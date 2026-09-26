@@ -6,6 +6,8 @@ laptops (or scan a QR code), pick a game, play it on its own page, and come
 back for the next one.
 
 - Pure HTML / CSS / JavaScript — no build step, no backend, no login.
+- The hub is open; each game is locked until the participant scans that
+  game's QR code (or types its code) from the instructor's slide.
 - Hosted on GitHub Pages; works from any repository sub-path.
 - Everything editable lives in **one file**: `site-config.js`.
 - Opens with a short hand-drawn "pencil sketch" intro (skippable, once per
@@ -26,6 +28,7 @@ back for the next one.
 │   ├── js/hub.js           ← renders cards, copy-link, QR codes
 │   ├── js/intro.js         ← pencil-sketch intro animation
 │   ├── js/hub-nav.js       ← drop-in "← Back to Game Hub" button for any game
+│   ├── js/gate.js          ← per-game lock screen (codes + unlock QR links)
 │   ├── js/feedback.js      ← drop-in in-game Feedback panel (faces, text, voice-to-text)
 │   ├── js/placeholder.js   ← fills the placeholder pages from site-config.js
 │   ├── img/favicon.svg
@@ -68,8 +71,15 @@ updated afterwards.
    just set `url` to match). The game's main page must be `index.html` so that
    `…/game-03/` opens it directly. Keep the game's own assets/scripts/CSS
    alongside — don't rewrite the game.
-2. Give the game a way back to the hub. Easiest: add this one line before
-   `</body>` in the game's `index.html` (it injects a small fixed
+2. Lock it and give it a way back to the hub. Add these two lines as the
+   **first** thing inside `<head>` (the lock screen must load before the game):
+
+   ```html
+   <script src="../site-config.js"></script>
+   <script src="../assets/js/gate.js" data-game="game-03"></script>
+   ```
+
+   and this one line before `</body>` (it injects a small fixed
    "← Back to Game Hub" button):
 
    ```html
@@ -95,6 +105,64 @@ The `game-0X/` folder can stay as a placeholder or be deleted.
 ```js
 todaysActivity: "game-01",   // any game id, or null to hide the banner
 ```
+
+---
+
+## Game codes & unlock QR codes (access control)
+
+The hub itself needs no code — put its link / QR code on the first slide.
+Every game, however, opens on a **"… is locked"** screen until it has been
+unlocked on that laptop. There is one code per game:
+
+| Game | Code (change these!) |
+|------|------|
+| 01 Keyboard Grove  | `GROVE-2481` |
+| 02 Floral Artistry | `BLOOM-7316` |
+| 03 | `GAME3-5029` |
+| 04 | `GAME4-8147` |
+| 05 | `GAME5-3692` |
+
+**Workshop flow**
+
+1. On the hub open *Trainer tools → game codes, unlock QR codes & feedback*,
+   type a game's code in its box and press **Unlock QR**. You get the game's
+   unlock link — `…/keyboard-grove/?key=GROVE-2481` — as a QR code
+   (**QR (PNG)** downloads a 1024 px version) plus the code in a yellow chip.
+2. Put that QR code **and** the code on the slide for that game.
+3. Participants scan the QR code (opens the game already unlocked) or, on a
+   laptop, click the game on the hub and type the code. Case, spaces and
+   dashes don't matter (`grove 2481` works).
+4. The unlock is remembered on that laptop for `access.hours` (48 h by
+   default; set `0` to re-lock when the tab closes). Unlocking one game does
+   not unlock the others. The hub cards show a padlock / "Unlocked" badge.
+5. **Lock here** (per game) and **Lock all games on this laptop** in Trainer
+   tools clear those grants — handy on the presenter laptop.
+
+**Changing a code.** Codes are never stored on the site — only SHA-256
+fingerprints in `site-config.js → access.keys`. In Trainer tools →
+*Change a game code*, pick the game, type the new code, press **Get hash** and
+paste the resulting line over that game's entry:
+
+```js
+access: {
+  enabled: true,
+  hours: 48,
+  keys: {
+    "game-01": "b4e3…f1f8",   // ← paste the new hash here
+    …
+  }
+}
+```
+
+The moment the new file is deployed, old QR codes and unlocks for that game
+stop working. Set `enabled: false` to open everything (e.g. after the
+workshop).
+
+> **Limits.** This is a browser-side lock, meant to keep games out of
+> circulation and off Google, not a security boundary: the site is static, so a
+> determined person reading the source could still reach a game. Codes are
+> hashed so they can't be read from the files, but a game's HTML itself is
+> not encrypted.
 
 ---
 
@@ -182,7 +250,8 @@ Then open <http://localhost:8000/>. Check:
 
 - the intro plays (add `?intro=1` to force it again, or use "Replay intro");
 - all five cards open their own page (`/keyboard-grove/`, `/floral artistry/`,
-  `/game-03/` … `/game-05/`);
+  `/game-03/` … `/game-05/`) on its lock screen; a wrong code is refused,
+  the game's code (or `?key=CODE` on the URL) unlocks only that game;
 - "← Back to Game Hub" returns to the hub;
 - "Copy link" shows "Link copied!";
 - the "Join the activity" QR code renders and downloads.
@@ -227,11 +296,13 @@ are always correct for the deployed site — nothing to configure.
 - **Hub QR** — on the hub, scroll to *Join the activity*. The QR and the short
   URL are shown there; **Download QR (PNG)** saves a print-ready image for a
   slide or a poster.
-- **Per-game QR** — open *Trainer tools* (below the join box). Every game has
-  its direct link, a Copy button, and a Download QR button.
+- **Per-game unlock QR** — open *Trainer tools* (below the join box), type
+  the game's code and press **Unlock QR** (see *Game codes & unlock QR codes*
+  above). Without a code the QR is the plain game link, which opens on the
+  lock screen.
 
-Tip: put the hub QR on the first slide; participants scan once and then use
-the cards to move between games.
+Tip: hub QR on the first slide; then one slide per game with that game's
+unlock QR and its code printed underneath for laptop users.
 
 ---
 

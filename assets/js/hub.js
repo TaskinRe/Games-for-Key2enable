@@ -68,8 +68,12 @@
   }
 
   function wireCopy(button, text, label) {
+    button.copyText = text;
+    button.setAttribute("aria-label", "Copy link to " + label);
+    if (button.copyWired) return;
+    button.copyWired = true;
     button.addEventListener("click", function () {
-      copyText(text).then(function () {
+      copyText(button.copyText).then(function () {
         toast("Link copied!");
         button.classList.add("is-copied");
         var old = button.innerHTML;
@@ -78,10 +82,9 @@
         button.appendChild(document.createTextNode(" Copied"));
         setTimeout(function () { button.classList.remove("is-copied"); button.innerHTML = old; }, 1600);
       }).catch(function () {
-        window.prompt("Copy this link:", text);
+        window.prompt("Copy this link:", button.copyText);
       });
     });
-    button.setAttribute("aria-label", "Copy link to " + label);
   }
 
   /* ---------- QR codes (assets/vendor/qrcode.js, MIT) ---------- */
@@ -153,6 +156,23 @@
 
   function pad(n) { return (n < 10 ? "0" : "") + n; }
 
+  /* ---------- Access (per-game codes; see assets/js/gate.js) ---------- */
+  var gate = window.K2E_GATE;
+  var access = cfg.access || {};
+  function gated(game) { return !!(gate && gate.enabled && access.keys && access.keys[game.id]); }
+  function locked(game) { return gated(game) && !gate.isUnlocked(game.id); }
+  function unlockUrl(game, code) { return gameUrl(game) + (gameUrl(game).indexOf("?") > -1 ? "&" : "?") + "key=" + encodeURIComponent(code); }
+  function fmtUntil(d) {
+    if (!d) return "";
+    var opts = { weekday: "short", hour: "numeric", minute: "2-digit" };
+    try { return d.toLocaleString(undefined, opts); } catch (e) { return d.toString(); }
+  }
+  var anyGated = games.some(gated);
+  var lockNote = document.getElementById("lockNote");
+  if (lockNote) lockNote.hidden = !anyGated;
+  var lockWatchers = [];
+  function refreshLocks() { lockWatchers.forEach(function (fn) { fn(); }); }
+
   /* ---------- Game cards ---------- */
   var grid = document.getElementById("gameGrid");
   games.forEach(function (game, i) {
@@ -190,6 +210,23 @@
       meta.appendChild(dots);
       meta.setAttribute("aria-label", "Difficulty " + game.difficulty + " of 3");
     }
+    if (gated(game)) {
+      var badge = card.querySelector(".badge");
+      if (game.ready === false) card.querySelector(".game-card__meta").appendChild(badge = el("span", { class: "badge" }));
+      var paint = function () {
+        var isLocked = locked(game);
+        card.classList.toggle("is-locked", isLocked);
+        badge.className = "badge " + (isLocked ? "badge--locked" : "badge--open");
+        badge.textContent = "";
+        badge.appendChild(icon(isLocked ? "lock" : "unlock"));
+        badge.appendChild(document.createTextNode(isLocked ? " Locked" : " Unlocked"));
+        var until = !isLocked && gate.until(game.id);
+        badge.title = isLocked ? "Scan the QR code on your instructor\u2019s slide to unlock" : (until ? "Unlocked on this laptop until " + fmtUntil(until) : "Unlocked on this laptop");
+        play.setAttribute("aria-label", (isLocked ? "Play Now \u2014 locked, you will be asked for the game code: " : "Play Now: ") + game.title);
+      };
+      paint();
+      lockWatchers.push(paint);
+    }
     grid.appendChild(card);
   });
 
@@ -199,25 +236,111 @@
   wireCopy(document.getElementById("copyHubUrl"), HUB_URL, "the Game Hub");
   renderQr(document.getElementById("hubQrImg"), HUB_URL, 200, document.getElementById("hubQrDownload"), "game-hub-qr.png");
 
-  /* ---------- Share list: per-game link + QR ---------- */
+  /* ---------- Share list: per-game link + QR (+ unlock QR when gated) ---------- */
   var shareList = document.getElementById("shareList");
+  var shareIntro = document.getElementById("shareIntro");
+  if (shareIntro && anyGated) {
+    shareIntro.textContent = "Each game gets its own slide: type the game\u2019s code below to get its unlock QR code (the game link with the code built in). Put that QR code and the code itself on the slide \u2014 scanning it, or typing the code, unlocks just that game" + (gate.hours > 0 ? " for " + gate.hours + " hours." : " until the tab closes.") + " Codes are never shown here unless you type them.";
+  }
   games.forEach(function (game, i) {
     var url = gameUrl(game);
     var qrBox = el("div", { class: "qr__img", role: "img", "aria-label": "QR code for " + game.title });
     var dl = el("a", { class: "btn btn--ghost btn--sm", href: "#", text: "QR (PNG)" });
     var copy = el("button", { type: "button", class: "btn btn--ghost btn--sm btn--copy" }, [icon("link"), document.createTextNode(" Copy")]);
-    wireCopy(copy, url, game.title);
-    var item = el("li", { class: "share__item" }, [
-      qrBox,
-      el("div", {}, [
-        el("h3", { text: "Game " + pad(i + 1) + " — " + game.title }),
-        el("code", { text: url.replace(/^https?:\/\//, "") }),
-        el("div", { class: "btn-row" }, [copy, dl, el("a", { class: "btn btn--ghost btn--sm", href: url, text: "Open" })])
-      ])
-    ]);
-    shareList.appendChild(item);
-    renderQr(qrBox, url, 84, dl, game.id + "-qr.png");
+    var urlEl = el("code", { text: url.replace(/^https?:\/\//, "") });
+    var body = el("div", {}, [el("h3", { text: "Game " + pad(i + 1) + " \u2014 " + game.title }), urlEl]);
+    var row = el("div", { class: "btn-row" }, [copy, dl, el("a", { class: "btn btn--ghost btn--sm", href: url, text: "Open" })]);
+    shareList.appendChild(el("li", { class: "share__item" }, [qrBox, body]));
+
+    if (!gated(game)) {
+      wireCopy(copy, url, game.title);
+      body.appendChild(row);
+      renderQr(qrBox, url, 84, dl, game.id + "-qr.png");
+      return;
+    }
+
+    var state = el("p", { class: "share__state" });
+    var codeTag = el("span", { class: "share__code", hidden: "" });
+    var input = el("input", { type: "text", autocomplete: "off", autocapitalize: "characters", spellcheck: "false", placeholder: "Game code", "aria-label": "Code for " + game.title });
+    var make = el("button", { type: "submit", class: "btn btn--ghost btn--sm" }, [icon("qr"), document.createTextNode(" Unlock QR")]);
+    var form = el("form", { class: "code-form" }, [input, make]);
+    var lockBtn = el("button", { type: "button", class: "btn btn--ghost btn--sm", text: "Lock here" });
+    body.appendChild(state); body.appendChild(codeTag); body.appendChild(form); body.appendChild(row);
+    row.appendChild(lockBtn);
+
+    function showPlain() {
+      urlEl.textContent = url.replace(/^https?:\/\//, "");
+      codeTag.hidden = true;
+      wireCopy(copy, url, game.title + " (locked link)");
+      renderQr(qrBox, url, 84, dl, game.id + "-qr.png");
+      qrBox.setAttribute("aria-label", "QR code for " + game.title + " (opens the lock screen)");
+    }
+    function showUnlock(code) {
+      var u = unlockUrl(game, code);
+      urlEl.textContent = u.replace(/^https?:\/\//, "");
+      codeTag.textContent = code;
+      codeTag.hidden = false;
+      wireCopy(copy, u, game.title + " (unlock link)");
+      renderQr(qrBox, u, 84, dl, game.id + "-unlock-qr.png");
+      qrBox.setAttribute("aria-label", "Unlock QR code for " + game.title);
+    }
+    function paintState() {
+      var until = gate.until(game.id);
+      state.textContent = locked(game) ? "Locked on this laptop." : "Unlocked on this laptop" + (until ? " until " + fmtUntil(until) + "." : ".");
+      lockBtn.hidden = locked(game);
+    }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var code = input.value.trim().toUpperCase();
+      if (!code) { input.focus(); return; }
+      if (gate.verify(game.id, code)) {
+        gate.unlock(game.id, code);
+        showUnlock(code);
+        refreshLocks();
+        toast(game.title + " unlock QR ready \u2014 download it for your slide");
+      } else {
+        toast("That code doesn\u2019t match " + game.title);
+        input.select();
+      }
+    });
+    lockBtn.addEventListener("click", function () {
+      gate.lock(game.id);
+      input.value = "";
+      showPlain();
+      refreshLocks();
+      toast(game.title + " locked on this laptop");
+    });
+    showPlain();
+    paintState();
+    lockWatchers.push(paintState);
   });
+
+  /* ---------- Trainer tools: change a game code / lock all ---------- */
+  (function () {
+    var box = document.getElementById("accessTools");
+    if (!box || !anyGated) return;
+    box.hidden = false;
+    var sel = document.getElementById("hashGame");
+    var input = document.getElementById("hashInput");
+    var out = document.getElementById("hashOut");
+    var copyBtn = document.getElementById("copyHash");
+    games.filter(gated).forEach(function (g) { sel.appendChild(el("option", { value: g.id, text: g.title })); });
+    document.getElementById("hashForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var code = input.value.trim().toUpperCase();
+      if (!code) { input.focus(); return; }
+      var line = '"' + sel.value + '": "' + gate.hash(code) + '",';
+      out.textContent = "// site-config.js \u2192 access.keys   (code: " + code + ")\n" + line;
+      out.hidden = false;
+      copyBtn.hidden = false;
+      wireCopy(copyBtn, line, "the config line");
+    });
+    document.getElementById("lockAll").addEventListener("click", function () {
+      gate.lock();
+      refreshLocks();
+      toast("All games locked on this laptop");
+    });
+  })();
 
   /* ---------- Trainer tools: feedback saved in this browser ---------- */
   (function () {

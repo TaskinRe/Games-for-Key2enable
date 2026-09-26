@@ -102,6 +102,28 @@ window.SITE_CONFIG = {
     }
   ],
 
+  /* ---------- Per-game access codes ----------
+     The hub is open to everyone; each game stays locked until the participant
+     opens the instructor's QR link (<game url>?key=CODE) or types the code on
+     the game's lock screen. Codes live here as SHA-256 hashes of the
+     UPPERCASE code with spaces/dashes removed — never the code itself.
+     To change a code: Trainer tools → "Game codes & QR" on the hub gives you
+     the hash line to paste here. Changing a hash re-locks that game everywhere.
+     hours : how long one unlock lasts on that laptop (0 = until the tab closes). */
+  access: {
+    enabled: true,
+    hours: 48,
+    keys: {
+      "game-01": "b4e341952c8e019b7d7321314a513662e19f2ada40738f664200560d5208f1f8",
+      "game-02": "4d4b59966493e43ffd45977bda83d90ec732e0ec285f868aa3e3663c3cf50fe7",
+      "game-03": "e36c42c9624760e58957f12f0260a5c8a50431d74ed01b550b2a8c0d69c51333",
+      "game-04": "e08b30053befa29538e6518d5fc1daa9a21b69317ea1b9018dd8a6a6a61037ab",
+      "game-05": "1db21871529924f428fbfbc02716165d6b5d175134eb67bc0d3d99ed8481a74b"
+    },
+    storageKey: "k2e-access"
+  },
+
+
   /* ---------- In-game feedback ----------
      Games that include assets/js/feedback.js show a "Feedback" button with a
      face rating, a text box and voice-to-text (speak instead of typing).

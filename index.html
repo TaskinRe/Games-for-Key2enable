@@ -12,6 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/hub.css">
   <script src="site-config.js"></script>
+  <script src="assets/js/gate.js"></script>
 </head>
 <body>
 
@@ -29,6 +30,8 @@
       <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></symbol>
       <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1.4 1.4"/><path d="M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1.4-1.4"/></symbol>
       <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 018 0v3"/></symbol>
+      <symbol id="i-unlock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 017.5-1.9"/></symbol>
       <symbol id="i-qr" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><path d="M14 14h3v3h-3zM19 14h2v2M14 19v2h2M19 19h2v2"/></symbol>
       <symbol id="i-replay" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1014-5.3"/><path d="M4 4v5h5"/></symbol>
       <symbol id="i-laptop" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="11" rx="1.8"/><path d="M2 19h20"/></symbol>
@@ -102,6 +105,7 @@
       <div class="section-head">
         <h2 id="gamesTitle">Pick a game</h2>
         <p>Five short activities. Each opens on its own page and works on its own link.</p>
+        <p class="games__lock-note" id="lockNote" hidden><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg> Games are unlocked one at a time: scan the QR code on your instructor’s slide (or type the code under it) when a game is up next.</p>
       </div>
       <ul class="game-grid" id="gameGrid" role="list"></ul>
     </section>
@@ -114,7 +118,7 @@
       </div>
       <ol class="steps">
         <li><span class="steps__num">1</span><h3>Choose a game</h3><p>Scroll the cards above and pick one that looks fun.</p></li>
-        <li><span class="steps__num">2</span><h3>Click “Play Now”</h3><p>The game opens on its own page in this tab.</p></li>
+        <li><span class="steps__num">2</span><h3>Unlock it</h3><p>Scan the QR code on your instructor’s slide, or click “Play Now” and type the game code shown under it.</p></li>
         <li><span class="steps__num">3</span><h3>Complete the activity</h3><p>Follow the instructions inside the game.</p></li>
         <li><span class="steps__num">4</span><h3>Come back &amp; try another</h3><p>Use “Back to Game Hub” in the corner of every game.</p></li>
       </ol>
@@ -141,9 +145,25 @@
       </div>
 
       <details class="share">
-        <summary><svg class="ico" aria-hidden="true"><use href="#i-qr"/></svg> Trainer tools: direct links &amp; QR codes for each game</summary>
-        <p class="share__intro">Each game has its own address. Copy a link to share it, or download a QR code for your slides.</p>
+        <summary><svg class="ico" aria-hidden="true"><use href="#i-qr"/></svg> Trainer tools: game codes, unlock QR codes &amp; feedback</summary>
+        <p class="share__intro" id="shareIntro">Each game has its own address. Copy a link to share it, or download a QR code for your slides.</p>
         <ul class="share__list" id="shareList" role="list"></ul>
+        <div class="share__feedback" id="accessTools" hidden>
+          <h3>Change a game code</h3>
+          <p class="share__intro">Codes are not stored anywhere on this site — only a fingerprint (hash) of each one lives in <code>site-config.js</code>. To set a new code, type it here, then replace that game’s line in <code>access.keys</code> with the result. Old QR codes for that game stop working immediately.</p>
+          <form class="hash-form" id="hashForm">
+            <label for="hashGame" class="sr-only">Game</label>
+            <select id="hashGame"></select>
+            <label for="hashInput" class="sr-only">New code</label>
+            <input id="hashInput" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="New code, e.g. GROVE-2481" required>
+            <button type="submit" class="btn btn--ghost btn--sm">Get hash</button>
+          </form>
+          <pre class="hash-out" id="hashOut" hidden tabindex="0"></pre>
+          <div class="btn-row">
+            <button type="button" class="btn btn--ghost btn--sm" id="copyHash" hidden>Copy line</button>
+            <button type="button" class="btn btn--ghost btn--sm" id="lockAll">Lock all games on this laptop</button>
+          </div>
+        </div>
         <div class="share__feedback" id="feedbackTools">
           <h3>Participant feedback</h3>
           <p class="share__intro">Games with a Feedback button save each entry in the browser it was written in. Open this page on that laptop to download it — or set <code>feedback.endpoint</code> in <code>site-config.js</code> to collect everything in one place.</p>

@@ -218,6 +218,25 @@ section { margin-top: 72px; }
 .share__item code { display: block; font-size: .82rem; color: var(--ink-soft); word-break: break-all; margin: 4px 0 10px; }
 .share__item .btn { min-height: 34px; }
 .share__item .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+[hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.games__lock-note { margin-top: 10px; display: inline-flex; gap: 8px; align-items: flex-start; color: var(--ink-soft); font-weight: 600; font-size: .95rem; }
+.badge--locked { background: var(--ink); color: #fff; display: inline-flex; align-items: center; gap: 5px; }
+.badge--locked .ico { width: 13px; height: 13px; stroke: #F9B233; }
+.badge--open { background: #DDF5EA; color: #0F6B45; display: inline-flex; align-items: center; gap: 5px; }
+.badge--open .ico { width: 13px; height: 13px; }
+.game-card.is-locked .game-card__icon { position: relative; }
+.game-card.is-locked .game-card__icon::after { content: ""; position: absolute; right: -6px; bottom: -6px; width: 22px; height: 22px; border-radius: 8px; background: var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F9B233' stroke-width='2.2' stroke-linecap='round'%3E%3Crect x='5' y='10.5' width='14' height='10' rx='2.5'/%3E%3Cpath d='M8 10.5V7.5a4 4 0 018 0v3'/%3E%3C/svg%3E") center / 14px no-repeat; border: 2px solid #fff; }
+.share__item .code-form { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 8px; }
+.share__item .code-form input { flex: 1 1 120px; min-width: 0; font: inherit; font-size: .9rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 6px 10px; border-radius: 8px; border: 1.5px solid var(--line); background: #fff; color: var(--ink); }
+.share__item .code-form input:focus-visible { outline: 3px solid #1F6FEB; outline-offset: 1px; }
+.share__item .share__code { display: inline-block; font-weight: 800; letter-spacing: .08em; background: #FFF0C2; color: #7A5300; padding: 3px 9px; border-radius: 8px; margin: 0 0 8px; font-size: .95rem; }
+.share__item .share__state { font-size: .82rem; color: var(--ink-soft); margin: 0 0 8px; }
+.hash-form { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.hash-form select, .hash-form input { font: inherit; font-size: .95rem; padding: 7px 10px; border-radius: 10px; border: 1.5px solid var(--line); background: #fff; color: var(--ink); }
+.hash-form input { flex: 1 1 200px; min-width: 0; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.hash-form select:focus-visible, .hash-form input:focus-visible { outline: 3px solid #1F6FEB; outline-offset: 1px; }
+.hash-out { font-size: .8rem; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; white-space: pre-wrap; word-break: break-all; margin: 0 0 10px; }
 .share__feedback { border-top: 1px dashed var(--line); padding: 18px 0 20px; }
 .share__feedback h3 { font-size: 1.05rem; margin-bottom: 6px; }
 .share__feedback code { font-size: .85em; background: var(--card); padding: 1px 5px; border-radius: 4px; }
