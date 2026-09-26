@@ -5,7 +5,6 @@
      • the hub title / tagline
      • game names, descriptions, what each game trains, difficulty, icon
      • where each game lives (folder or external URL)
-     • which game is "Today's Activity"
      • the colour theme
      • the intro animation
      • where in-game feedback is sent
@@ -19,13 +18,7 @@ window.SITE_CONFIG = {
   brand: "Key2Enable",
   hubName: "Game Hub",
   tagline: "Interactive Training Games",
-  description:
-    "Explore five hands-on activities built for the training session. " +
-    "Pick a game, play it on your laptop, then come back here for the next one.",
-
-  /* ---------- Today's Activity ----------
-     Set to the `id` of the game to highlight, or null to hide the banner. */
-  todaysActivity: "game-01",
+  description: "Five short games. Pick one, scan its code, play.",
 
   /* ---------- Intro animation ----------
      playIntro : true  → the pencil-sketch intro plays once per browser session
@@ -54,7 +47,7 @@ window.SITE_CONFIG = {
       id: "game-01",
       url: "keyboard-grove/",
       title: "Keyboard Grove",
-      description: "Meet your Key-X buttons in a night-time grove and work through short chapters at your own pace.",
+      description: "Learn your Key-X buttons in a night-time grove, one short chapter at a time.",
       trains: ["Key-X buttons", "Getting started"],
       difficulty: 1,
       icon: "keyboard",
@@ -64,7 +57,7 @@ window.SITE_CONFIG = {
       id: "game-02",
       url: "floral artistry/",
       title: "Floral Artistry",
-      description: "Bloom & create — design your own flower artwork in a calm night garden.",
+      description: "Design your own flower artwork in a calm night garden.",
       trains: ["Creativity", "Making choices"],
       difficulty: 1,
       icon: "star",
@@ -74,7 +67,7 @@ window.SITE_CONFIG = {
       id: "game-03",
       url: "game-03/",
       title: "Game 03",
-      description: "Placeholder for the third activity. Drop the game files into the game-03/ folder.",
+      description: "Coming soon.",
       trains: ["Recall", "Sequencing"],
       difficulty: 2,
       icon: "memory",
@@ -84,7 +77,7 @@ window.SITE_CONFIG = {
       id: "game-04",
       url: "game-04/",
       title: "Game 04",
-      description: "Placeholder for the fourth activity. Drop the game files into the game-04/ folder.",
+      description: "Coming soon.",
       trains: ["Letters", "Word building"],
       difficulty: 2,
       icon: "letters",
@@ -94,13 +87,35 @@ window.SITE_CONFIG = {
       id: "game-05",
       url: "game-05/",
       title: "Game 05",
-      description: "Placeholder for the fifth activity. Drop the game files into the game-05/ folder.",
+      description: "Coming soon.",
       trains: ["Problem solving", "Putting it together"],
       difficulty: 3,
       icon: "puzzle",
       ready: false
     }
   ],
+
+  /* ---------- Per-game access codes ----------
+     The hub is open to everyone; each game stays locked until the participant
+     opens the instructor's QR link (<game url>?key=CODE) or types the code on
+     the game's lock screen. Codes live here as SHA-256 hashes of the
+     UPPERCASE code with spaces/dashes removed — never the code itself.
+     To change a code: Trainer tools → "Game codes & QR" on the hub gives you
+     the hash line to paste here. Changing a hash re-locks that game everywhere.
+     hours : how long one unlock lasts on that laptop (0 = until the tab closes). */
+  access: {
+    enabled: true,
+    hours: 48,
+    keys: {
+      "game-01": "b4e341952c8e019b7d7321314a513662e19f2ada40738f664200560d5208f1f8",
+      "game-02": "4d4b59966493e43ffd45977bda83d90ec732e0ec285f868aa3e3663c3cf50fe7",
+      "game-03": "e36c42c9624760e58957f12f0260a5c8a50431d74ed01b550b2a8c0d69c51333",
+      "game-04": "e08b30053befa29538e6518d5fc1daa9a21b69317ea1b9018dd8a6a6a61037ab",
+      "game-05": "1db21871529924f428fbfbc02716165d6b5d175134eb67bc0d3d99ed8481a74b"
+    },
+    storageKey: "k2e-access"
+  },
+
 
   /* ---------- In-game feedback ----------
      Games that include assets/js/feedback.js show a "Feedback" button with a
