@@ -321,4 +321,4 @@ unlock QR and its code printed underneath for laptop users.
 
 QR codes: [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator)
 by Kazuhiko Arase (MIT), vendored in `assets/vendor/qrcode.js`.
-Fonts: Fredoka and Nunito via Google Fonts (falls back to system fonts offline).
+Fonts: Plus Jakarta Sans and Inter via Google Fonts (falls back to system fonts offline).

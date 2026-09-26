@@ -1,27 +1,26 @@
-/* Styles for the game placeholder pages (game-0X/index.html) only — sketchbook look, matches hub.css. */
-:root { --paper: #FDF8EF; --ink: #1F2A3D; --ink-soft: #5B667A; --line: #D9CDB8; --c: #F76C5E; --wobble: 255px 18px 225px 18px / 18px 225px 18px 255px; --wobble-sm: 120px 10px 110px 10px / 10px 110px 10px 120px; }
+/* Styles for the game placeholder pages (game-0X/index.html) only — matches hub.css. */
+:root { --paper: #FBF9F4; --ink: #17202E; --text: #2B3546; --ink-soft: #6B7587; --line: #E4DED2; --c: #F0654F; }
 * { box-sizing: border-box; }
 body {
   margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 72px 20px 40px;
-  font-family: "Nunito", system-ui, sans-serif; color: var(--ink); background: var(--paper);
-  background-image: radial-gradient(rgba(31,42,61,.13) 1px, transparent 1.2px); background-size: 26px 26px;
+  font-family: "Inter", system-ui, sans-serif; color: var(--text); background: var(--paper); -webkit-font-smoothing: antialiased;
 }
-.ph { width: min(100%, 560px); display: grid; gap: 18px; }
-.ph__card { background: #fff; border: 2px solid var(--ink); border-radius: var(--wobble); padding: 38px 34px 32px; text-align: center; box-shadow: 6px 6px 0 var(--ink); }
-.ph__eyebrow { margin: 0; font-family: "Caveat", cursive; font-size: 1.4rem; color: var(--c); line-height: 1; }
-h1 { font-family: "Patrick Hand", sans-serif; font-weight: 400; font-size: clamp(2.4rem, 6vw, 3.4rem); margin: 4px 0 8px; line-height: 1.05; }
-.ph__desc { margin: 0 auto; color: var(--ink-soft); max-width: 420px; font-family: "Caveat", cursive; font-size: 1.5rem; line-height: 1.2; }
-.ph__stage { display: flex; justify-content: center; gap: 14px; margin: 26px 0 22px; }
-.ph__key { width: 46px; height: 46px; border-radius: var(--wobble-sm); border: 2px solid var(--ink); background: #fff; box-shadow: 2px 2px 0 var(--ink); animation: bounce 1.6s ease-in-out infinite; }
-.ph__key.k2 { animation-delay: .2s; background: var(--c); } .ph__key.k3 { animation-delay: .4s; background: #FFF0C2; }
-@keyframes bounce { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-12px) rotate(4deg); } }
+.ph { width: min(100%, 540px); display: grid; gap: 16px; }
+.ph__card { background: #fff; border: 1px solid var(--line); border-radius: 24px; padding: 40px 36px 34px; text-align: center; box-shadow: 0 2px 4px rgba(23,32,46,.04), 0 28px 60px -20px rgba(23,32,46,.22); }
+.ph__eyebrow { margin: 0 0 12px; font-family: "Plus Jakarta Sans", sans-serif; font-weight: 600; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--c); }
+h1 { font-family: "Plus Jakarta Sans", sans-serif; font-weight: 700; font-size: clamp(1.9rem, 5vw, 2.6rem); letter-spacing: -.03em; margin: 0 0 8px; line-height: 1.1; color: var(--ink); }
+.ph__desc { margin: 0 auto; color: var(--ink-soft); max-width: 400px; font-size: 1rem; }
+.ph__stage { display: flex; justify-content: center; gap: 12px; margin: 28px 0 26px; }
+.ph__key { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--line); background: #fff; box-shadow: 0 8px 20px -10px rgba(23,32,46,.3); animation: bounce 1.6s ease-in-out infinite; }
+.ph__key.k2 { animation-delay: .2s; background: var(--c); border-color: transparent; } .ph__key.k3 { animation-delay: .4s; background: #FFF1CC; }
+@keyframes bounce { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-10px) rotate(4deg); } }
 @media (prefers-reduced-motion: reduce) { .ph__key { animation: none; } }
-.ph__soon { color: var(--ink-soft); font-family: "Patrick Hand", sans-serif; font-size: 1.2rem; margin: 0 0 22px; }
-.ph__btn { display: inline-flex; align-items: center; gap: 8px; font-family: "Patrick Hand", sans-serif; font-size: 1.25rem; text-decoration: none; background: var(--ink); color: #fff; padding: 10px 24px; border: 2px solid var(--ink); border-radius: var(--wobble-sm); box-shadow: 3px 3px 0 #F9B233; }
-.ph__btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 #F9B233; }
+.ph__soon { color: var(--ink-soft); margin: 0 0 22px; }
+.ph__btn { display: inline-flex; align-items: center; gap: 8px; font-family: "Plus Jakarta Sans", sans-serif; font-weight: 600; font-size: .95rem; text-decoration: none; background: var(--ink); color: #fff; height: 46px; padding: 0 24px; border-radius: 999px; transition: transform .15s, box-shadow .15s; }
+.ph__btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -8px rgba(23,32,46,.4); }
 .ph__btn:focus-visible { outline: 3px solid #1F6FEB; outline-offset: 3px; }
-.ph__trainer { background: #F6EEDF; border: 2px dashed var(--ink); border-radius: var(--wobble); padding: 6px 20px; color: var(--ink-soft); font-size: .95rem; }
-.ph__trainer summary { cursor: pointer; font-family: "Patrick Hand", sans-serif; font-size: 1.15rem; padding: 12px 0; color: var(--ink); }
+.ph__trainer { background: #F3EFE6; border-radius: 16px; padding: 4px 20px; color: var(--ink-soft); font-size: .9rem; }
+.ph__trainer summary { cursor: pointer; font-family: "Plus Jakarta Sans", sans-serif; font-weight: 600; font-size: .9rem; padding: 14px 0; color: var(--ink); }
 .ph__trainer ol { padding-left: 20px; margin: 0 0 14px; }
 .ph__trainer li { margin: 6px 0; }
 code { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; font-size: .9em; }
