@@ -396,10 +396,21 @@
     ui.send.disabled = true; ui.send.textContent = t("sending");
     var ctrl = window.AbortController ? new AbortController() : null;
     var timer = ctrl && setTimeout(function () { ctrl.abort(); }, 8000);
+    var payload = {
+      _subject: gameTitle + " feedback" + (entry.rating ? " — " + entry.ratingLabel + " (" + entry.rating + "/5)" : "") + (entry.name ? " — " + entry.name : ""),
+      game: entry.gameTitle,
+      rating: entry.rating ? entry.rating + "/5 " + entry.ratingLabel : "",
+      message: entry.text,
+      name: entry.name,
+      lang: entry.lang,
+      time: entry.ts,
+      page: entry.page,
+      browser: entry.ua
+    };
     fetch(ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify(entry),
+      body: JSON.stringify(payload),
       signal: ctrl ? ctrl.signal : undefined
     }).then(function (res) {
       if (!res.ok) throw new Error("HTTP " + res.status);
@@ -425,9 +436,9 @@
     card.innerHTML = "";
     var actions = el("div", { class: "k2e-fb__actions" });
     var emailPrimary = !!EMAIL && key !== "thanksSent";
-    if (EMAIL) {
+    if (emailPrimary) {
       var mail = "mailto:" + EMAIL + "?subject=" + encodeURIComponent(gameTitle + " feedback" + (entry.name ? " — " + entry.name : "")) + "&body=" + encodeURIComponent(summary(entry));
-      actions.appendChild(el("a", { class: "k2e-fb__btn " + (emailPrimary ? "k2e-fb__btn--primary" : "k2e-fb__btn--ghost"), href: mail, text: t("emailIt"), style: "display:inline-flex;align-items:center;text-decoration:none" }));
+      actions.appendChild(el("a", { class: "k2e-fb__btn k2e-fb__btn--primary", href: mail, text: t("emailIt"), style: "display:inline-flex;align-items:center;text-decoration:none" }));
     }
     var copyBtn = el("button", { type: "button", class: "k2e-fb__btn k2e-fb__btn--ghost", text: t("copy") });
     copyBtn.addEventListener("click", function () {

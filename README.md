@@ -113,36 +113,32 @@ While the panel is open, key presses do **not** reach the game, so typing a
 
 ### Where the feedback goes
 
-The site is static (no server), so a page cannot email anything by itself.
-Three channels are available, and they can be combined:
+Configured in `site-config.js`:
 
-* **Email (configured: `rt2609@nyu.edu`).** After sending, the participant sees
-  a highlighted **Email it to the trainer** button; it opens their mail app with
-  the rating, text, name and time pre-filled, so one more tap delivers it.
-  Relies on the laptop having a mail app / webmail handler set up.
-* **Per laptop (always on).** Every entry is saved in that laptop's browser
-  (`localStorage`). Open the hub on that laptop → *Trainer tools* →
-  *Participant feedback* → **Download CSV**. (**Clear** wipes the saved entries.)
-* **Automatic collection in one place (recommended if you want zero extra taps).**
-  Set an endpoint in `site-config.js` and every entry is POSTed there as JSON
-  the moment it is sent — no mail app needed:
+```js
+feedback: {
+  enabled: true,
+  endpoint: "https://formspree.io/f/xgavnqva", // Formspree form — every entry is POSTed here
+  email: "rt2609@nyu.edu",                     // fallback "Email it to the trainer" button
+  storageKey: "k2e-feedback"
+}
+```
 
-  ```js
-  feedback: {
-    enabled: true,
-    endpoint: "https://formspree.io/f/xxxxxxx", // any URL that accepts a JSON POST
-    email: "rt2609@nyu.edu",                     // "Email it to the trainer" button
-    storageKey: "k2e-feedback"
-  }
-  ```
-
-  Fastest setup: [Formspree](https://formspree.io) (free tier) → sign up with
-  the trainer email → *New form* → copy the form's endpoint URL
-  (`https://formspree.io/f/…`) into `endpoint`. Every submission is then
-  emailed to that address and listed in the Formspree dashboard, exportable
-  as CSV. A Google Apps Script web app or any small webhook works too.
-  Fields sent: `ts, game, gameTitle, rating, ratingLabel, text, name, lang,
-  page, ua`.
+* **Formspree (primary).** The moment a participant presses *Send feedback* the
+  entry is POSTed as JSON to the form above. Formspree emails it to the form
+  owner and keeps it in the dashboard at https://formspree.io/forms (search,
+  CSV export). Fields: `_subject` (e.g. "Keyboard Grove feedback — Great (4/5)
+  — Sara"), `game, rating, message, name, lang, time, page, browser`.
+  The free plan has a monthly submission cap — check the dashboard before a
+  large workshop. Any other URL that accepts a JSON POST works the same way.
+* **Email fallback.** If the POST fails (offline, cap reached), the participant
+  sees a highlighted **Email it to the trainer** button — a `mailto:` with the
+  rating, text, name and time pre-filled, one more tap to send from their mail
+  app. (Shown also when `endpoint` is empty.)
+* **Per laptop (always on).** Every entry is also saved in that laptop's
+  browser (`localStorage`); the hub's *Trainer tools → Participant feedback*
+  offers **Download CSV** and **Clear** for that browser. Entries that reached
+  Formspree are marked `sent = yes` in the CSV.
 
 Set `enabled: false` to hide the Feedback button everywhere.
 

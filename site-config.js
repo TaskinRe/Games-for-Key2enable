@@ -115,7 +115,7 @@ window.SITE_CONFIG = {
      Trainer tools can download it as CSV from that same browser. */
   feedback: {
     enabled: true,
-    endpoint: "",
+    endpoint: "https://formspree.io/f/xgavnqva",
     email: "rt2609@nyu.edu",
     storageKey: "k2e-feedback"
   },
