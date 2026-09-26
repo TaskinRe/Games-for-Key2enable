@@ -66,12 +66,12 @@ window.SITE_CONFIG = {
     {
       id: "game-03",
       url: "game-03/",
-      title: "Game 03",
-      description: "Coming soon.",
-      trains: ["Recall", "Sequencing"],
+      title: "Sky Catch",
+      description: "Catch the falling pictures with the matching number key, then replay the pattern from memory.",
+      trains: ["Number keys", "Recognition"],
       difficulty: 2,
-      icon: "memory",
-      ready: false
+      icon: "target",
+      ready: true
     },
     {
       id: "game-04",

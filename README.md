@@ -35,7 +35,7 @@ back for the next one.
 │   └── vendor/qrcode.js    ← QR generator (qrcode-generator 1.4.4, MIT)
 ├── keyboard-grove/index.html   ← Game 01 · Keyboard Grove (live)
 ├── floral artistry/index.html  ← Game 02 · Floral Artistry (live)
-├── game-03/index.html          ← Game 03 (placeholder)
+├── game-03/index.html          ← Game 03 · Sky Catch (live)
 ├── game-04/index.html          ← Game 04 (placeholder)
 └── game-05/index.html          ← Game 05 (placeholder)
 ```
@@ -49,7 +49,7 @@ the others.
 |---|---------------------|-----------------|-------------|-----|
 | 1 | `keyboard-grove/`   | Keyboard Grove  | live        | `https://taskinre.github.io/Games-for-Key2enable/keyboard-grove/` |
 | 2 | `floral artistry/`  | Floral Artistry | live        | `https://taskinre.github.io/Games-for-Key2enable/floral%20artistry/` |
-| 3 | `game-03/`          | Game 03         | placeholder | `https://taskinre.github.io/Games-for-Key2enable/game-03/` |
+| 3 | `game-03/`          | Sky Catch       | live        | `https://taskinre.github.io/Games-for-Key2enable/game-03/` |
 | 4 | `game-04/`          | Game 04         | placeholder | `https://taskinre.github.io/Games-for-Key2enable/game-04/` |
 | 5 | `game-05/`          | Game 05         | placeholder | `https://taskinre.github.io/Games-for-Key2enable/game-05/` |
 

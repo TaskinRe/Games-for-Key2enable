@@ -200,6 +200,7 @@
     var hubHref = (me && me.getAttribute("data-hub")) || "../";
     var gate = document.createElement("div");
     gate.className = "k2e-gate";
+    gate.setAttribute("translate", "no");
     gate.setAttribute("role", "dialog");
     gate.setAttribute("aria-modal", "true");
     gate.setAttribute("aria-labelledby", "k2eGateTitle");
