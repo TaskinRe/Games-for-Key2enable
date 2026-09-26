@@ -142,18 +142,6 @@
     h1.appendChild(el("span", { class: "hl", text: last }));
   }
 
-  /* ---------- Today's activity ---------- */
-  var today = games.filter(function (g) { return g.id === cfg.todaysActivity; })[0];
-  var todaySection = document.getElementById("today");
-  if (today && todaySection) {
-    todaySection.hidden = false;
-    var idx = games.indexOf(today);
-    var num = "Game " + pad(idx + 1);
-    document.getElementById("todayGame").textContent = today.title.indexOf(num) === 0 ? today.title : num + " — " + today.title;
-    document.getElementById("todayDesc").textContent = today.description || "";
-    document.getElementById("todayLink").href = gameUrl(today);
-  }
-
   function pad(n) { return (n < 10 ? "0" : "") + n; }
 
   /* ---------- Access (per-game codes; see assets/js/gate.js) ---------- */

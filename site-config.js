@@ -5,7 +5,6 @@
      • the hub title / tagline
      • game names, descriptions, what each game trains, difficulty, icon
      • where each game lives (folder or external URL)
-     • which game is "Today's Activity"
      • the colour theme
      • the intro animation
      • where in-game feedback is sent
@@ -20,10 +19,6 @@ window.SITE_CONFIG = {
   hubName: "Game Hub",
   tagline: "Interactive Training Games",
   description: "Five short games. Pick one, scan its code, play.",
-
-  /* ---------- Today's Activity ----------
-     Set to the `id` of the game to highlight, or null to hide the banner. */
-  todaysActivity: "game-01",
 
   /* ---------- Intro animation ----------
      playIntro : true  → the pencil-sketch intro plays once per browser session

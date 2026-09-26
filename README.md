@@ -20,7 +20,7 @@ back for the next one.
 ```
 /
 ├── index.html              ← the Game Hub (landing page)
-├── site-config.js          ← ★ edit this: titles, descriptions, links, Today's Activity
+├── site-config.js          ← ★ edit this: titles, descriptions, links
 ├── README.md
 ├── assets/
 │   ├── css/hub.css         ← hub styling
@@ -99,12 +99,6 @@ updated afterwards.
 2. Optionally add a link back to the hub inside that game.
 
 The `game-0X/` folder can stay as a placeholder or be deleted.
-
-### Today's Activity
-
-```js
-todaysActivity: "game-01",   // any game id, or null to hide the banner
-```
 
 ---
 
