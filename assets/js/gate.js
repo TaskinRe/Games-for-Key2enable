@@ -147,38 +147,43 @@
 
   /* ---------- locked: hide the page, block keys, show the panel ---------- */
   html.classList.add("k2e-locked");
+  var fonts = document.createElement("link");
+  fonts.rel = "stylesheet";
+  fonts.href = "https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@500;600&family=Nunito:wght@400;700&display=swap";
+  (document.head || html).appendChild(fonts);
   var style = document.createElement("style");
   style.textContent =
     "html.k2e-locked body>*:not(.k2e-gate){visibility:hidden!important}" +
     "html.k2e-locked{overflow:hidden}" +
     ".k2e-gate{position:fixed;inset:0;z-index:2147483600;visibility:visible;display:grid;place-items:center;padding:20px;direction:ltr;" +
-      "background-color:#FFF8EE;background-image:radial-gradient(circle at 20% 15%,rgba(249,178,51,.28),transparent 45%),radial-gradient(circle at 85% 90%,rgba(63,184,175,.25),transparent 45%);" +
-      "font:16px/1.45 'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;color:#23324A}" +
+      "background-color:#FDF8EF;background-image:radial-gradient(rgba(31,42,61,.13) 1px,transparent 1.2px);background-size:26px 26px;" +
+      "font:16px/1.45 'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;color:#1F2A3D}" +
     ".k2e-gate *{box-sizing:border-box}" +
-    ".k2e-gate__card{width:min(460px,100%);background:#fff;border:2px solid #23324A;border-radius:24px;padding:34px 30px 26px;text-align:center;" +
-      "box-shadow:8px 8px 0 #23324A;animation:k2e-gate-in .4s ease-out}" +
-    "@keyframes k2e-gate-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}" +
-    ".k2e-gate__brand{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.8rem;color:#D8503F;margin:0 0 6px}" +
-    ".k2e-gate__lock{width:64px;height:64px;margin:4px auto 12px;border-radius:20px;background:#23324A;display:grid;place-items:center;transform:rotate(-6deg)}" +
-    ".k2e-gate__lock svg{width:34px;height:34px;fill:none;stroke:#F9B233;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}" +
-    ".k2e-gate h1{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-weight:600;font-size:1.65rem;margin:0 0 6px;line-height:1.15}" +
-    ".k2e-gate p{margin:0 0 4px;color:#55627A;font-size:1rem}" +
-    ".k2e-gate__ar{direction:rtl;font-size:1.05rem;color:#55627A;margin:0 0 18px}" +
+    ".k2e-gate__card{width:min(440px,100%);background:#fff;border:2px solid #1F2A3D;border-radius:255px 18px 225px 18px/18px 225px 18px 255px;padding:32px 30px 24px;text-align:center;" +
+      "box-shadow:6px 6px 0 #1F2A3D;animation:k2e-gate-in .4s ease-out}" +
+    "@keyframes k2e-gate-in{from{opacity:0;transform:translateY(14px) rotate(-1deg)}to{opacity:1;transform:none}}" +
+    ".k2e-gate__brand{font-family:'Caveat','Patrick Hand',cursive;font-size:1.35rem;color:#D8503F;margin:0 0 8px;line-height:1}" +
+    ".k2e-gate__lock{width:66px;height:66px;margin:0 auto 12px;border:2px solid #1F2A3D;border-radius:120px 10px 110px 10px/10px 110px 10px 120px;background:#FFF0C2;display:grid;place-items:center;transform:rotate(-6deg);box-shadow:2px 2px 0 #1F2A3D}" +
+    ".k2e-gate__lock svg{width:36px;height:36px;fill:none;stroke:#1F2A3D;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}" +
+    ".k2e-gate h1{font-family:'Patrick Hand','Nunito',system-ui,sans-serif;font-weight:400;font-size:2.1rem;margin:0 0 4px;line-height:1.05}" +
+    ".k2e-gate p{margin:0 0 2px;color:#5B667A;font-family:'Caveat','Patrick Hand',cursive;font-size:1.4rem;line-height:1.2}" +
+    ".k2e-gate__ar{direction:rtl;font-family:'Nunito',system-ui,sans-serif!important;font-size:1rem!important;margin:0 0 18px!important}" +
     ".k2e-gate__row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}" +
     ".k2e-gate input{flex:1 1 180px;min-width:0;font:inherit;font-size:1.25rem;font-weight:700;letter-spacing:.12em;text-align:center;text-transform:uppercase;" +
-      "padding:12px 14px;border-radius:14px;border:2px solid #23324A;background:#FFF8EE;color:#23324A;outline:none}" +
+      "padding:11px 14px;border-radius:120px 10px 110px 10px/10px 110px 10px 120px;border:2px solid #1F2A3D;background:#FDF8EF;color:#1F2A3D;outline:none}" +
     ".k2e-gate input:focus-visible{box-shadow:0 0 0 4px rgba(63,184,175,.45)}" +
-    ".k2e-gate button{font:inherit;font-weight:800;font-size:1.05rem;padding:12px 22px;border-radius:14px;border:2px solid #23324A;background:#F76C5E;color:#fff;cursor:pointer;" +
-      "box-shadow:0 5px 0 #23324A;transition:transform .12s ease,box-shadow .12s ease}" +
-    ".k2e-gate button:hover{transform:translateY(-1px)}.k2e-gate button:active{transform:translateY(3px);box-shadow:0 2px 0 #23324A}" +
+    ".k2e-gate input::placeholder{color:#9AA3B5;font-weight:600;letter-spacing:.06em}" +
+    ".k2e-gate button{font-family:'Patrick Hand','Nunito',system-ui,sans-serif;font-size:1.3rem;padding:10px 24px;border-radius:120px 10px 110px 10px/10px 110px 10px 120px;border:2px solid #1F2A3D;background:#F76C5E;color:#fff;cursor:pointer;" +
+      "box-shadow:3px 3px 0 #1F2A3D;transition:transform .12s ease,box-shadow .12s ease}" +
+    ".k2e-gate button:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #1F2A3D}.k2e-gate button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #1F2A3D}" +
     ".k2e-gate button:focus-visible{outline:3px solid #1F6FEB;outline-offset:3px}" +
-    ".k2e-gate__err{min-height:1.4em;margin-top:12px;font-weight:700;color:#D8503F}" +
+    ".k2e-gate__err{min-height:1.4em;margin-top:12px;font-weight:700;color:#D8503F;font-size:.95rem}" +
     ".k2e-gate__card.is-wrong{animation:k2e-gate-shake .45s ease}" +
     "@keyframes k2e-gate-shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}" +
-    ".k2e-gate__foot{margin-top:18px;font-size:.9rem;color:#8A94A6}" +
-    ".k2e-gate__foot a{color:#23324A;font-weight:700}" +
+    ".k2e-gate__foot{margin-top:16px!important;font-size:1.15rem!important;color:#8A94A6!important}" +
+    ".k2e-gate__foot a{color:#1F2A3D}" +
     "@media (prefers-reduced-motion:reduce){.k2e-gate__card,.k2e-gate__card.is-wrong{animation:none}}" +
-    "@media (max-width:480px){.k2e-gate__card{padding:26px 20px 22px;border-radius:18px}.k2e-gate h1{font-size:1.4rem}}";
+    "@media (max-width:480px){.k2e-gate__card{padding:26px 20px 22px}.k2e-gate h1{font-size:1.7rem}}";
   (document.head || html).appendChild(style);
 
   var gateEl = null;
@@ -204,15 +209,15 @@
         '<p class="k2e-gate__brand">' + brand + " \u00b7 " + hubName + "</p>" +
         '<div class="k2e-gate__lock" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 018 0v3"/><circle cx="12" cy="15.5" r="1.4" fill="#F9B233" stroke="none"/></svg></div>' +
         '<h1 id="k2eGateTitle"></h1>' +
-        "<p>Scan the QR code on your instructor\u2019s slide, or type the game code shown under it." +
-          (HOURS > 0 ? " This laptop then stays unlocked for " + HOURS + " hours." : "") + "</p>" +
+        "<p>Scan the QR code on the slide, or type its code.</p>" +
         '<p class="k2e-gate__ar" lang="ar">\u0627\u0645\u0633\u062d \u0631\u0645\u0632 QR \u0645\u0646 \u0634\u0631\u064a\u062d\u0629 \u0627\u0644\u0645\u062f\u0631\u0628 \u0623\u0648 \u0627\u0643\u062a\u0628 \u0631\u0645\u0632 \u0627\u0644\u0644\u0639\u0628\u0629</p>' +
         '<div class="k2e-gate__row">' +
           '<input id="k2eGateKey" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Game code" placeholder="GAME CODE">' +
           '<button type="submit">Unlock</button>' +
         "</div>" +
         '<div class="k2e-gate__err" role="alert" aria-live="assertive"></div>' +
-        '<p class="k2e-gate__foot"><a href="' + hubHref + '">\u2190 Back to ' + hubName + "</a></p>" +
+        '<p class="k2e-gate__foot"><a href="' + hubHref + '">\u2190 ' + hubName + "</a>" +
+          (HOURS > 0 ? " \u00b7 stays unlocked " + HOURS + " h" : "") + "</p>" +
       "</form>";
     gate.querySelector("h1").textContent = (game.title || "This game") + " is locked";
     document.body.appendChild(gate);
@@ -230,7 +235,7 @@
       if (unlock(GAME, v)) {
         open(gate);
       } else {
-        err.textContent = "That code isn\u2019t right for this game \u2014 check the slide or ask your instructor. \u00b7 \u0627\u0644\u0631\u0645\u0632 \u063a\u064a\u0631 \u0635\u062d\u064a\u062d";
+        err.textContent = "Not the code for this game \u2014 check the slide. \u00b7 \u0627\u0644\u0631\u0645\u0632 \u063a\u064a\u0631 \u0635\u062d\u064a\u062d";
         form.classList.remove("is-wrong"); void form.offsetWidth; form.classList.add("is-wrong");
         input.select();
       }

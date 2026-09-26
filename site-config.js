@@ -19,9 +19,7 @@ window.SITE_CONFIG = {
   brand: "Key2Enable",
   hubName: "Game Hub",
   tagline: "Interactive Training Games",
-  description:
-    "Explore five hands-on activities built for the training session. " +
-    "Pick a game, play it on your laptop, then come back here for the next one.",
+  description: "Five short games. Pick one, scan its code, play.",
 
   /* ---------- Today's Activity ----------
      Set to the `id` of the game to highlight, or null to hide the banner. */
@@ -54,7 +52,7 @@ window.SITE_CONFIG = {
       id: "game-01",
       url: "keyboard-grove/",
       title: "Keyboard Grove",
-      description: "Meet your Key-X buttons in a night-time grove and work through short chapters at your own pace.",
+      description: "Learn your Key-X buttons in a night-time grove, one short chapter at a time.",
       trains: ["Key-X buttons", "Getting started"],
       difficulty: 1,
       icon: "keyboard",
@@ -64,7 +62,7 @@ window.SITE_CONFIG = {
       id: "game-02",
       url: "floral artistry/",
       title: "Floral Artistry",
-      description: "Bloom & create — design your own flower artwork in a calm night garden.",
+      description: "Design your own flower artwork in a calm night garden.",
       trains: ["Creativity", "Making choices"],
       difficulty: 1,
       icon: "star",
@@ -74,7 +72,7 @@ window.SITE_CONFIG = {
       id: "game-03",
       url: "game-03/",
       title: "Game 03",
-      description: "Placeholder for the third activity. Drop the game files into the game-03/ folder.",
+      description: "Coming soon.",
       trains: ["Recall", "Sequencing"],
       difficulty: 2,
       icon: "memory",
@@ -84,7 +82,7 @@ window.SITE_CONFIG = {
       id: "game-04",
       url: "game-04/",
       title: "Game 04",
-      description: "Placeholder for the fourth activity. Drop the game files into the game-04/ folder.",
+      description: "Coming soon.",
       trains: ["Letters", "Word building"],
       difficulty: 2,
       icon: "letters",
@@ -94,7 +92,7 @@ window.SITE_CONFIG = {
       id: "game-05",
       url: "game-05/",
       title: "Game 05",
-      description: "Placeholder for the fifth activity. Drop the game files into the game-05/ folder.",
+      description: "Coming soon.",
       trains: ["Problem solving", "Putting it together"],
       difficulty: 3,
       icon: "puzzle",

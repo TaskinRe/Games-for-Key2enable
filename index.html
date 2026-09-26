@@ -9,7 +9,7 @@
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@500;600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/hub.css">
   <script src="site-config.js"></script>
   <script src="assets/js/gate.js"></script>
@@ -62,10 +62,9 @@
     </a>
     <nav class="site-nav" aria-label="Sections">
       <a href="#games">Games</a>
-      <a href="#how-to-play">How to play</a>
       <a href="#join">Join</a>
       <button type="button" class="btn btn--ghost btn--sm" id="replayIntro" title="Replay the intro animation">
-        <svg class="ico" aria-hidden="true"><use href="#i-replay"/></svg> Replay intro
+        <svg class="ico" aria-hidden="true"><use href="#i-replay"/></svg> Intro
       </button>
     </nav>
   </header>
@@ -75,87 +74,82 @@
     <!-- ===== Hero ===== -->
     <section class="hero" aria-labelledby="heroTitle">
       <div class="hero__doodles" aria-hidden="true">
-        <span class="doodle doodle--1"></span><span class="doodle doodle--2"></span>
-        <span class="doodle doodle--3"></span><span class="doodle doodle--4"></span>
+        <svg class="doodle doodle--1" viewBox="0 0 24 24"><use href="#i-star"/></svg>
+        <svg class="doodle doodle--2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>
+        <svg class="doodle doodle--3" viewBox="0 0 24 24"><use href="#i-keyboard"/></svg>
+        <svg class="doodle doodle--4" viewBox="0 0 24 24"><use href="#i-puzzle"/></svg>
       </div>
       <p class="eyebrow"><span data-cfg="brand">Key2Enable</span> · <span data-cfg="hubName">Game Hub</span></p>
       <h1 id="heroTitle" class="hero__title" data-cfg="tagline">Interactive Training Games</h1>
       <p class="hero__lead" data-cfg="description"></p>
       <div class="hero__actions">
-        <a class="btn btn--primary btn--lg" href="#games"><svg class="ico" aria-hidden="true"><use href="#i-play"/></svg> Browse the games</a>
-        <a class="btn btn--ghost btn--lg" href="#join"><svg class="ico" aria-hidden="true"><use href="#i-qr"/></svg> Join with QR</a>
+        <a class="btn btn--primary btn--lg" href="#games"><svg class="ico" aria-hidden="true"><use href="#i-play"/></svg> Pick a game</a>
       </div>
-      <p class="hero__hint"><svg class="ico" aria-hidden="true"><use href="#i-laptop"/></svg> Use your laptop for the best experience.</p>
     </section>
 
     <!-- ===== Today's Activity (controlled by SITE_CONFIG.todaysActivity) ===== -->
     <section class="today" id="today" aria-labelledby="todayTitle" hidden>
       <div class="today__card">
         <div class="today__text">
-          <p class="eyebrow eyebrow--light" id="todayTitle">Today's activity</p>
+          <p class="eyebrow eyebrow--light" id="todayTitle">Today</p>
           <h2 class="today__game" id="todayGame">—</h2>
           <p class="today__desc" id="todayDesc"></p>
         </div>
-        <a class="btn btn--light btn--lg" id="todayLink" href="#"><svg class="ico" aria-hidden="true"><use href="#i-play"/></svg> Start activity</a>
+        <a class="btn btn--light btn--lg" id="todayLink" href="#"><svg class="ico" aria-hidden="true"><use href="#i-play"/></svg> Start</a>
       </div>
     </section>
 
     <!-- ===== Games ===== -->
     <section class="games" id="games" aria-labelledby="gamesTitle">
       <div class="section-head">
-        <h2 id="gamesTitle">Pick a game</h2>
-        <p>Five short activities. Each opens on its own page and works on its own link.</p>
-        <p class="games__lock-note" id="lockNote" hidden><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg> Games are unlocked one at a time: scan the QR code on your instructor’s slide (or type the code under it) when a game is up next.</p>
+        <h2 id="gamesTitle"><span class="u">Games</span></h2>
+        <p class="games__lock-note" id="lockNote" hidden><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg> Locked? Scan the QR code on the slide — or type its code.</p>
       </div>
       <ul class="game-grid" id="gameGrid" role="list"></ul>
     </section>
 
-    <!-- ===== How to play ===== -->
+    <!-- ===== How it works (3 sketches) ===== -->
     <section class="how" id="how-to-play" aria-labelledby="howTitle">
-      <div class="section-head">
-        <h2 id="howTitle">How to play</h2>
-        <p>Four steps — no login, nothing to install.</p>
-      </div>
+      <h2 id="howTitle" class="sr-only">How it works</h2>
       <ol class="steps">
-        <li><span class="steps__num">1</span><h3>Choose a game</h3><p>Scroll the cards above and pick one that looks fun.</p></li>
-        <li><span class="steps__num">2</span><h3>Unlock it</h3><p>Scan the QR code on your instructor’s slide, or click “Play Now” and type the game code shown under it.</p></li>
-        <li><span class="steps__num">3</span><h3>Complete the activity</h3><p>Follow the instructions inside the game.</p></li>
-        <li><span class="steps__num">4</span><h3>Come back &amp; try another</h3><p>Use “Back to Game Hub” in the corner of every game.</p></li>
+        <li><span class="steps__pic" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-qr"/></svg></span><span class="steps__num">1</span><h3>Scan</h3><p>the QR code on the slide</p></li>
+        <li class="steps__arrow" aria-hidden="true"><svg viewBox="0 0 60 30"><path d="M2 18c15-10 30 6 44-2M40 8l8 6-6 8"/></svg></li>
+        <li><span class="steps__pic" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-keyboard"/></svg></span><span class="steps__num">2</span><h3>Play</h3><p>on your laptop</p></li>
+        <li class="steps__arrow" aria-hidden="true"><svg viewBox="0 0 60 30"><path d="M2 12c15 10 30-6 44 2M40 22l8-6-6-8"/></svg></li>
+        <li><span class="steps__pic" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-replay"/></svg></span><span class="steps__num">3</span><h3>Next</h3><p>“Back to Game Hub”</p></li>
       </ol>
-      <p class="how__hint"><svg class="ico" aria-hidden="true"><use href="#i-laptop"/></svg> Use your laptop for the best experience. Phones work too, but the games are made for a bigger screen.</p>
     </section>
 
-    <!-- ===== Join the activity (URL + QR) ===== -->
+    <!-- ===== Join (URL + QR) ===== -->
     <section class="join" id="join" aria-labelledby="joinTitle">
       <div class="join__card">
         <div class="join__text">
-          <h2 id="joinTitle">Join the activity</h2>
-          <p>Scan the code with your phone, or type this address into your laptop's browser:</p>
+          <h2 id="joinTitle"><span class="u">Join</span></h2>
+          <p>Scan, or type the address.</p>
           <div class="url-box">
             <code id="hubUrl">…</code>
-            <button type="button" class="btn btn--primary" id="copyHubUrl"><svg class="ico" aria-hidden="true"><use href="#i-link"/></svg> Copy link</button>
+            <button type="button" class="btn btn--primary" id="copyHubUrl"><svg class="ico" aria-hidden="true"><use href="#i-link"/></svg> Copy</button>
           </div>
-          <p class="join__small">The address and QR code are generated from wherever this page is hosted — nothing to configure.</p>
         </div>
         <figure class="qr" id="hubQr">
           <div class="qr__img" id="hubQrImg" role="img" aria-label="QR code for the Game Hub link"></div>
           <figcaption>Game Hub</figcaption>
-          <a class="btn btn--ghost btn--sm" id="hubQrDownload" download="game-hub-qr.png" href="#">Download QR (PNG)</a>
+          <a class="btn btn--ghost btn--sm" id="hubQrDownload" download="game-hub-qr.png" href="#">Download QR</a>
         </figure>
       </div>
 
       <details class="share">
-        <summary><svg class="ico" aria-hidden="true"><use href="#i-qr"/></svg> Trainer tools: game codes, unlock QR codes &amp; feedback</summary>
-        <p class="share__intro" id="shareIntro">Each game has its own address. Copy a link to share it, or download a QR code for your slides.</p>
+        <summary><svg class="ico" aria-hidden="true"><use href="#i-qr"/></svg> Trainer tools</summary>
+        <p class="share__intro" id="shareIntro">Each game has its own link and QR code.</p>
         <ul class="share__list" id="shareList" role="list"></ul>
         <div class="share__feedback" id="accessTools" hidden>
           <h3>Change a game code</h3>
-          <p class="share__intro">Codes are not stored anywhere on this site — only a fingerprint (hash) of each one lives in <code>site-config.js</code>. To set a new code, type it here, then replace that game’s line in <code>access.keys</code> with the result. Old QR codes for that game stop working immediately.</p>
+          <p class="share__intro">Only a fingerprint (hash) of each code lives in <code>site-config.js</code>. Type a new code, then paste the line over that game’s entry in <code>access.keys</code>.</p>
           <form class="hash-form" id="hashForm">
             <label for="hashGame" class="sr-only">Game</label>
             <select id="hashGame"></select>
             <label for="hashInput" class="sr-only">New code</label>
-            <input id="hashInput" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="New code, e.g. GROVE-2481" required>
+            <input id="hashInput" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="New code" required>
             <button type="submit" class="btn btn--ghost btn--sm">Get hash</button>
           </form>
           <pre class="hash-out" id="hashOut" hidden tabindex="0"></pre>
@@ -165,9 +159,8 @@
           </div>
         </div>
         <div class="share__feedback" id="feedbackTools">
-          <h3>Participant feedback</h3>
-          <p class="share__intro">Games with a Feedback button save each entry in the browser it was written in. Open this page on that laptop to download it — or set <code>feedback.endpoint</code> in <code>site-config.js</code> to collect everything in one place.</p>
-          <p id="feedbackCount">No feedback saved in this browser yet.</p>
+          <h3>Feedback</h3>
+          <p id="feedbackCount">Nothing saved in this browser yet.</p>
           <div class="btn-row">
             <button type="button" class="btn btn--ghost btn--sm" id="feedbackCsv" disabled>Download CSV</button>
             <button type="button" class="btn btn--ghost btn--sm" id="feedbackClear" disabled>Clear</button>
@@ -179,7 +172,7 @@
   </main>
 
   <footer class="site-footer">
-    <p><b data-cfg="brand">Key2Enable</b> <span data-cfg="hubName">Game Hub</span> · Training session materials. Static site — hosted on GitHub Pages.</p>
+    <p><b data-cfg="brand">Key2Enable</b> <span data-cfg="hubName">Game Hub</span></p>
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>

@@ -187,10 +187,7 @@
       (game.trains || []).map(function (t) { return el("span", { class: "tag", text: t }); })
     ));
 
-    var play = el("a", { class: "btn btn--primary", href: url, "aria-describedby": titleId }, [icon("play"), document.createTextNode(" Play Now")]);
-    var copy = el("button", { type: "button", class: "btn btn--ghost btn--copy" }, [icon("link"), document.createTextNode(" Copy link")]);
-    wireCopy(copy, url, game.title);
-
+    var play = el("a", { class: "btn btn--primary", href: url, "aria-describedby": titleId }, [icon("play"), document.createTextNode(" Play")]);
     var card = el("li", { class: "game-card", style: "--c:" + accent }, [
       el("div", { class: "game-card__top" }, [
         el("span", { class: "game-card__icon", "aria-hidden": "true" }, [icon(game.icon || "star", "")]),
@@ -200,13 +197,13 @@
       el("p", { class: "game-card__desc", text: game.description || "" }),
       trains,
       el("div", { class: "game-card__meta" }, [
-        game.difficulty ? el("span", { html: "Difficulty" }) : el("span"),
+        el("span", { class: "game-card__level" }),
         game.ready === false ? el("span", { class: "badge badge--soon", text: "Coming soon" }) : el("span", { class: "badge", text: "Ready" })
       ]),
-      el("div", { class: "game-card__actions" }, [play, copy])
+      el("div", { class: "game-card__actions" }, [play])
     ]);
     if (game.difficulty) {
-      var meta = card.querySelector(".game-card__meta span");
+      var meta = card.querySelector(".game-card__level");
       meta.appendChild(dots);
       meta.setAttribute("aria-label", "Difficulty " + game.difficulty + " of 3");
     }
@@ -221,8 +218,8 @@
         badge.appendChild(icon(isLocked ? "lock" : "unlock"));
         badge.appendChild(document.createTextNode(isLocked ? " Locked" : " Unlocked"));
         var until = !isLocked && gate.until(game.id);
-        badge.title = isLocked ? "Scan the QR code on your instructor\u2019s slide to unlock" : (until ? "Unlocked on this laptop until " + fmtUntil(until) : "Unlocked on this laptop");
-        play.setAttribute("aria-label", (isLocked ? "Play Now \u2014 locked, you will be asked for the game code: " : "Play Now: ") + game.title);
+        badge.title = isLocked ? "Scan the QR code on the slide, or type its code" : (until ? "Unlocked on this laptop until " + fmtUntil(until) : "Unlocked on this laptop");
+        play.setAttribute("aria-label", (isLocked ? "Play \u2014 locked, you will be asked for the game code: " : "Play: ") + game.title);
       };
       paint();
       lockWatchers.push(paint);
@@ -240,7 +237,7 @@
   var shareList = document.getElementById("shareList");
   var shareIntro = document.getElementById("shareIntro");
   if (shareIntro && anyGated) {
-    shareIntro.textContent = "Each game gets its own slide: type the game\u2019s code below to get its unlock QR code (the game link with the code built in). Put that QR code and the code itself on the slide \u2014 scanning it, or typing the code, unlocks just that game" + (gate.hours > 0 ? " for " + gate.hours + " hours." : " until the tab closes.") + " Codes are never shown here unless you type them.";
+    shareIntro.textContent = "One slide per game: type its code \u2192 Unlock QR \u2192 put the QR code and the code on that slide. Scanning (or typing the code) unlocks just that game" + (gate.hours > 0 ? " for " + gate.hours + " h." : " until the tab closes.");
   }
   games.forEach(function (game, i) {
     var url = gameUrl(game);
@@ -286,7 +283,7 @@
     }
     function paintState() {
       var until = gate.until(game.id);
-      state.textContent = locked(game) ? "Locked on this laptop." : "Unlocked on this laptop" + (until ? " until " + fmtUntil(until) + "." : ".");
+      state.textContent = locked(game) ? "Locked here" : "Unlocked here" + (until ? " until " + fmtUntil(until) : "");
       lockBtn.hidden = locked(game);
     }
     form.addEventListener("submit", function (e) {
@@ -356,8 +353,8 @@
     function refresh() {
       var list = entries();
       countEl.textContent = list.length
-        ? list.length + (list.length === 1 ? " feedback entry" : " feedback entries") + " saved in this browser."
-        : "No feedback saved in this browser yet.";
+        ? list.length + (list.length === 1 ? " entry" : " entries") + " saved in this browser."
+        : "Nothing saved in this browser yet.";
       csvBtn.disabled = clearBtn.disabled = !list.length;
     }
     function cell(v) {
