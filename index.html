@@ -144,6 +144,15 @@
         <summary><svg class="ico" aria-hidden="true"><use href="#i-qr"/></svg> Trainer tools: direct links &amp; QR codes for each game</summary>
         <p class="share__intro">Each game has its own address. Copy a link to share it, or download a QR code for your slides.</p>
         <ul class="share__list" id="shareList" role="list"></ul>
+        <div class="share__feedback" id="feedbackTools">
+          <h3>Participant feedback</h3>
+          <p class="share__intro">Games with a Feedback button save each entry in the browser it was written in. Open this page on that laptop to download it — or set <code>feedback.endpoint</code> in <code>site-config.js</code> to collect everything in one place.</p>
+          <p id="feedbackCount">No feedback saved in this browser yet.</p>
+          <div class="btn-row">
+            <button type="button" class="btn btn--ghost btn--sm" id="feedbackCsv" disabled>Download CSV</button>
+            <button type="button" class="btn btn--ghost btn--sm" id="feedbackClear" disabled>Clear</button>
+          </div>
+        </div>
       </details>
     </section>
 
