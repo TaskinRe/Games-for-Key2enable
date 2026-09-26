@@ -116,7 +116,7 @@ window.SITE_CONFIG = {
   feedback: {
     enabled: true,
     endpoint: "",
-    email: "",
+    email: "rt2609@nyu.edu",
     storageKey: "k2e-feedback"
   },
 

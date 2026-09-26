@@ -75,6 +75,7 @@
       copy: "Copy text",
       copied: "Copied!",
       emailIt: "Email it to the trainer",
+      emailHint: "One more tap: this opens your mail app with the feedback ready to send.",
       close: "Close",
       done: "Share feedback",
       keysHint: "Keys 1–5 pick a face"
@@ -102,6 +103,7 @@
       sending: "جارٍ الإرسال…",
       thanksSaved: "شكرًا لك! تم حفظ رأيك على هذا الجهاز.",
       thanksSent: "شكرًا لك! تم إرسال رأيك.",
+      emailHint: "ضغطة واحدة بعد: سيُفتح بريدك والرأي جاهز للإرسال.",
       sendFailed: "لم نتمكن من الوصول إلى الخادم، لذا تم حفظ رأيك على هذا الجهاز.",
       copy: "نسخ النص",
       copied: "تم النسخ!",
@@ -415,15 +417,17 @@
     if (entry.rating) lines.push((lang() === "ar" ? "التقييم: " : "Rating: ") + entry.rating + "/5 (" + t("faces")[entry.rating - 1] + ")");
     if (entry.text) lines.push(entry.text);
     if (entry.name) lines.push("— " + entry.name);
+    lines.push("", entry.ts.replace("T", " ").slice(0, 16) + " UTC · " + entry.lang);
     return lines.join("\n");
   }
 
   function showThanks(entry, key) {
     card.innerHTML = "";
     var actions = el("div", { class: "k2e-fb__actions" });
+    var emailPrimary = !!EMAIL && key !== "thanksSent";
     if (EMAIL) {
-      var mail = "mailto:" + EMAIL + "?subject=" + encodeURIComponent(gameTitle + " feedback") + "&body=" + encodeURIComponent(summary(entry));
-      actions.appendChild(el("a", { class: "k2e-fb__btn k2e-fb__btn--ghost", href: mail, text: t("emailIt"), style: "display:inline-flex;align-items:center;text-decoration:none" }));
+      var mail = "mailto:" + EMAIL + "?subject=" + encodeURIComponent(gameTitle + " feedback" + (entry.name ? " — " + entry.name : "")) + "&body=" + encodeURIComponent(summary(entry));
+      actions.appendChild(el("a", { class: "k2e-fb__btn " + (emailPrimary ? "k2e-fb__btn--primary" : "k2e-fb__btn--ghost"), href: mail, text: t("emailIt"), style: "display:inline-flex;align-items:center;text-decoration:none" }));
     }
     var copyBtn = el("button", { type: "button", class: "k2e-fb__btn k2e-fb__btn--ghost", text: t("copy") });
     copyBtn.addEventListener("click", function () {
@@ -433,15 +437,17 @@
       else { var ta = el("textarea", { text: txt }); document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); done(); } catch (e) {} document.body.removeChild(ta); }
     });
     actions.appendChild(copyBtn);
-    var closeBtn = el("button", { type: "button", class: "k2e-fb__btn k2e-fb__btn--primary", text: t("close") });
+    var closeBtn = el("button", { type: "button", class: "k2e-fb__btn " + (emailPrimary ? "k2e-fb__btn--ghost" : "k2e-fb__btn--primary"), text: t("close") });
     closeBtn.addEventListener("click", closeDialog);
     actions.appendChild(closeBtn);
-    card.appendChild(el("div", { class: "k2e-fb__thanks" }, [
+    var kids = [
       el("div", { class: "k2e-fb__big", "aria-hidden": "true" }, [entry.rating ? faceSvg(entry.rating - 1, 72) : svg(ICON_CHAT)]),
-      el("h2", { id: "k2eFbTitle", text: t(key) }),
-      actions
-    ]));
-    closeBtn.focus();
+      el("h2", { id: "k2eFbTitle", text: t(key) })
+    ];
+    if (emailPrimary) kids.push(el("p", { text: t("emailHint") }));
+    kids.push(actions);
+    card.appendChild(el("div", { class: "k2e-fb__thanks" }, kids));
+    (emailPrimary ? actions.firstChild : closeBtn).focus();
   }
 
   /* ---------- open / close, key isolation ---------- */

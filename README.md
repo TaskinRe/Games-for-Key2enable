@@ -113,26 +113,36 @@ While the panel is open, key presses do **not** reach the game, so typing a
 
 ### Where the feedback goes
 
-The site is static, so by default every entry is saved in **that laptop's
-browser** (`localStorage`). To collect it:
+The site is static (no server), so a page cannot email anything by itself.
+Three channels are available, and they can be combined:
 
-* **Per laptop:** open the hub on that laptop → *Trainer tools* → *Participant
-  feedback* → **Download CSV**. (**Clear** wipes the saved entries.)
-* **In one place (recommended for a workshop):** set an endpoint in
-  `site-config.js` and every entry is also POSTed there as JSON:
+* **Email (configured: `rt2609@nyu.edu`).** After sending, the participant sees
+  a highlighted **Email it to the trainer** button; it opens their mail app with
+  the rating, text, name and time pre-filled, so one more tap delivers it.
+  Relies on the laptop having a mail app / webmail handler set up.
+* **Per laptop (always on).** Every entry is saved in that laptop's browser
+  (`localStorage`). Open the hub on that laptop → *Trainer tools* →
+  *Participant feedback* → **Download CSV**. (**Clear** wipes the saved entries.)
+* **Automatic collection in one place (recommended if you want zero extra taps).**
+  Set an endpoint in `site-config.js` and every entry is POSTed there as JSON
+  the moment it is sent — no mail app needed:
 
   ```js
   feedback: {
     enabled: true,
     endpoint: "https://formspree.io/f/xxxxxxx", // any URL that accepts a JSON POST
-    email: "trainer@example.org",               // optional: adds an "Email it to the trainer" button
+    email: "rt2609@nyu.edu",                     // "Email it to the trainer" button
     storageKey: "k2e-feedback"
   }
   ```
 
-  A free Formspree form works out of the box; a Google Apps Script web app or
-  any small webhook does too. Fields sent: `ts, game, gameTitle, rating,
-  ratingLabel, text, name, lang, page, ua`.
+  Fastest setup: [Formspree](https://formspree.io) (free tier) → sign up with
+  the trainer email → *New form* → copy the form's endpoint URL
+  (`https://formspree.io/f/…`) into `endpoint`. Every submission is then
+  emailed to that address and listed in the Formspree dashboard, exportable
+  as CSV. A Google Apps Script web app or any small webhook works too.
+  Fields sent: `ts, game, gameTitle, rating, ratingLabel, text, name, lang,
+  page, ua`.
 
 Set `enabled: false` to hide the Feedback button everywhere.
 
