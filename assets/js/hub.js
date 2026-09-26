@@ -219,6 +219,50 @@
     renderQr(qrBox, url, 84, dl, game.id + "-qr.png");
   });
 
+  /* ---------- Trainer tools: feedback saved in this browser ---------- */
+  (function () {
+    var key = (cfg.feedback && cfg.feedback.storageKey) || "k2e-feedback";
+    var countEl = document.getElementById("feedbackCount");
+    var csvBtn = document.getElementById("feedbackCsv");
+    var clearBtn = document.getElementById("feedbackClear");
+    if (!countEl || !csvBtn || !clearBtn) return;
+
+    function entries() {
+      try { var v = JSON.parse(localStorage.getItem(key) || "[]"); return Array.isArray(v) ? v : []; } catch (e) { return []; }
+    }
+    function refresh() {
+      var list = entries();
+      countEl.textContent = list.length
+        ? list.length + (list.length === 1 ? " feedback entry" : " feedback entries") + " saved in this browser."
+        : "No feedback saved in this browser yet.";
+      csvBtn.disabled = clearBtn.disabled = !list.length;
+    }
+    function cell(v) {
+      var s = v == null ? "" : String(v);
+      return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }
+    csvBtn.addEventListener("click", function () {
+      var cols = ["ts", "game", "gameTitle", "rating", "ratingLabel", "text", "name", "lang", "sent", "page"];
+      var rows = [cols.join(",")].concat(entries().map(function (e) {
+        return cols.map(function (c) { return cell(c === "sent" ? (e.sent ? "yes" : "no") : e[c]); }).join(",");
+      }));
+      var blob = new Blob(["\uFEFF" + rows.join("\r\n")], { type: "text/csv;charset=utf-8" });
+      var a = el("a", { href: URL.createObjectURL(blob), download: "key2enable-feedback.csv" });
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+      toast("CSV downloaded");
+    });
+    clearBtn.addEventListener("click", function () {
+      if (!window.confirm("Delete all feedback saved in this browser?")) return;
+      try { localStorage.removeItem(key); } catch (e) {}
+      refresh();
+      toast("Feedback cleared");
+    });
+    window.addEventListener("storage", function (e) { if (e.key === key) refresh(); });
+    window.addEventListener("focus", refresh);
+    refresh();
+  })();
+
   /* ---------- Intro replay ---------- */
   var replay = document.getElementById("replayIntro");
   if (replay) {

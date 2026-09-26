@@ -8,6 +8,7 @@
      • which game is "Today's Activity"
      • the colour theme
      • the intro animation
+     • where in-game feedback is sent
 
    Everything in index.html reads from this file at load time.
    ========================================================================= */
@@ -100,6 +101,24 @@ window.SITE_CONFIG = {
       ready: false
     }
   ],
+
+  /* ---------- In-game feedback ----------
+     Games that include assets/js/feedback.js show a "Feedback" button with a
+     face rating, a text box and voice-to-text (speak instead of typing).
+     enabled   : false hides the button everywhere
+     endpoint  : optional URL that accepts a JSON POST (e.g. a Formspree form
+                 "https://formspree.io/f/xxxxxxx", or any small web hook).
+                 Leave "" to keep feedback on each participant's device only.
+     email     : optional trainer email — adds an "Email it to the trainer"
+                 button after sending, which opens the participant's mail app.
+     Feedback is always also saved in the browser (localStorage); the hub's
+     Trainer tools can download it as CSV from that same browser. */
+  feedback: {
+    enabled: true,
+    endpoint: "https://formspree.io/f/xgavnqva",
+    email: "rt2609@nyu.edu",
+    storageKey: "k2e-feedback"
+  },
 
   /* ---------- Theme ----------
      Card accent colours are applied in order to the games above.
