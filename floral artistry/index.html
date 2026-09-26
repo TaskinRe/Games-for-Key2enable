@@ -404,7 +404,8 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
 }
 .hang .mat{width:100%;height:100%;background:#fbf7f0;padding:8px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
 .hang img{width:100%;height:100%;object-fit:contain;display:block}
-.hang.lifted{opacity:0}
+.hang:hover{filter:brightness(1.15);box-shadow:0 18px 40px rgba(0,0,0,.45),0 0 0 5px var(--gframe2),0 0 30px rgba(255,220,150,.5)}
+.hang.lifted{opacity:0;pointer-events:none}
 .hang.far{filter:brightness(.7)}
 .hang::after{content:attr(data-num);position:absolute;left:50%;bottom:-38px;transform:translateX(-50%);
   font-family:'Cormorant Garamond',Georgia,serif;font-size:14px;letter-spacing:.1em;color:#2a1a08;
@@ -460,8 +461,10 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
 #gallery .btn:disabled:hover{background:var(--gwall);border-color:var(--gline)}
 
 /* the lifted piece, facing the visitor */
-.gal-wall{position:relative;z-index:10;flex:1 1 auto;min-height:0;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;padding:8px 14px}
-.gal-nav{width:48px;height:48px;border-radius:50%;justify-content:center;padding:0;font-size:1.6rem;font-family:'Cormorant Garamond',Georgia,serif;line-height:1}
+.gal-wall{position:relative;z-index:10;flex:1 1 auto;min-height:0;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;padding:8px 14px;pointer-events:none}
+.gal-wall .gal-nav,.gal-frame.show{pointer-events:auto}
+.gal-head{pointer-events:none}.gal-head>*{pointer-events:auto}
+.gal-nav{position:relative;z-index:2;width:60px;height:60px;border-radius:50%;justify-content:center;padding:0;font-size:2rem;font-family:'Cormorant Garamond',Georgia,serif;line-height:1}
 [dir="rtl"] .gal-nav .glyph{display:inline-block;transform:scaleX(-1)}
 .gal-stage{position:relative;height:100%;min-height:0;display:flex;align-items:center;justify-content:center;perspective:1100px}
 .gal-frame{position:relative;margin:0;max-width:100%;max-height:100%;display:flex;flex-direction:column;align-items:center;transform-origin:50% 50%;
@@ -517,20 +520,26 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
 
 /* toolbar + floor plan */
 .gal-foot{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;gap:8px;padding:6px 14px 12px}
-.gal-tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.gal-tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center}
 .gal-tools .btn{font-size:.85rem;padding:9px 14px}
+.gal-jump{display:flex;gap:4px;padding:3px;border-radius:999px;background:var(--gwall);border:1px solid var(--gline)}
+#gallery .gal-jump .btn{border-radius:999px;border-color:transparent;padding:8px 12px}
+.gal-jump .glyph{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.1rem;line-height:1}
+[dir="rtl"] .gal-jump .glyph{display:inline-block;transform:scaleX(-1)}
 .gal-plan{
   position:relative;display:flex;align-items:center;gap:0;max-width:min(96vw,900px);overflow-x:auto;overflow-y:hidden;
-  padding:14px 16px 12px;background:var(--gwall);border:1px solid var(--gline);border-radius:12px;
+  padding:26px 16px 12px;background:var(--gwall);border:1px solid var(--gline);border-radius:12px;
   box-shadow:inset 0 2px 8px rgba(0,0,0,.12);scroll-behavior:smooth;
 }
 .gal-plan::-webkit-scrollbar{height:6px}
 .gal-plan::-webkit-scrollbar-thumb{background:var(--gline);border-radius:3px}
 .gal-plan .room{display:flex;align-items:center;position:relative;padding:0 6px;border-inline-end:2px dashed var(--gline)}
 .gal-plan .room:last-child{border-inline-end:0}
-.gal-plan .room::before{content:attr(data-label);position:absolute;top:-13px;left:8px;font-family:'Cormorant Garamond',Georgia,serif;
-  font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gink2);white-space:nowrap}
-[dir="rtl"] .gal-plan .room::before{left:auto;right:8px;font-family:'Tajawal',sans-serif;letter-spacing:0}
+.room-lbl{position:absolute;top:-25px;left:4px;min-height:24px;font-family:'Cormorant Garamond',Georgia,serif;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gink2);white-space:nowrap;background:transparent;border:0;border-radius:999px;padding:3px 8px;cursor:pointer;line-height:1.2}
+.room-lbl:hover,.room-lbl[aria-current="true"]{color:var(--gink);background:var(--gwall2);box-shadow:0 0 0 1px var(--gline)}
+.room-lbl:focus-visible{outline:2px solid var(--gframe2);outline-offset:1px}
+[dir="rtl"] .room-lbl{left:auto;right:4px;font-family:'Tajawal',sans-serif;letter-spacing:0}
 .dot{
   flex:0 0 auto;width:20px;height:24px;margin:0 2px;padding:0;border:0;background:transparent;cursor:pointer;position:relative;
 }
@@ -546,9 +555,10 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
 @keyframes ping{from{transform:scale(.6);opacity:.8}to{transform:scale(1.6);opacity:0}}
 
 @media (max-width:640px){
-  .gal-wall{grid-template-columns:1fr;grid-auto-rows:auto;gap:6px}
-  .gal-nav{display:none}
-  #galImg{max-width:82vw;max-height:36vh}
+  .gal-wall{gap:4px;padding:4px 6px}
+  .gal-nav{width:46px;height:46px;font-size:1.5rem}
+  .gal-jump .txt{display:none}
+  #galImg{max-width:calc(100vw - 124px);max-height:36vh}
   .gal-head{padding:12px 14px 0}
   .hall{perspective:600px}
 }
@@ -646,6 +656,12 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
 
   <footer class="gal-foot" id="galFoot">
     <div class="gal-tools">
+      <div class="gal-jump" id="galJump">
+        <button class="btn" id="galFirst" onclick="galGo(0)"><span class="glyph" aria-hidden="true">|‹</span> <span class="txt"></span></button>
+        <button class="btn" id="galRoomPrev" onclick="galGo(galIndex-ROOM_SIZE)"><span class="glyph" aria-hidden="true">‹‹</span> <span class="txt"></span></button>
+        <button class="btn" id="galRoomNext" onclick="galGo(galIndex+ROOM_SIZE)"><span class="txt"></span> <span class="glyph" aria-hidden="true">››</span></button>
+        <button class="btn" id="galLast" onclick="galGo(gallery.length-1)"><span class="txt"></span> <span class="glyph" aria-hidden="true">›|</span></button>
+      </div>
       <button class="btn" id="galTour" onclick="toggleTour()" aria-pressed="false"></button>
       <button class="btn" id="galDownload" onclick="galDownload()"></button>
       <button class="btn" id="galDelete" onclick="galDelete()"></button>
@@ -715,7 +731,9 @@ const I18N={
     galThumb:'Show piece {i}: {title}',
     galEmpty:'The walls are bare. Bloom something beautiful, then choose Save → Exhibit to hang it here.',
     galBack:'Back to the canvas',
-    galHint:'Use the left and right arrow keys to walk between pieces, Page Up and Page Down to change rooms, Home and End for the first and last piece, Escape to close.',
+    galHint:'Click the arrows, a piece on the wall, or the floor plan to walk there; scroll the mouse wheel to walk piece by piece. Keyboard: left and right arrows, Page Up and Page Down for rooms, Home and End, Escape to close.',
+    galFirst:'First',galLast:'Last',galRoomPrev:'Previous room',galRoomNext:'Next room',
+    galFirstLabel:'First piece',galLastLabel:'Last piece',galRoomLabel:'Go to room {r}',
     pieceTitle:'Bloom No. {n}',
     pieceMeta:'{count} flowers · Combination {combo} · {date}',
     galRoom:'Room {r}',
@@ -776,7 +794,9 @@ const I18N={
     galThumb:'اعرض اللوحة {i}: {title}',
     galEmpty:'الجدران خالية. ازرع شيئًا جميلًا ثم اختر حفظ ← اعرضها لتعليقه هنا.',
     galBack:'عودة إلى اللوحة',
-    galHint:'استخدم مفتاحي السهم الأيسر والأيمن للتنقل بين اللوحات، وPage Up وPage Down لتغيير القاعة، وHome وEnd لأول وآخر لوحة، وEscape للإغلاق.',
+    galHint:'انقر على الأسهم أو على لوحة في الجدار أو على مخطط المعرض للانتقال إليها؛ حرّك عجلة الفأرة للتنقل لوحةً لوحة. لوحة المفاتيح: السهمان الأيسر والأيمن، وPage Up وPage Down للقاعات، وHome وEnd، وEscape للإغلاق.',
+    galFirst:'الأولى',galLast:'الأخيرة',galRoomPrev:'القاعة السابقة',galRoomNext:'القاعة التالية',
+    galFirstLabel:'اللوحة الأولى',galLastLabel:'اللوحة الأخيرة',galRoomLabel:'انتقل إلى القاعة {r}',
     pieceTitle:'تفتّح رقم {n}',
     pieceMeta:'{count} زهرة · التركيبة {combo} · {date}',
     galRoom:'القاعة {r}',
@@ -829,6 +849,9 @@ function applyLang(l){
   const gp=document.getElementById('galPrev'), gn=document.getElementById('galNext');
   if(gp) gp.setAttribute('aria-label', t('galPrev'));
   if(gn) gn.setAttribute('aria-label', t('galNext'));
+  [['galFirst','galFirst','galFirstLabel'],['galLast','galLast','galLastLabel'],['galRoomPrev','galRoomPrev','galRoomPrev'],['galRoomNext','galRoomNext','galRoomNext']].forEach(([id,k,lk])=>{
+    const b=document.getElementById(id); if(!b) return; b.querySelector('.txt').textContent=t(k); b.setAttribute('aria-label', t(lk));
+  });
   const gname=document.getElementById('galName');
   if(gname) gname.setAttribute('aria-label', t('galNameLabel'));
   if(typeof renderGallery==='function' && galleryOpen) renderGallery(true);
@@ -1611,6 +1634,9 @@ function renderGallery(first){
   }
   document.getElementById('galPrev').disabled = gallery.length<2;
   document.getElementById('galNext').disabled = gallery.length<2;
+  document.getElementById('galFirst').disabled = document.getElementById('galRoomPrev').disabled = galIndex===0;
+  document.getElementById('galLast').disabled = document.getElementById('galRoomNext').disabled = galIndex===gallery.length-1;
+  document.getElementById('galJump').hidden = gallery.length<=ROOM_SIZE;
   tourBtn.disabled = gallery.length<2;
   buildPlan(first);
   if(!first) announce(fmt(t('galCountSr'),{i:galIndex+1,n:gallery.length,title:p.title}));
@@ -1621,7 +1647,14 @@ function buildPlan(first){
   plan.innerHTML='';
   let room=null;
   gallery.forEach((q,i)=>{
-    if(i%ROOM_SIZE===0){ room=el('div','room'); room.dataset.label=fmt(t('galRoom'),{r:Math.floor(i/ROOM_SIZE)+1}); plan.appendChild(room); }
+    if(i%ROOM_SIZE===0){
+      const r=Math.floor(i/ROOM_SIZE)+1, start=i;
+      room=el('div','room'); plan.appendChild(room);
+      const lb=el('button','room-lbl'); lb.type='button'; lb.tabIndex=-1; lb.textContent=fmt(t('galRoom'),{r});
+      lb.setAttribute('aria-label', fmt(t('galRoomLabel'),{r}));
+      if(Math.floor(galIndex/ROOM_SIZE)+1===r) lb.setAttribute('aria-current','true');
+      lb.addEventListener('click',()=>galGo(start)); room.appendChild(lb);
+    }
     const b=el('button','dot '+(i%2===0?'l':'r')); b.type='button';
     b.setAttribute('aria-label', fmt(t('galDot'),{i:i+1,title:q.title,side:t(i%2===0?'galLeft':'galRight')}));
     if(i===galIndex) b.setAttribute('aria-current','true');
@@ -1647,6 +1680,7 @@ function galShow(i){
   galIndex=next;
   renderGallery(false);
 }
+function galGo(i){ stopTour(); galShow(i); }
 function galStep(d){
   stopTour();
   const n=gallery.length; if(!n) return;
@@ -1704,6 +1738,18 @@ async function galRename(){
 }
 (function galWire(){
   const name=document.getElementById('galName');
+  const g=document.getElementById('gallery'), plan=document.getElementById('galPlan');
+  let wheelT=0;
+  g.addEventListener('wheel',e=>{ // mouse wheel walks the hall, one piece per notch
+    if(!galleryOpen || !gallery.length || e.target.closest('.gal-plan')) return;
+    e.preventDefault();
+    const d=Math.abs(e.deltaY)>=Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+    const now=Date.now(); if(Math.abs(d)<4 || now-wheelT<450) return;
+    wheelT=now; galGo(galIndex+(d>0?1:-1));
+  },{passive:false});
+  plan.addEventListener('wheel',e=>{ // vertical wheel scrolls the floor plan sideways
+    if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){ e.preventDefault(); plan.scrollLeft+=e.deltaY; }
+  },{passive:false});
   name.addEventListener('blur',galRename);
   name.addEventListener('keydown',e=>{
     if(e.key==='Enter'){ e.preventDefault(); galRename(); const nx=document.getElementById('galNext'); (nx.disabled ? document.getElementById('galDownload') : nx).focus(); }
