@@ -26,6 +26,7 @@ back for the next one.
 │   ├── js/hub.js           ← renders cards, copy-link, QR codes
 │   ├── js/intro.js         ← pencil-sketch intro animation
 │   ├── js/hub-nav.js       ← drop-in "← Back to Game Hub" button for any game
+│   ├── js/feedback.js      ← drop-in in-game Feedback panel (faces, text, voice-to-text)
 │   ├── js/placeholder.js   ← fills the placeholder pages from site-config.js
 │   ├── img/favicon.svg
 │   └── vendor/qrcode.js    ← QR generator (qrcode-generator 1.4.4, MIT)
@@ -49,9 +50,9 @@ the others.
 | 4 | `game-04/`          | Game 04         | placeholder | `https://taskinre.github.io/Games-for-Key2enable/game-04/` |
 | 5 | `game-05/`          | Game 05         | placeholder | `https://taskinre.github.io/Games-for-Key2enable/game-05/` |
 
-The two live games are single self-contained HTML files; the only change made
-to them is one `<script>` line at the end that adds the "← Back to Game Hub"
-button. Titles, descriptions and "trains" lists for games 3–5 are temporary
+The two live games are single self-contained HTML files; the only changes made
+to them are the `<script>` lines at the end that add the "← Back to Game Hub"
+button (and, for Keyboard Grove, the Feedback panel). Titles, descriptions and "trains" lists for games 3–5 are temporary
 labels — replace them in `site-config.js` when the games are known.
 
 ---
@@ -94,6 +95,70 @@ The `game-0X/` folder can stay as a placeholder or be deleted.
 ```js
 todaysActivity: "game-01",   // any game id, or null to hide the banner
 ```
+
+---
+
+## Participant feedback (in-game)
+
+Keyboard Grove shows a floating **Feedback** button while playing and a
+**Share feedback** button on the "Chapter done!" card. The panel has:
+
+* five faces (Hard → Loved it; keys `1`–`5` also pick one),
+* a text box, and a **Speak** button — browser speech-to-text types the words
+  for the participant (English or Arabic, following the game's language),
+* an optional name field.
+
+While the panel is open, key presses do **not** reach the game, so typing a
+`4` in the text box never triggers Key-X button 4.
+
+### Where the feedback goes
+
+The site is static, so by default every entry is saved in **that laptop's
+browser** (`localStorage`). To collect it:
+
+* **Per laptop:** open the hub on that laptop → *Trainer tools* → *Participant
+  feedback* → **Download CSV**. (**Clear** wipes the saved entries.)
+* **In one place (recommended for a workshop):** set an endpoint in
+  `site-config.js` and every entry is also POSTed there as JSON:
+
+  ```js
+  feedback: {
+    enabled: true,
+    endpoint: "https://formspree.io/f/xxxxxxx", // any URL that accepts a JSON POST
+    email: "trainer@example.org",               // optional: adds an "Email it to the trainer" button
+    storageKey: "k2e-feedback"
+  }
+  ```
+
+  A free Formspree form works out of the box; a Google Apps Script web app or
+  any small webhook does too. Fields sent: `ts, game, gameTitle, rating,
+  ratingLabel, text, name, lang, page, ua`.
+
+Set `enabled: false` to hide the Feedback button everywhere.
+
+### Voice input
+
+Voice-to-text uses the browser's built-in Web Speech API — no keys or services
+to set up. It works in **Chrome, Edge and Safari** (an internet connection is
+needed); Firefox does not support it, so there the Speak button is hidden and
+participants simply type. The first time, the browser asks for microphone
+permission. Speech recognition needs a secure page (`https://` — GitHub Pages
+is — or `localhost`).
+
+### Adding the panel to another game
+
+Add this before `</body>`, after the game's own scripts:
+
+```html
+<script src="../site-config.js"></script>
+<script src="../assets/js/feedback.js" data-game="game-03"></script>
+```
+
+Optional: `data-done="#doneOverlay"` (a selector for the game's "finished"
+element; a *Share feedback* button is added inside it and the floating button
+nudges when it appears), `data-done-slot=".card"` (where inside it to put the
+button), `data-done-class="active"` (class that marks it visible),
+`data-title="My Game"`.
 
 ---
 
