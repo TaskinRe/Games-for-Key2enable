@@ -19,6 +19,7 @@
      data-game="game-01"           id in SITE_CONFIG.games (title + id in records)
      data-title="My Game"          title override when SITE_CONFIG is absent
      data-done="#doneOverlay"      element that becomes .active when a round ends
+                                   (may also be created later, e.g. by React)
      data-done-slot=".overlay-card"  where to add a "Share feedback" button inside it
      data-done-class="active"      class name that marks `data-done` as shown
 
@@ -499,18 +500,34 @@
   /* ---------- "round done" hook: button inside the game's finish overlay ---------- */
   function watchDone() {
     var sel = attr("data-done", ""); if (!sel) return;
-    var doneEl = document.querySelector(sel); if (!doneEl) return;
     var slotSel = attr("data-done-slot", ""), cls = attr("data-done-class", "active");
-    var btn = el("button", { type: "button", class: "k2e-fb-done" }, [svg(ICON_CHAT), el("span", { text: t("done") })]);
-    btn.addEventListener("click", function () { openDialog(btn); });
-    var slot = (slotSel && doneEl.querySelector(slotSel)) || doneEl;
-    slot.appendChild(btn);
-    new MutationObserver(function () {
-      if (doneEl.classList.contains(cls)) {
-        btn.querySelector("span").textContent = t("done");
-        fab.classList.remove("is-nudge"); void fab.offsetWidth; fab.classList.add("is-nudge");
+
+    function nudge() {
+      var d = document.querySelector(".k2e-fb-done span"); if (d) d.textContent = t("done");
+      fab.classList.remove("is-nudge"); void fab.offsetWidth; fab.classList.add("is-nudge");
+    }
+    function attach(doneEl) {
+      if (doneEl.querySelector(".k2e-fb-done")) return;
+      var btn = el("button", { type: "button", class: "k2e-fb-done" }, [svg(ICON_CHAT), el("span", { text: t("done") })]);
+      btn.addEventListener("click", function () { openDialog(btn); });
+      var slot = (slotSel && doneEl.querySelector(slotSel)) || doneEl;
+      slot.appendChild(btn);
+      if (doneEl === existing) {
+        new MutationObserver(function () { if (doneEl.classList.contains(cls)) nudge(); })
+          .observe(doneEl, { attributes: true, attributeFilter: ["class"] });
+      } else {
+        nudge();
       }
-    }).observe(doneEl, { attributes: true, attributeFilter: ["class"] });
+    }
+
+    /* Static overlay: present at load and toggled with `data-done-class`.
+       Dynamic screen (React etc.): appears later; watch the DOM and attach each time. */
+    var existing = document.querySelector(sel);
+    if (existing) attach(existing);
+    new MutationObserver(function () {
+      var found = document.querySelector(sel);
+      if (found) attach(found);
+    }).observe(document.body, { childList: true, subtree: true });
   }
 
   /* ---------- follow the game's language switch ---------- */
