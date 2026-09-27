@@ -11,10 +11,11 @@
   --card: #FFFFFF;
   --ink: #17202E;            /* headings / illustration ink */
   --text: #2B3546;           /* body text */
-  --ink-soft: #6B7587;       /* secondary text */
+  --ink-soft: #5F6979;       /* secondary text */
   --line: #E4DED2;           /* hairline borders */
   --accent: #F0654F;         /* coral – primary action */
-  --accent-dark: #D14E3A;
+  --accent-dark: #CF4128;      /* coral, AA on white text */
+  --accent-deep: #B8351E;
   --accent-ink: #FFFFFF;
   --sun: #F5B53F;
   --teal: #3FB8AF;
@@ -86,8 +87,8 @@ code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
 }
 .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -8px rgba(23,32,46,.4); }
 .btn:active { transform: translateY(0); box-shadow: none; }
-.btn--primary { background: var(--accent); color: var(--accent-ink); }
-.btn--primary:hover { background: var(--accent-dark); box-shadow: 0 8px 20px -8px rgba(209,78,58,.6); }
+.btn--primary { background: var(--accent-dark); color: var(--accent-ink); }
+.btn--primary:hover { background: var(--accent-deep); box-shadow: 0 8px 20px -8px rgba(209,78,58,.6); }
 .btn--ghost { background: transparent; color: var(--ink); border-color: var(--line); }
 .btn--ghost:hover { background: var(--card); border-color: var(--ink); box-shadow: none; }
 .btn--lg { font-size: 1.05rem; height: 52px; padding: 0 1.6em; }

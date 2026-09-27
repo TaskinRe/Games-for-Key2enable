@@ -193,6 +193,7 @@
     if (game.difficulty) {
       var meta = card.querySelector(".game-card__level");
       meta.appendChild(dots);
+      meta.setAttribute("role", "img");
       meta.setAttribute("aria-label", "Difficulty " + game.difficulty + " of 3");
     }
     if (gated(game)) {

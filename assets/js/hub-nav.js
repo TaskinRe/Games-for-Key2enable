@@ -44,6 +44,11 @@
   a.setAttribute("aria-label", "Back to Game Hub");
   a.setAttribute("dir", "ltr");
 
-  function mount() { document.body.appendChild(a); }
+  var nav = document.createElement("nav");
+  nav.setAttribute("aria-label", "Game Hub");
+  nav.style.display = "contents";
+  nav.appendChild(a);
+
+  function mount() { document.body.appendChild(nav); }
   if (document.body) mount(); else document.addEventListener("DOMContentLoaded", mount);
 })();

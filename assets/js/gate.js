@@ -172,14 +172,14 @@
       "height:48px;padding:0 14px;border-radius:999px;border:1px solid #E4DED2;background:#F3EFE6;color:#17202E;outline:none;transition:border-color .15s,box-shadow .15s}" +
     ".k2e-gate input:focus-visible{border-color:#17202E;box-shadow:0 0 0 4px rgba(23,32,46,.08)}" +
     ".k2e-gate input::placeholder{color:#9AA3B5;font-weight:500;letter-spacing:.06em}" +
-    ".k2e-gate button{font-family:'Plus Jakarta Sans','Inter',system-ui,sans-serif;font-weight:600;font-size:.95rem;height:48px;padding:0 24px;border-radius:999px;border:0;background:#F0654F;color:#fff;cursor:pointer;" +
+    ".k2e-gate button{font-family:'Plus Jakarta Sans','Inter',system-ui,sans-serif;font-weight:600;font-size:.95rem;height:48px;padding:0 24px;border-radius:999px;border:0;background:#CF4128;color:#fff;cursor:pointer;" +
       "transition:transform .15s ease,box-shadow .15s ease,background-color .15s ease}" +
-    ".k2e-gate button:hover{background:#D14E3A;transform:translateY(-1px);box-shadow:0 8px 20px -8px rgba(209,78,58,.6)}.k2e-gate button:active{transform:none;box-shadow:none}" +
+    ".k2e-gate button:hover{background:#B8351E;transform:translateY(-1px);box-shadow:0 8px 20px -8px rgba(209,78,58,.6)}.k2e-gate button:active{transform:none;box-shadow:none}" +
     ".k2e-gate button:focus-visible{outline:3px solid #1F6FEB;outline-offset:3px}" +
-    ".k2e-gate__err{min-height:1.4em;margin-top:12px;font-weight:500;color:#D14E3A;font-size:.9rem}" +
+    ".k2e-gate__err{min-height:1.4em;margin-top:12px;font-weight:500;color:#BF3A26;font-size:.9rem}" +
     ".k2e-gate__card.is-wrong{animation:k2e-gate-shake .45s ease}" +
     "@keyframes k2e-gate-shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}" +
-    ".k2e-gate__foot{margin-top:18px!important;font-size:.85rem!important;color:#9AA3B5!important}" +
+    ".k2e-gate__foot{margin-top:18px!important;font-size:.85rem!important;color:#5F6979!important}" +
     ".k2e-gate__foot a{color:#17202E;font-weight:500;text-decoration:none}.k2e-gate__foot a:hover{text-decoration:underline}" +
     "@media (prefers-reduced-motion:reduce){.k2e-gate__card,.k2e-gate__card.is-wrong{animation:none}}" +
     "@media (max-width:480px){.k2e-gate__card{padding:28px 20px 22px}.k2e-gate h1{font-size:1.4rem}}";
