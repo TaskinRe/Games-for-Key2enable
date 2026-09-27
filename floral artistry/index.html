@@ -1029,11 +1029,11 @@ let kbdX=400, kbdY=350;
 let modeKeyCount=0, modeKeyTimer=null;
 let bgGraphics;
 
-const FLOWER_POOL=[0,1,2,3,4,5,6,7,10,11,12,13,14,15,16,17,18,19,20];
+const FLOWER_POOL=[0,1,2,3,4,5,6,7,10,12,13,15,16,17,18,19];
 // Newer flower types borrow a sibling's colours from a named combination
 // (tinted lighter >0 / deeper <0) unless the combination sets them explicitly.
-const TYPE_FALLBACK={11:4,12:5,13:2,14:10,15:1,16:0,17:10,18:6,19:3,20:7};
-const TYPE_TINT={11:-.08,12:.14,13:.1,14:.12,15:-.06,16:.08,17:-.1,18:.06,19:.12,20:.1};
+const TYPE_FALLBACK={12:5,13:2,15:1,16:0,17:10,18:6,19:3};
+const TYPE_TINT={12:.14,13:.1,15:-.06,16:.08,17:-.1,18:.06,19:.12};
 
 // ── COLOR PALETTES (petal, edge, center) ──
 // Softened, dusty pastel tones — same variety of hues, gentler saturation
@@ -1404,16 +1404,13 @@ function drawFlower(x,y,size,rotation,type,p){
     case 6:  drawCherryBlossom(x,y,size,rotation,p); break;
     case 7:  drawCosmos(x,y,size,rotation,p); break;
     case 10: drawViolet(x,y,size,rotation,p); break;
-    case 11: drawPoppy(x,y,size,rotation,p); break;
     case 12: drawDahlia(x,y,size,rotation,p); break;
     case 13: drawLotus(x,y,size,rotation,p); break;
-    case 14: drawHydrangea(x,y,size,rotation,p); break;
     case 15: drawBluebell(x,y,size,rotation,p); break;
     case 16: drawJasmine(x,y,size,rotation,p); break;
     case 17: drawPansy(x,y,size,rotation,p); break;
     case 18: drawAnemone(x,y,size,rotation,p); break;
     case 19: drawButtercup(x,y,size,rotation,p); break;
-    case 20: drawChrysanthemum(x,y,size,rotation,p); break;
   }
 }
 const lighten=(c,t)=>lerpColor(color(c),color(255,255,255),t);
@@ -1428,17 +1425,6 @@ function petalShape(L,W){
 }
 function petalRing(n,L,W,offset){
   for(let i=0;i<n;i++){ push(); rotate(TWO_PI/n*i+(offset||0)); petalShape(L,W); pop(); }
-}
-function drawPoppy(x,y,size,rotation,p){
-  push(); translate(x,y); rotate(rotation);
-  stroke(p[1]); strokeWeight(.8); fill(p[0]);
-  for(let i=0;i<4;i++){ push(); rotate(HALF_PI*i+.2); ellipse(0,-size*.38,size*.8,size*.82); pop(); }
-  fill(lighten(p[0],.3)); noStroke();
-  for(let i=0;i<4;i++){ push(); rotate(HALF_PI*i+.2); ellipse(-size*.1,-size*.44,size*.2,size*.3); pop(); }
-  fill(darken(p[1],.45)); ellipse(0,0,size*.3);
-  fill(p[2]);
-  for(let i=0;i<10;i++){ const a=TWO_PI/10*i; ellipse(cos(a)*size*.19,sin(a)*size*.19,size*.06); }
-  pop();
 }
 function drawDahlia(x,y,size,rotation,p){
   push(); translate(x,y); rotate(rotation);
@@ -1457,19 +1443,6 @@ function drawLotus(x,y,size,rotation,p){
   fill(p[2]); noStroke(); ellipse(0,0,size*.26);
   fill(darken(p[2],.3));
   for(let i=0;i<6;i++){ const a=TWO_PI/6*i; ellipse(cos(a)*size*.07,sin(a)*size*.07,size*.04); }
-  pop();
-}
-function drawHydrangea(x,y,size,rotation,p){
-  push(); translate(x,y); rotate(rotation);
-  const floret=(fx,fy,r,a)=>{
-    push(); translate(fx,fy); rotate(a);
-    stroke(p[1]); strokeWeight(.6); fill(p[0]);
-    for(let i=0;i<4;i++){ push(); rotate(HALF_PI*i); ellipse(0,-r*.55,r*.7,r*.95); pop(); }
-    fill(p[2]); noStroke(); ellipse(0,0,r*.36);
-    pop();
-  };
-  for(let i=0;i<6;i++){ const a=TWO_PI/6*i; floret(cos(a)*size*.36,sin(a)*size*.36,size*.38,a); }
-  floret(0,0,size*.4,.4);
   pop();
 }
 function drawBluebell(x,y,size,rotation,p){
@@ -1531,16 +1504,6 @@ function drawButtercup(x,y,size,rotation,p){
   fill(p[2]); ellipse(0,0,size*.3);
   fill(darken(p[2],.35));
   for(let i=0;i<8;i++){ const a=TWO_PI/8*i; ellipse(cos(a)*size*.11,sin(a)*size*.11,size*.045); }
-  pop();
-}
-function drawChrysanthemum(x,y,size,rotation,p){
-  push(); translate(x,y); rotate(rotation);
-  stroke(p[1]); strokeWeight(.6);
-  fill(p[0]);
-  for(let i=0;i<24;i++){ push(); rotate(TWO_PI/24*i); ellipse(0,-size*.52,size*.12,size*1.02); pop(); }
-  fill(lighten(p[0],.3));
-  for(let i=0;i<16;i++){ push(); rotate(TWO_PI/16*i+PI/16); ellipse(0,-size*.34,size*.12,size*.66); pop(); }
-  fill(p[2]); noStroke(); ellipse(0,0,size*.24);
   pop();
 }
 
