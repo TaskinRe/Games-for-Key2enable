@@ -229,10 +229,10 @@
     var STORE = (access.storageKey || "k2e-access") + "-trainer";
     var input = document.getElementById("pinInput");
     var signedIn = document.getElementById("pinSignedIn"), state = document.getElementById("pinState");
-    var store = gate.hours > 0 ? localStorage : sessionStorage;
+    function store() { return gate.hours > 0 ? localStorage : sessionStorage; }
     function grant() {
       try {
-        var g = JSON.parse(store.getItem(STORE) || "null");
+        var g = JSON.parse(store().getItem(STORE) || "null");
         if (!g || g.h !== pinHash) return null;
         if (gate.hours > 0 && (!g.until || g.until < Date.now())) return null;
         return g;
@@ -250,7 +250,7 @@
       var pin = input.value.trim();
       if (!pin) { input.focus(); return; }
       if (gate.hash(pin) === pinHash) {
-        try { store.setItem(STORE, JSON.stringify({ h: pinHash, at: Date.now(), until: gate.hours > 0 ? Date.now() + gate.hours * 3600000 : 0 })); } catch (err) { /* private mode */ }
+        try { store().setItem(STORE, JSON.stringify({ h: pinHash, at: Date.now(), until: gate.hours > 0 ? Date.now() + gate.hours * 3600000 : 0 })); } catch (err) { /* private mode */ }
         input.value = "";
         paint();
         toast("Trainer tools open");
@@ -260,10 +260,11 @@
       }
     });
     document.getElementById("pinSignOut").addEventListener("click", function () {
-      try { store.removeItem(STORE); } catch (err) { /* ignore */ }
+      try { store().removeItem(STORE); } catch (err) { /* ignore */ }
       paint();
       toast("Trainer tools closed on this laptop");
     });
+    window.addEventListener("storage", function (e) { if (!e.key || e.key === STORE) paint(); });
     paint();
   })();
 
@@ -356,7 +357,7 @@
     var out = document.getElementById("hashOut");
     var copyBtn = document.getElementById("copyHash");
     games.filter(gated).forEach(function (g) { sel.appendChild(el("option", { value: g.id, text: g.title })); });
-    if (access.trainerPin) sel.appendChild(el("option", { value: "trainerPin", text: "Trainer PIN" }));
+    sel.appendChild(el("option", { value: "trainerPin", text: "Trainer PIN" }));
     document.getElementById("hashForm").addEventListener("submit", function (e) {
       e.preventDefault();
       var code = input.value.trim().toUpperCase();
