@@ -13,6 +13,13 @@ back for the next one.
 - Opens with a short hand-drawn "pencil sketch" intro (skippable, once per
   session, honours `prefers-reduced-motion`).
 
+## Authorship
+
+**All five games (Keyboard Grove, Floral Artistry, Sky Catch, Robot Workshop,
+Typing Teacher) were designed and built by rt2609 (TaskinRe).** Devin's role
+was limited to deploying them to this hub and encrypting the game files
+(the hub site, access-code gate and encryption tooling in this repository).
+
 ---
 
 ## Project structure
@@ -366,6 +373,8 @@ unlock QR and its code printed underneath for laptop users.
 
 ## Credits
 
+Games: designed and built by rt2609 (TaskinRe) — see [Authorship](#authorship).
+Deployment and encryption only: Devin.
 QR codes: [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator)
 by Kazuhiko Arase (MIT), vendored in `assets/vendor/qrcode.js`.
 Fonts: Plus Jakarta Sans and Inter via Google Fonts (falls back to system fonts offline).
