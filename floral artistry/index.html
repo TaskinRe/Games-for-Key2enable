@@ -716,6 +716,7 @@ const I18N={
     reset:'Reset',
     combo:'Try a New Color Combination',
     comboWord:'Combination',
+    comboNames:['Original','Dusty Pastel','Full Colour','Sakura Morning','Ocean Breeze','Sunset Glow','Wild Meadow','Candy Shop','Autumn Leaves','Winter Frost','Tropical','Lavender Fields','Ink & Gold','Surprise Me'],
     save:'Save',
     saveHeader:'Save Your Artwork',
     pngMain:'PNG',pngSub:'best quality',
@@ -779,6 +780,7 @@ const I18N={
     reset:'مسح اللوحة',
     combo:'جرّب تركيبة ألوان جديدة',
     comboWord:'التركيبة',
+    comboNames:['الأصلية','باستيل ناعم','ألوان كاملة','صباح الساكورا','نسيم المحيط','وهج الغروب','مرج بري','متجر الحلوى','أوراق الخريف','صقيع الشتاء','استوائية','حقول اللافندر','حبر وذهب','فاجئني'],
     save:'حفظ',
     saveHeader:'احفظ لوحتك الفنية',
     pngMain:'PNG',pngSub:'أفضل جودة',
@@ -1008,7 +1010,8 @@ function focusIsOnControl(){
 function tryAnotherCombination(){
   comboIndex=(comboIndex+1)%NAMED_COMBOS.length;
   applyNamedCombo(comboIndex);
-  showToast(t('comboWord')+' '+(comboIndex+1));
+  const names=t('comboNames');
+  showToast(t('comboWord')+' '+(comboIndex+1)+(names[comboIndex] ? ' · '+names[comboIndex] : ''));
 }
 
 // ══════════════════════════════════════════════
@@ -1066,8 +1069,9 @@ function adjustForTheme(pal){
 }
 
 // ── Named combinations. 1 and 2 are earlier looks from this game's
-// history, kept on hand; 3 is the current fuller-color set; 4 reshuffles
-// a fresh random pairing from the full PALETTES pool every time it's chosen.
+// history, kept on hand; 3 is the current fuller-color set; 4–13 are themed
+// looks; the last entry reshuffles a fresh random pairing from PALETTES
+// every time it's chosen. Names live in I18N.comboNames (same order).
 const NAMED_COMBOS=[
   { // Combination 1 — the original gameplay colors
     0:['#EAF4F7','#C4D4D8','#FFF9E6'], 1:['#C8B4FA','#9B8CE8','#F0EBF8'],
@@ -1090,7 +1094,77 @@ const NAMED_COMBOS=[
     6:['#F4A0B4','#CC5C79','#FFEEEC'], 7:['#E166D6','#9A2E92','#FFF3A8'],
     10:['#9C89D9','#5C3FA0','#FFFFFF'],
   },
-  // Combination 4 — surprise me: a fresh random pairing each time
+  { // Combination 4 — Sakura Morning: soft pinks and cream
+    0:['#FFF5F7','#E8B4C4','#FFE08A'], 1:['#F9C5D5','#D98AA5','#FFF0F5'],
+    2:['#F7A8C4','#D06A93','#FFF3F7'], 3:['#FFD6E0','#E6889F','#8A5A3C'],
+    4:['#FCE4EC','#E7A2B9','#FFF6B3'], 5:['#F8B7CD','#D9789B','#FFE9A8'],
+    6:['#FFD1DC','#E77E9E','#FFF5DA'], 7:['#F6A5C0','#C95F88','#FFF3D6'],
+    10:['#E9A6D2','#B6579B','#FFF2B0'],
+  },
+  { // Combination 5 — Ocean Breeze: blues, teals and sea foam
+    0:['#F0F8FF','#9CC4E0','#FFE985'], 1:['#7FB8E6','#2F6FA8','#EAF6FF'],
+    2:['#5FC8D8','#1E7F92','#F2FCFF'], 3:['#4E8CE0','#22448F','#FFF4B0'],
+    4:['#A7DDF0','#4C9BC0','#FFFFFF'], 5:['#3FCBB4','#1C7A6C','#FFF3C6'],
+    6:['#BFE3F5','#5B9EC4','#FFF9E0'], 7:['#6FA8E8','#2E5CB8','#EAF2FF'],
+    10:['#8FB4F0','#3C6BC0','#F5FAFF'],
+  },
+  { // Combination 6 — Sunset Glow: apricot, coral and gold
+    0:['#FFE6CC','#E89A5A','#7A3E10'], 1:['#F09454','#C0561A','#FFF3E2'],
+    2:['#F0645C','#B12B20','#FFECE6'], 3:['#FFB84D','#C4700A','#5A3E14'],
+    4:['#F6C177','#D08A2C','#FFF8E6'], 5:['#F4783C','#B8440F','#FFE7B3'],
+    6:['#FFC9A6','#E4805A','#FFF4DC'], 7:['#E85A8C','#9E2856','#FFF0E0'],
+    10:['#D9636E','#96303F','#FFE4B8'],
+  },
+  { // Combination 7 — Wild Meadow: daisies, buttercups and clover
+    0:['#FFFDF5','#C9C39A','#F5C542'], 1:['#B48CE0','#6E3FA8','#F0E6FF'],
+    2:['#F5A6BC','#D8728F','#FFF3D6'], 3:['#F0D256','#B8930E','#5A3E14'],
+    4:['#FFFFFF','#B6C48A','#F2C94C'], 5:['#F0B23C','#B5720E','#FFF3E2'],
+    6:['#F7C6D6','#CF7A98','#FFF7E0'], 7:['#C9A0E8','#8352B8','#FFF3A8'],
+    10:['#8E6FD4','#4E2E92','#FFE9A0'],
+  },
+  { // Combination 8 — Candy Shop: bright and sweet
+    0:['#FFF0FA','#F07FC0','#FFE45E'], 1:['#FF8FD8','#E054C0','#FFF176'],
+    2:['#FF6FA5','#D6336C','#FFF0F6'], 3:['#FFE066','#F0A500','#8A4B08'],
+    4:['#7FE0FF','#22A0D0','#FFFFFF'], 5:['#FF9F43','#E67E22','#FFF3C6'],
+    6:['#FFB3E6','#E75AB5','#FFFBD6'], 7:['#A78BFA','#7C3AED','#FFF59D'],
+    10:['#5EEAD4','#0D9488','#FFF7AE'],
+  },
+  { // Combination 9 — Autumn Leaves: rust, amber and plum
+    0:['#F5E6C8','#C9A06A','#7A4A1E'], 1:['#D97B3C','#9C4A15','#FFE9C4'],
+    2:['#B5453C','#7A231C','#FFDCC8'], 3:['#E0A030','#A26A0E','#4A2E10'],
+    4:['#EBC79A','#B8884C','#FFF4E0'], 5:['#C9612A','#8B3A0E','#FFE0A8'],
+    6:['#E8B8A0','#B87C5E','#FFF0DC'], 7:['#8C4C6E','#5C2A48','#FFE6B0'],
+    10:['#6E3F6B','#452045','#F5D6A8'],
+  },
+  { // Combination 10 — Winter Frost: whites, ice blue and silver
+    0:['#FFFFFF','#BFD3E0','#DCEBF5'], 1:['#DCEBF5','#8FB4CC','#FFFFFF'],
+    2:['#EAF3F9','#9CC0D8','#F6FBFF'], 3:['#CFE3F0','#7FA8C4','#5C7A90'],
+    4:['#F4F9FC','#A9C6DA','#E3F0F8'], 5:['#B9D6EA','#6A98BA','#FFFFFF'],
+    6:['#E6F1F8','#9FC0D6','#FFFDF0'], 7:['#C3D9EC','#7BA5C6','#F9FCFF'],
+    10:['#A9C2E6','#6383B3','#F2F7FF'],
+  },
+  { // Combination 11 — Tropical: hibiscus pink, lime, mango, turquoise
+    0:['#FFF9E6','#F2C14E','#FF7A45'], 1:['#FF6B6B','#C0392B','#FFE66D'],
+    2:['#FF4FA3','#B8236E','#FFF0F6'], 3:['#FFD23F','#E0A100','#5A3E14'],
+    4:['#3DDC97','#118C5C','#FFFDE0'], 5:['#FF9F1C','#D9730A','#FFF3C6'],
+    6:['#F9A8D4','#DB2777','#FFFBD6'], 7:['#40C4FF','#0288D1','#FFFFFF'],
+    10:['#B388FF','#6D3FCF','#FFF59D'],
+  },
+  { // Combination 12 — Lavender Fields: lilac through deep violet
+    0:['#F5F0FF','#C2B0E6','#FFE9A0'], 1:['#B48CE0','#6E3FA8','#F0E6FF'],
+    2:['#D9B8F0','#9A67C8','#FBF3FF'], 3:['#9C89D9','#5C3FA0','#FFF3B0'],
+    4:['#E6D7FA','#A98BD6','#FFFFFF'], 5:['#C9A0E8','#8352B8','#FFF3A8'],
+    6:['#EED6FF','#B387D9','#FFF9E6'], 7:['#8E6FD4','#4E2E92','#FFE9A0'],
+    10:['#7A5BC8','#452A88','#F0E6FF'],
+  },
+  { // Combination 13 — Ink & Gold: deep indigo petals, gilded hearts
+    0:['#2E2E3A','#15151E','#F5C542'], 1:['#3B3B4F','#1B1B29','#F1B93C'],
+    2:['#4A4A62','#232333','#FFD666'], 3:['#F5C542','#B8860B','#1E1E2A'],
+    4:['#5C5C78','#2A2A3C','#FFE08A'], 5:['#3A3A50','#181824','#F5C542'],
+    6:['#6E6E8C','#33334A','#FFE9A8'], 7:['#2B2B3C','#101018','#F5C542'],
+    10:['#44445C','#20202E','#FFD666'],
+  },
+  // Combination 14 — surprise me: a fresh random pairing each time
   'random',
 ];
 let comboIndex=2; // start on Combination 3, today's default look
