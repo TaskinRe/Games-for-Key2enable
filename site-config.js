@@ -109,13 +109,13 @@ window.SITE_CONFIG = {
   access: {
     enabled: true,
     hours: 48,
-    trainerPin: "530a9338faaeddf25791d8f20c4e372f387d4a19a7c99e3852267e159647ceb7",
+    trainerPin: "ced0d88fe7826dd09f37a9b2147be5849bab92919e01ceb4ca9acab99611fc0f",
     keys: {
-      "game-01": "b4e341952c8e019b7d7321314a513662e19f2ada40738f664200560d5208f1f8",
-      "game-02": "4d4b59966493e43ffd45977bda83d90ec732e0ec285f868aa3e3663c3cf50fe7",
-      "game-03": "e36c42c9624760e58957f12f0260a5c8a50431d74ed01b550b2a8c0d69c51333",
-      "game-04": "e08b30053befa29538e6518d5fc1daa9a21b69317ea1b9018dd8a6a6a61037ab",
-      "game-05": "1db21871529924f428fbfbc02716165d6b5d175134eb67bc0d3d99ed8481a74b"
+      "game-01": "b10d7a42d88651d56ca7ea2133fbdb50e621ef66132cbaeaf9d3705d39556efc",
+      "game-02": "c07eda507983ecfdf2c7456605a63673221ab2295eca81b5c387b85c8e76a841",
+      "game-03": "6ce251051c975512ed1355b9cda32fe98456efed079a80deed963f5942f34416",
+      "game-04": "5c11fc3455e8442a809bb6c4c265d38741ae7333bea6e9fd650216e0353fcb29",
+      "game-05": "15a0a5976d1629058a32ceeadb041aebab7e41f1ad3992638a7aa8b5ea0fc0b9"
     },
     storageKey: "k2e-access"
   },
