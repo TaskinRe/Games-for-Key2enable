@@ -17,7 +17,12 @@
 
    The hub loads the same script without data-game to get the helper API:
    window.K2E_GATE = { hash(code), verify(id, code), unlock(id, code),
-                       isUnlocked(id), until(id), lock(id), hours } */
+                       isUnlocked(id), until(id), code(id), lock(id), hours }
+
+   The grant keeps the normalised code so vault.js can decrypt an
+   encrypted game (game.enc) on later visits without asking again. A loader
+   page marks its gate script with data-encrypted: there the code is the
+   decryption key, so it is required even when access.enabled is false. */
 (function () {
   "use strict";
   var site = window.SITE_CONFIG || {};
@@ -27,6 +32,8 @@
   var STORE = cfg.storageKey || "k2e-access";
   var enabled = cfg.enabled !== false;
   var html = document.documentElement;
+  var me = document.currentScript;
+  var ENCRYPTED = !!(me && me.hasAttribute("data-encrypted"));
 
   /* ---------- SHA-256 (sync, works on file:// too) ---------- */
   function sha256(str) {
@@ -82,7 +89,7 @@
   function hashCode(code) { return sha256(normalize(code)); }
   function expectedHash(id) { return String(KEYS[id] || "").toLowerCase(); }
 
-  /* ---------- storage: { "game-01": { h, until }, ... } ---------- */
+  /* ---------- storage: { "game-01": { h, c, until }, ... } ---------- */
   function store() { return HOURS > 0 ? localStorage : sessionStorage; }
   function readAll() {
     try { var v = JSON.parse(store().getItem(STORE) || "{}"); return v && typeof v === "object" ? v : {}; } catch (e) { return {}; }
@@ -92,17 +99,18 @@
     var g = readAll()[id], h = expectedHash(id);
     if (!g || !h || g.h !== h) return null;
     if (HOURS > 0 && (!g.until || g.until < Date.now())) return null;
+    if (ENCRYPTED && !g.c) return null;
     return g;
   }
   function verify(id, code) { var h = expectedHash(id); return !!h && hashCode(code) === h; }
   function unlock(id, code) {
     if (!verify(id, code)) return false;
     var all = readAll();
-    all[id] = { h: expectedHash(id), at: Date.now(), until: HOURS > 0 ? Date.now() + HOURS * 3600000 : 0 };
+    all[id] = { h: expectedHash(id), c: normalize(code), at: Date.now(), until: HOURS > 0 ? Date.now() + HOURS * 3600000 : 0 };
     writeAll(all);
     return true;
   }
-  function isLocked(id) { return enabled && !!expectedHash(id) && !grant(id); }
+  function isLocked(id) { return (enabled || ENCRYPTED) && !!expectedHash(id) && !grant(id); }
 
   window.K2E_GATE = {
     enabled: enabled,
@@ -112,6 +120,8 @@
     unlock: unlock,
     isUnlocked: function (id) { return !isLocked(id); },
     until: function (id) { var g = grant(id); return g && g.until ? new Date(g.until) : null; },
+    code: function (id) { var g = grant(id); return g && g.c ? g.c : ""; },
+    game: "",
     lock: function (id) {
       var all = readAll();
       if (id) delete all[id]; else all = {};
@@ -121,7 +131,6 @@
   };
 
   /* ---------- which game is this page? ---------- */
-  var me = document.currentScript;
   var GAME = (me && me.getAttribute("data-game")) || "";
   if (!GAME) {
     (site.games || []).some(function (g) {
@@ -131,6 +140,7 @@
     });
   }
   if (!GAME) return; // the hub — API only
+  window.K2E_GATE.game = GAME;
   var game = (site.games || []).filter(function (g) { return g.id === GAME; })[0] || {};
 
   /* ?key=CODE in the URL (from the instructor's QR) counts as typing it. */

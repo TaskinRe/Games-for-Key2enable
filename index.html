@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="assets/css/hub.css">
   <script src="site-config.js"></script>
   <script src="assets/js/gate.js"></script>
+  <script src="assets/js/vault.js"></script>
 </head>
 <body>
 
@@ -159,6 +160,20 @@
             <button type="button" class="btn btn--ghost btn--sm" id="copyHash" hidden>Copy line</button>
             <button type="button" class="btn btn--ghost btn--sm" id="lockAll">Lock all games on this laptop</button>
           </div>
+        </div>
+        <div class="share__feedback" id="vaultTools" hidden>
+          <h3>Encrypt a game file</h3>
+          <p class="share__intro">Games are stored encrypted with their code, so “View source” shows nothing. Pick the game, type its code, choose the game’s HTML — you get <code>game.enc</code> and a small <code>index.html</code> to put in that game’s folder.</p>
+          <form class="hash-form" id="vaultForm">
+            <label for="vaultGame" class="sr-only">Game</label>
+            <select id="vaultGame"></select>
+            <label for="vaultCode" class="sr-only">Game code</label>
+            <input id="vaultCode" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Game code" required>
+            <label for="vaultFile" class="sr-only">Game HTML file</label>
+            <input id="vaultFile" type="file" accept=".html,.htm,text/html" required>
+            <button type="submit" class="btn btn--ghost btn--sm">Encrypt</button>
+          </form>
+          <p class="share__intro" id="vaultOut" role="status" aria-live="polite"></p>
         </div>
         <div class="share__feedback" id="feedbackTools">
           <h3>Feedback</h3>

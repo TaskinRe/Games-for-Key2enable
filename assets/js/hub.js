@@ -376,6 +376,47 @@
     });
   })();
 
+  /* ---------- Trainer tools: encrypt a game file (game.enc + loader) ---------- */
+  (function () {
+    var box = document.getElementById("vaultTools");
+    var vault = window.K2E_VAULT;
+    if (!box || !anyGated || !vault || !vault.supported) return;
+    box.hidden = false;
+    var sel = document.getElementById("vaultGame");
+    var codeIn = document.getElementById("vaultCode");
+    var fileIn = document.getElementById("vaultFile");
+    var out = document.getElementById("vaultOut");
+    games.filter(gated).forEach(function (g) { sel.appendChild(el("option", { value: g.id, text: g.title })); });
+
+    function save(blob, name) {
+      var a = el("a", { href: URL.createObjectURL(blob), download: name });
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 5000);
+    }
+    document.getElementById("vaultForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var game = games.filter(function (g) { return g.id === sel.value; })[0];
+      var code = codeIn.value.trim(), file = fileIn.files && fileIn.files[0];
+      if (!game || !code) { codeIn.focus(); return; }
+      if (!file) { fileIn.focus(); return; }
+      if (!gate.verify(game.id, code)) { out.textContent = "That isn\u2019t the current code for " + game.title + " \u2014 the game would never open. Change the code hash first, or use the current code."; codeIn.select(); return; }
+      out.textContent = "Encrypting\u2026";
+      Promise.all([file.text(), fetch("assets/vault-loader.html").then(function (r) { return r.text(); })]).then(function (res) {
+        if (!/<(!doctype\s+html|html|body)\b/i.test(res[0])) throw new Error(file.name + " doesn\u2019t look like an HTML page.");
+        if (res[0].indexOf("game.enc") !== -1 && /assets\/js\/vault\.js/.test(res[0])) throw new Error(file.name + " is already an encrypted-game loader, not the game itself.");
+        return vault.encrypt(code, res[0]).then(function (bytes) {
+          var loader = res[1].replace(/\{\{title\}\}/g, game.title).replace(/\{\{game_id\}\}/g, game.id)
+            .replace(/\{\{brand\}\}/g, cfg.brand || "Key2Enable").replace(/\{\{hub\}\}/g, cfg.hubName || "Game Hub");
+          save(new Blob([bytes], { type: "application/octet-stream" }), "game.enc");
+          setTimeout(function () { save(new Blob([loader], { type: "text/html" }), "index.html"); }, 400);
+          var folder = (game.url || game.id + "/").replace(/index\.html$/, "");
+          out.textContent = "Done \u2014 two downloads: put game.enc and index.html into " + folder + " (replacing what is there) and commit.";
+          toast("Encrypted " + game.title);
+        });
+      }).catch(function (err) { out.textContent = "Couldn\u2019t encrypt: " + (err && err.message || err); });
+    });
+  })();
+
   /* ---------- Trainer tools: feedback saved in this browser ---------- */
   (function () {
     var key = (cfg.feedback && cfg.feedback.storageKey) || "k2e-feedback";
