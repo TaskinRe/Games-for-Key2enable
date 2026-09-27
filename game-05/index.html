@@ -5,44 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Game 05 — Key2Enable Game Hub</title>
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/placeholder.css">
+  <link rel="stylesheet" href="../assets/css/vault.css">
   <script src="../site-config.js"></script>
-  <script src="../assets/js/gate.js" data-game="game-05"></script>
+  <script src="../assets/js/gate.js" data-game="game-05" data-encrypted></script>
 </head>
-<body data-game="game-05">
-  <!--
-    PLACEHOLDER PAGE
-    ----------------
-    Replace this file with the real game's index.html (and copy the game's
-    other files / assets/ folder next to it). Then add this line before the
-    game's closing </body> tag to get the "Back to Game Hub" button:
-
-        <script src="../assets/js/hub-nav.js"></script>
-
-    Finally set  ready: true  for this game in ../site-config.js.
-  -->
-  <main class="ph">
-    <div class="ph__card">
-      <p class="ph__eyebrow">Game <span data-num>05</span></p>
-      <h1 data-title>Game 05</h1>
-      <p class="ph__desc" data-desc>This activity is on its way.</p>
-      <div class="ph__stage" aria-hidden="true">
-        <span class="ph__key k1"></span><span class="ph__key k2"></span><span class="ph__key k3"></span>
-      </div>
-      <a class="ph__btn" href="../">← Back to Game Hub</a>
-    </div>
-    <details class="ph__trainer">
-      <summary>Trainer: how to add this game</summary>
-      <ol>
-        <li>Copy the game's files into the <code data-folder>game-05/</code> folder, replacing this <code>index.html</code>.</li>
-        <li>Keep the game's own <code>assets/</code>, CSS and JS next to its <code>index.html</code> (relative paths only).</li>
-        <li>Add <code>&lt;script src="../assets/js/hub-nav.js"&gt;&lt;/script&gt;</code> before <code>&lt;/body&gt;</code> for the back button.</li>
-        <li>In <code>site-config.js</code>, update the title/description and set <code>ready: true</code>.</li>
-      </ol>
-    </details>
+<body>
+  <!-- This game is encrypted: the real page is game.enc, decrypted in the
+       browser with the game's code (see assets/js/vault.js). -->
+  <main class="vault">
+    <p class="vault__brand">Key2Enable · Game Hub</p>
+    <p id="k2eVaultStatus" class="vault__status" role="status" aria-live="polite">Opening…</p>
   </main>
-  <script src="../assets/js/placeholder.js"></script>
-  <script src="../assets/js/hub-nav.js"></script>
+  <script src="../assets/js/vault.js" data-src="game.enc"></script>
 </body>
 </html>
