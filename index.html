@@ -129,13 +129,26 @@
 
       <details class="share">
         <summary><svg class="ico" aria-hidden="true"><use href="#i-qr"/></svg> Trainer tools</summary>
+        <form class="pin-form" id="pinForm" hidden>
+          <p class="share__intro">For trainers. Enter the trainer PIN.</p>
+          <div class="pin-form__row">
+            <label for="pinInput" class="sr-only">Trainer PIN</label>
+            <input id="pinInput" type="password" autocomplete="off" spellcheck="false" placeholder="PIN" required>
+            <button type="submit" class="btn btn--primary btn--sm">Open</button>
+          </div>
+        </form>
+        <div id="trainerBody">
+        <div class="btn-row" id="pinSignedIn" hidden>
+          <p class="share__intro" id="pinState"></p>
+          <button type="button" class="btn btn--ghost btn--sm" id="pinSignOut">Close Trainer tools</button>
+        </div>
         <p class="share__intro" id="shareIntro">Each game has its own link and QR code.</p>
         <ul class="share__list" id="shareList" role="list"></ul>
         <div class="share__feedback" id="accessTools" hidden>
           <h3>Change a game code</h3>
           <p class="share__intro">Only a fingerprint (hash) of each code lives in <code>site-config.js</code>. Type a new code, then paste the line over that game’s entry in <code>access.keys</code>.</p>
           <form class="hash-form" id="hashForm">
-            <label for="hashGame" class="sr-only">Game</label>
+            <label for="hashGame" class="sr-only">Game or trainer PIN</label>
             <select id="hashGame"></select>
             <label for="hashInput" class="sr-only">New code</label>
             <input id="hashInput" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="New code" required>
@@ -154,6 +167,7 @@
             <button type="button" class="btn btn--ghost btn--sm" id="feedbackCsv" disabled>Download CSV</button>
             <button type="button" class="btn btn--ghost btn--sm" id="feedbackClear" disabled>Clear</button>
           </div>
+        </div>
         </div>
       </details>
     </section>

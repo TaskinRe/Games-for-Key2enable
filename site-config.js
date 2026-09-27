@@ -102,10 +102,14 @@ window.SITE_CONFIG = {
      UPPERCASE code with spaces/dashes removed — never the code itself.
      To change a code: Trainer tools → "Game codes & QR" on the hub gives you
      the hash line to paste here. Changing a hash re-locks that game everywhere.
-     hours : how long one unlock lasts on that laptop (0 = until the tab closes). */
+     hours : how long one unlock lasts on that laptop (0 = until the tab closes).
+     trainerPin : hash of the PIN that opens Trainer tools on the hub (QR
+                  generation, code changes, feedback export). Same hashing as
+                  the game codes; "" leaves Trainer tools open to everyone. */
   access: {
     enabled: true,
     hours: 48,
+    trainerPin: "530a9338faaeddf25791d8f20c4e372f387d4a19a7c99e3852267e159647ceb7",
     keys: {
       "game-01": "b4e341952c8e019b7d7321314a513662e19f2ada40738f664200560d5208f1f8",
       "game-02": "4d4b59966493e43ffd45977bda83d90ec732e0ec285f868aa3e3663c3cf50fe7",

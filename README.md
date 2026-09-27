@@ -116,9 +116,15 @@ unlocked on that laptop. There is one code per game:
 | 04 | `GAME4-8147` |
 | 05 | `GAME5-3692` |
 
+**Trainer PIN.** *Trainer tools* on the hub is behind a PIN — starter PIN
+`TRAIN-4820`. Entering it opens the tools on that laptop for `access.hours`
+(**Close Trainer tools** ends it early). Participants never need it. To
+change it, pick *Trainer PIN* in *Change a game code* → **Get hash** and paste
+the line over `access.trainerPin` in `site-config.js` (`""` removes the PIN).
+
 **Workshop flow**
 
-1. On the hub open *Trainer tools → game codes, unlock QR codes & feedback*,
+1. On the hub open *Trainer tools*, enter the trainer PIN,
    type a game's code in its box and press **Unlock QR**. You get the game's
    unlock link — `…/keyboard-grove/?key=GROVE-2481` — as a QR code
    (**QR (PNG)** downloads a 1024 px version) plus the code in a yellow chip.

@@ -221,6 +221,52 @@
   wireCopy(document.getElementById("copyHubUrl"), HUB_URL, "the Game Hub");
   renderQr(document.getElementById("hubQrImg"), HUB_URL, 200, document.getElementById("hubQrDownload"), "game-hub-qr.png");
 
+  /* ---------- Trainer tools: PIN (access.trainerPin, hashed like game codes) ---------- */
+  (function () {
+    var pinHash = String(access.trainerPin || "").toLowerCase();
+    var form = document.getElementById("pinForm"), body = document.getElementById("trainerBody");
+    if (!form || !body || !pinHash || !gate) return;
+    var STORE = (access.storageKey || "k2e-access") + "-trainer";
+    var input = document.getElementById("pinInput");
+    var signedIn = document.getElementById("pinSignedIn"), state = document.getElementById("pinState");
+    var store = gate.hours > 0 ? localStorage : sessionStorage;
+    function grant() {
+      try {
+        var g = JSON.parse(store.getItem(STORE) || "null");
+        if (!g || g.h !== pinHash) return null;
+        if (gate.hours > 0 && (!g.until || g.until < Date.now())) return null;
+        return g;
+      } catch (e) { return null; }
+    }
+    function paint() {
+      var g = grant();
+      form.hidden = !!g;
+      body.hidden = !g;
+      signedIn.hidden = !g;
+      if (g) state.textContent = "Trainer tools open on this laptop" + (g.until ? " until " + fmtUntil(new Date(g.until)) : "") + ".";
+    }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var pin = input.value.trim();
+      if (!pin) { input.focus(); return; }
+      if (gate.hash(pin) === pinHash) {
+        try { store.setItem(STORE, JSON.stringify({ h: pinHash, at: Date.now(), until: gate.hours > 0 ? Date.now() + gate.hours * 3600000 : 0 })); } catch (err) { /* private mode */ }
+        input.value = "";
+        paint();
+        toast("Trainer tools open");
+      } else {
+        toast("That PIN doesn\u2019t match");
+        input.select();
+      }
+    });
+    document.getElementById("pinSignOut").addEventListener("click", function () {
+      try { store.removeItem(STORE); } catch (err) { /* ignore */ }
+      paint();
+      toast("Trainer tools closed on this laptop");
+    });
+    paint();
+  })();
+
   /* ---------- Share list: per-game link + QR (+ unlock QR when gated) ---------- */
   var shareList = document.getElementById("shareList");
   var shareIntro = document.getElementById("shareIntro");
@@ -310,12 +356,14 @@
     var out = document.getElementById("hashOut");
     var copyBtn = document.getElementById("copyHash");
     games.filter(gated).forEach(function (g) { sel.appendChild(el("option", { value: g.id, text: g.title })); });
+    if (access.trainerPin) sel.appendChild(el("option", { value: "trainerPin", text: "Trainer PIN" }));
     document.getElementById("hashForm").addEventListener("submit", function (e) {
       e.preventDefault();
       var code = input.value.trim().toUpperCase();
       if (!code) { input.focus(); return; }
-      var line = '"' + sel.value + '": "' + gate.hash(code) + '",';
-      out.textContent = "// site-config.js \u2192 access.keys   (code: " + code + ")\n" + line;
+      var isPin = sel.value === "trainerPin";
+      var line = isPin ? 'trainerPin: "' + gate.hash(code) + '",' : '"' + sel.value + '": "' + gate.hash(code) + '",';
+      out.textContent = "// site-config.js \u2192 access" + (isPin ? "" : ".keys") + "   (" + (isPin ? "PIN" : "code") + ": " + code + ")\n" + line;
       out.hidden = false;
       copyBtn.hidden = false;
       wireCopy(copyBtn, line, "the config line");
