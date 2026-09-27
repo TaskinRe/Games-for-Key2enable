@@ -41,7 +41,7 @@ back for the next one.
 ├── floral artistry/        ← Game 02 · Floral Artistry (live, encrypted)
 ├── game-03/                ← Game 03 · Sky Catch (live, encrypted)
 ├── game-04/                ← Game 04 · Robot Workshop (live, encrypted)
-└── game-05/index.html      ← Game 05 (placeholder)
+└── game-05/                ← Game 05 · Typing Teacher (live, encrypted)
 ```
 
 Each game folder is independent: it has its own URL and is not bundled with
@@ -55,7 +55,7 @@ the others.
 | 2 | `floral artistry/`  | Floral Artistry | live        | `https://taskinre.github.io/Games-for-Key2enable/floral%20artistry/` |
 | 3 | `game-03/`          | Sky Catch       | live        | `https://taskinre.github.io/Games-for-Key2enable/game-03/` |
 | 4 | `game-04/`          | Robot Workshop  | live        | `https://taskinre.github.io/Games-for-Key2enable/game-04/` |
-| 5 | `game-05/`          | Game 05         | placeholder | `https://taskinre.github.io/Games-for-Key2enable/game-05/` |
+| 5 | `game-05/`          | Typing Teacher  | live        | `https://taskinre.github.io/Games-for-Key2enable/game-05/` |
 
 The live games are single self-contained HTML files; the only changes made to
 them are the `<script>` lines that add the lock, the "← Back to Game Hub"

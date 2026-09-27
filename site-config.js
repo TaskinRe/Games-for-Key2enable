@@ -86,12 +86,12 @@ window.SITE_CONFIG = {
     {
       id: "game-05",
       url: "game-05/",
-      title: "Game 05",
-      description: "Coming soon.",
-      trains: ["Problem solving", "Putting it together"],
-      difficulty: 3,
-      icon: "puzzle",
-      ready: false
+      title: "Typing Teacher",
+      description: "Learn to type one letter at a time: travel the A-to-Z map, practise groups of letters, then build simple words.",
+      trains: ["Letter keys", "Typing"],
+      difficulty: 2,
+      icon: "letters",
+      ready: true
     }
   ],
 

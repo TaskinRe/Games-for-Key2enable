@@ -25,6 +25,7 @@
 
   var css = document.createElement("style");
   css.textContent =
+    ".k2e-hub-nav-region{display:contents}" +
     ".k2e-hub-nav{position:fixed;z-index:2147483000;margin:14px;font:600 15px/1.1 'Fredoka','Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;" +
     "text-decoration:none;padding:10px 16px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;" +
     "box-shadow:0 6px 18px rgba(0,0,0,.18);transition:transform .15s ease,opacity .2s ease;opacity:.92}" +
@@ -44,6 +45,11 @@
   a.setAttribute("aria-label", "Back to Game Hub");
   a.setAttribute("dir", "ltr");
 
-  function mount() { document.body.appendChild(a); }
+  var nav = document.createElement("nav");
+  nav.className = "k2e-hub-nav-region";
+  nav.setAttribute("aria-label", "Game Hub");
+  nav.appendChild(a);
+
+  function mount() { document.body.appendChild(nav); }
   if (document.body) mount(); else document.addEventListener("DOMContentLoaded", mount);
 })();
