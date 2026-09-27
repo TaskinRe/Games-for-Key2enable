@@ -22,6 +22,7 @@
                                    (may also be created later, e.g. by React)
      data-done-slot=".overlay-card"  where to add a "Share feedback" button inside it
      data-done-class="active"      class name that marks `data-done` as shown
+     data-position="bottom-left"  corner for the Feedback button (default bottom-right)
 
    While the dialog is open every key press is kept inside it, so typing
    digits never triggers Key-X shortcuts in the game underneath. */
@@ -150,6 +151,7 @@
     ".k2e-fb-fab:hover,.k2e-fb-fab:focus-visible{transform:translateY(-2px);opacity:1}" +
     ".k2e-fb-fab:focus-visible,.k2e-fb button:focus-visible,.k2e-fb textarea:focus-visible,.k2e-fb input:focus-visible,.k2e-fb a:focus-visible,.k2e-fb-done:focus-visible{outline:3px solid #1F6FEB;outline-offset:3px}" +
     ".k2e-fb-fab.is-nudge{animation:k2e-fb-nudge 1.1s ease 2}" +
+    ".k2e-fb-fab.k2e-fb-fab--left{right:auto;left:0}" +
     "@keyframes k2e-fb-nudge{0%,100%{transform:none}30%{transform:translateY(-6px) scale(1.05)}60%{transform:translateY(0) scale(1)}}" +
     ".k2e-fb-done{display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:10px 18px;border-radius:999px;cursor:pointer;" +
     "border:2px solid var(--accent,#F76C5E);background:transparent;color:var(--ink,#23324A);font:inherit;font-weight:700;font-size:1rem}" +
@@ -230,6 +232,7 @@
 
   /* ---------- floating button ---------- */
   var fab = el("button", { type: "button", class: "k2e-fb-fab" }, [svg(ICON_CHAT), el("span", { text: t("fab") })]);
+  if (attr("data-position", "") === "bottom-left") fab.classList.add("k2e-fb-fab--left");
   fab.setAttribute("aria-label", t("fabAria"));
   fab.addEventListener("click", function () { openDialog(fab); });
 
