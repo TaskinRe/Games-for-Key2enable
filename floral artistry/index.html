@@ -346,7 +346,7 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
   100%{transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(1);opacity:0}
 }
 
-/* ── THE GARDEN EXHIBITION — a painted garden gate; the piece in front hangs under the arch ── */
+/* ── THE GARDEN EXHIBITION — a painted row of easels; the pieces are placed on them, six at a time ── */
 #gallery{
   --sky1:#86c4ee; --sky2:#cbe6f7; --sky3:#fdebd2; --sunglow:rgba(255,238,196,.65);
   --far:#bccde6; --far2:#a3b8db; --mid:#b5dc96; --mid2:#8cc477; --near:#6fb15f; --near2:#559a4c; --near3:#447f3f;
@@ -355,7 +355,7 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
   --glass:rgba(255,251,242,.8); --glass2:rgba(255,251,242,.96);
   --wood:#c99a62; --wood2:#9a6c3c; --wood3:#ead2a8; --mat:#fffaf1; --frame:#fffaf1;
   --sign:#fffaf1; --signink:#2d4634; --leaf:#4f9f48; --rose:#f7a1bd; --daisy:#ffd670; --seed:#ffffff;
-  --pw:1408px;--ph:768px;--px:0px;--py:0px;--ax:50vw;--ay:50vh;--aw:440px;--ah:360px;
+  --pw:1408px;--ph:768px;--px:0px;--py:0px;--fw:190px;--fh:296px;--chip:48px;--chipgap:7px;
   position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;
   color:var(--gink);font-family:'Nunito',sans-serif;background:var(--sky2);
   opacity:0;pointer-events:none;transition:opacity .5s;overflow:hidden;
@@ -375,35 +375,36 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
 /* the painting, scaled to cover the screen; everything else is placed in its coordinates */
 .hall{position:absolute;inset:0;overflow:hidden;background:#bfd3e6}
 .paint{position:absolute;left:var(--px);top:var(--py);width:var(--pw);height:var(--ph);
-  background:url(assets/garden-arch.jpg) center/100% 100% no-repeat}
+  background:url(assets/garden-easels.jpg) center/100% 100% no-repeat}
 :root[data-theme="dark"] .paint{filter:brightness(.62) saturate(.8) hue-rotate(-10deg) contrast(1.05)}
 :root[data-theme="dark"] .hall::after{content:'';position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(180deg,rgba(40,30,90,.35),rgba(60,30,80,.15) 45%,rgba(20,15,40,.35)),
              radial-gradient(circle,#fff 0 1.1px,transparent 1.6px) 0 0/140px 110px,
              radial-gradient(circle,rgba(255,255,255,.8) 0 .8px,transparent 1.3px) 70px 55px/170px 130px}
 
-/* neighbouring pieces stand on easels among the flowers, either side of the gate */
+/* six easels in the painting; each carries one piece (blank canvas when the garden runs out) */
 .scene{position:absolute;left:var(--px);top:var(--py);width:var(--pw);height:var(--ph);z-index:4;pointer-events:none}
+.paint,.scene{transition:left 1s cubic-bezier(.4,0,.2,1)}
 .hang{
-  position:absolute;left:var(--x);top:var(--y);width:var(--fw);height:calc(var(--fw) * .74);transform:translate(-50%,-100%);
-  padding:6px;border:0;border-radius:3px;background:var(--frame);pointer-events:auto;
-  box-shadow:0 10px 22px rgba(40,50,30,.28),inset 0 0 0 2px var(--wood3),inset 0 0 0 3px var(--frame);
-  cursor:pointer;transition:filter .4s,box-shadow .3s;animation:settle .9s cubic-bezier(.2,.7,.2,1) both;
+  position:absolute;left:var(--x);top:var(--y);width:var(--fw);height:var(--fh);margin-left:calc(var(--fw) / -2);
+  padding:calc(var(--fw) * .05);border:0;border-radius:3px;pointer-events:auto;cursor:pointer;
+  background:linear-gradient(160deg,#a8743d,#7d4f24 45%,#9a6a36);
+  box-shadow:0 8px 18px rgba(40,50,30,.3),inset 0 0 0 2px rgba(255,225,170,.35);
+  transition:filter .3s,box-shadow .3s;animation:settle .8s cubic-bezier(.2,.7,.2,1) both;
 }
-.hang::before{ /* easel legs */
-  content:'';position:absolute;left:0;right:0;top:100%;height:calc(var(--fw) * .34);pointer-events:none;
-  background:linear-gradient(90deg,var(--wood2),var(--wood) 50%,var(--wood2));
-  clip-path:polygon(30% 0,36% 0,33% 48%,67% 48%,64% 0,70% 0,92% 100%,86% 100%,69% 56%,31% 56%,14% 100%,8% 100%);
-  filter:drop-shadow(0 6px 4px rgba(30,40,20,.3));
-}
-.hang .mat{width:100%;height:100%;background:var(--mat);padding:5px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.hang .mat{width:100%;height:100%;background:var(--mat);padding:calc(var(--fw) * .04);box-shadow:inset 0 0 0 1px rgba(0,0,0,.1),inset 0 3px 10px rgba(0,0,0,.1)}
 .hang img{width:100%;height:100%;object-fit:contain;display:block}
-.hang:hover{filter:brightness(1.05);box-shadow:0 10px 22px rgba(40,50,30,.28),0 0 0 4px var(--glass2),0 0 28px rgba(255,255,255,.85)}
-.hang::after{content:attr(data-num);position:absolute;left:50%;bottom:calc(var(--fw) * -.34 - 26px);transform:translateX(-50%);
-  font-family:'Cormorant Garamond',Georgia,serif;font-size:13px;letter-spacing:.1em;color:var(--signink);
-  background:var(--sign);padding:2px 10px;border-radius:999px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.hang:hover:not(.blank){filter:brightness(1.06);box-shadow:0 8px 18px rgba(40,50,30,.3),0 0 0 4px var(--glass2),0 0 30px rgba(255,255,255,.9)}
+.hang.current{box-shadow:0 8px 18px rgba(40,50,30,.3),0 0 0 4px #fff8ee,0 0 0 7px var(--leaf),0 0 34px rgba(255,255,255,.9)}
+.hang.blank{cursor:default}
+.hang.blank .mat{background:linear-gradient(160deg,#fffaf1,#f1e7d3)}
+.hang::after{content:attr(data-num);position:absolute;left:50%;top:calc(100% + var(--chipgap));transform:translateX(-50%);
+  width:var(--chip);height:var(--chip);border-radius:50%;display:flex;align-items:center;justify-content:center;box-sizing:border-box;
+  font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:calc(var(--chip) * .5);color:var(--signink);
+  background:#fff8ee;border:2px solid var(--wood2);box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.hang.current::after{background:var(--leaf);color:#fff;border-color:#fff8ee}
 
-/* morning light fades in when the gate opens */
+/* morning light fades in when the garden opens */
 .gal-curtain{position:absolute;inset:0;z-index:20;pointer-events:none;background:#fff;opacity:1;transition:opacity 1.2s ease .1s}
 #gallery.open .gal-curtain{opacity:0}
 
@@ -462,7 +463,11 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
 .gal-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:60px;height:60px;border-radius:50%;justify-content:center;padding:0;font-size:2rem;font-family:'Cormorant Garamond',Georgia,serif;line-height:1}
 #galPrev{inset-inline-start:14px}#galNext{inset-inline-end:14px}
 [dir="rtl"] .gal-nav .glyph{display:inline-block;transform:scaleX(-1)}
-.gal-stage{position:absolute;left:var(--ax);top:var(--ay);transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center}
+.gal-dim{position:absolute;inset:0;background:rgba(30,40,30,.5);opacity:0;pointer-events:none;transition:opacity .4s}
+#gallery.zoomed .gal-dim{opacity:1;pointer-events:auto}
+.gal-stage{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:none;align-items:center;justify-content:center}
+#gallery.zoomed .gal-stage{display:flex}
+.gal-frame{cursor:zoom-out}
 .gal-frame{position:relative;margin:0;max-width:100%;max-height:100%;display:flex;flex-direction:column;align-items:center;opacity:0;pointer-events:none}
 .gal-frame.show{opacity:1;pointer-events:auto}
 .gal-frame.hang-in{animation:settle 1.1s cubic-bezier(.2,.7,.2,1) both}
@@ -473,18 +478,18 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
 .gal-mat{padding:clamp(10px,1.4vw,18px);background:var(--frame);border-radius:6px;
   box-shadow:0 26px 50px rgba(30,60,30,.24),0 4px 10px rgba(0,0,0,.14),inset 0 0 0 3px var(--wood3),inset 0 0 0 5px var(--frame)}
 .gal-mat .inner{padding:clamp(6px,1vw,14px);background:var(--mat);border-radius:2px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.07),inset 0 4px 12px rgba(0,0,0,.08);overflow:hidden}
-#galImg{display:block;max-width:min(calc(var(--aw) * .8),calc(100vw - 132px));max-height:min(calc(var(--ah) * .58),52vh);width:auto;height:auto;box-shadow:0 0 0 1px rgba(0,0,0,.14);background:#fff}
-.gal-plaque{margin-top:10px;padding:6px 16px 7px;border-radius:14px;
+#galImg{display:block;max-width:min(78vw,1000px);max-height:min(66vh,720px);width:auto;height:auto;box-shadow:0 0 0 1px rgba(0,0,0,.14);background:#fff}
+.gal-plaque{margin:0;padding:6px 16px 7px;border-radius:14px;
   background:var(--sign);color:var(--signink);border:2px solid var(--wood);
   box-shadow:0 6px 16px rgba(0,0,0,.16);
-  display:flex;flex-direction:column;align-items:center;gap:2px;min-width:180px;max-width:min(80vw,var(--aw))}
+  display:flex;flex-direction:column;align-items:center;gap:2px;min-width:180px;max-width:min(80vw,520px)}
 .gal-name{width:100%;text-align:center;background:transparent;border:0;border-bottom:1px dashed rgba(45,70,52,.4);
   font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:1.05rem;color:var(--signink);padding:2px 4px;outline:none}
 [dir="rtl"] .gal-name{font-family:'Tajawal',sans-serif}
 .gal-name:focus-visible{border-bottom-style:solid;box-shadow:0 2px 0 var(--leaf)}
 .gal-meta{font-size:.72rem;letter-spacing:.06em;color:var(--signink);font-weight:700;opacity:.85}
 
-.gal-empty{position:absolute;left:var(--ax);top:var(--ay);transform:translate(-50%,-50%);width:min(90vw,var(--aw));z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:20px}
+.gal-empty{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(90vw,520px);z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:20px}
 .gal-empty[hidden],.gal-wall[hidden],.gal-foot[hidden]{display:none}
 .gal-empty .easel{color:var(--wood2);animation:float 5s ease-in-out infinite;filter:drop-shadow(0 6px 10px rgba(0,0,0,.18))}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
@@ -533,7 +538,7 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
   .gal-head{padding:12px 14px 0}
 }
 @media (prefers-reduced-motion:reduce){
-  .gal-curtain,#gallery,.scene,.you,.hang{transition:none!important}
+  .gal-curtain,#gallery,.paint,.scene,.you,.hang{transition:none!important}
   .mote,.bfly,.bfly::before,.bfly::after,.hang,.gal-frame,#galImg,.gal-empty .easel,#galleryBtn .badge,.you::after,.bp{animation:none!important}
   .gal-frame.show{opacity:1;transform:none}
   .gal-frame.away{opacity:0}
@@ -608,13 +613,10 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
 
   <div class="gal-wall" id="galWall">
     <button class="btn gal-nav" id="galPrev" onclick="galStep(-1)"><span class="glyph" aria-hidden="true">‹</span></button>
+    <div class="gal-dim" onclick="galZoom(false)"></div>
     <div class="gal-stage">
-      <figure class="gal-frame" id="galFrame">
+      <figure class="gal-frame" id="galFrame" onclick="galZoom(false)">
         <div class="gal-mat"><div class="inner"><img id="galImg" alt=""></div></div>
-        <figcaption class="gal-plaque">
-          <input id="galName" class="gal-name" type="text" maxlength="48" autocomplete="off" spellcheck="false">
-          <span class="gal-meta" id="galMeta"></span>
-        </figcaption>
       </figure>
     </div>
     <button class="btn gal-nav" id="galNext" onclick="galStep(1)"><span class="glyph" aria-hidden="true">›</span></button>
@@ -627,6 +629,10 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
   </div>
 
   <footer class="gal-foot" id="galFoot">
+    <div class="gal-plaque">
+      <input id="galName" class="gal-name" type="text" maxlength="48" autocomplete="off" spellcheck="false">
+      <span class="gal-meta" id="galMeta"></span>
+    </div>
     <div class="gal-tools">
       <div class="gal-jump" id="galJump">
         <button class="btn" id="galFirst" onclick="galGo(0)"><span class="glyph" aria-hidden="true">|‹</span> <span class="txt"></span></button>
@@ -1552,7 +1558,7 @@ function generateFlowers(mx,my){
 //  GALLERY — hang finished pieces in a walkable
 //  exhibition hall (IndexedDB, localStorage fallback)
 // ══════════════════════════════════════════════
-const GAL_KEY='fa-gallery', GAL_MAX=120, GAL_MAX_W=1400, GAL_THUMB_W=320, TOUR_MS=6000, ROOM_SIZE=10;
+const GAL_KEY='fa-gallery', GAL_MAX=120, GAL_MAX_W=1400, GAL_THUMB_W=320, TOUR_MS=6000, ROOM_SIZE=6;
 var gallery=[], galleryOpen=false, galIndex=0, galDir=0, tourTimer=null, galPrevFocus=null, motesTimer=null, galReady=false, galImgReq=0, galFrameT=null;
 
 function fmt(str,vars){ return str.replace(/\{(\w+)\}/g,(_,k)=> vars[k]!==undefined ? vars[k] : ''); }
@@ -1655,6 +1661,7 @@ async function exhibitCurrent(){
 }
 
 function openGallery(){
+  hallPage=-1; galZoom(false);
   if(galleryOpen) return;
   galleryOpen=true; galDir=0;
   galPrevFocus=document.activeElement;
@@ -1703,33 +1710,49 @@ function spawnMotes(){
   }
 }
 
-// ── the painting is scaled to cover the screen; the arch and the flower beds are fixed spots in it ──
-const PAINT_W=1408, PAINT_H=768, ARCH={x:.516,y:.495,w:.316,h:.475};
-const EASEL_SPOTS={'-2':{x:.10,y:.655,s:.095},'-1':{x:.225,y:.60,s:.115},'1':{x:.79,y:.60,s:.115},'2':{x:.915,y:.655,s:.095}};
+// ── the painting is scaled to cover the screen; its six easels are fixed spots in it ──
+const PAINT_W=1408, PAINT_H=768, SLOT_X=[161,378,600,811,1028,1244], SLOT_Y=233, SLOT_W=190, SLOT_H=296, CHIP_D=48, CHIP_GAP=7;
+var hallPage=-1, hallN=-1;
 function paintMetrics(){
-  const sc=Math.max(innerWidth/PAINT_W, innerHeight/PAINT_H), w=PAINT_W*sc, h=PAINT_H*sc, x=(innerWidth-w)/2, y=(innerHeight-h)/2;
+  const sc=Math.max(innerWidth/PAINT_W, innerHeight/PAINT_H), w=PAINT_W*sc, h=PAINT_H*sc;
+  let x=(innerWidth-w)/2;
+  if(w-innerWidth>innerWidth*.25 && gallery.length) // narrow screen: keep the chosen easel in view
+    x=Math.max(innerWidth-w, Math.min(0, innerWidth/2-SLOT_X[galIndex%ROOM_SIZE]*sc));
   const g=document.getElementById('gallery').style;
-  g.setProperty('--pw',w+'px'); g.setProperty('--ph',h+'px'); g.setProperty('--px',x+'px'); g.setProperty('--py',y+'px');
-  g.setProperty('--ax',(x+w*ARCH.x)+'px'); g.setProperty('--ay',(y+h*ARCH.y)+'px');
-  g.setProperty('--aw',(w*ARCH.w)+'px'); g.setProperty('--ah',(h*ARCH.h)+'px');
-  return {w,h};
+  [['--pw',w],['--ph',h],['--px',x],['--py',(innerHeight-h)/2],['--fw',SLOT_W*sc],['--fh',SLOT_H*sc],['--chip',CHIP_D*sc],['--chipgap',CHIP_GAP*sc]]
+    .forEach(([k,v])=>g.setProperty(k,v.toFixed(1)+'px'));
 }
 function buildHall(){
-  const sc=document.getElementById('scene'), m=paintMetrics(), n=gallery.length;
+  paintMetrics();
+  const sc=document.getElementById('scene'), n=gallery.length, page=Math.floor(galIndex/ROOM_SIZE);
+  if(page===hallPage && n===hallN){ // same six pieces: only the highlight moves
+    sc.querySelectorAll('.hang').forEach(h=>{
+      const cur=Number(h.dataset.i)===galIndex;
+      h.classList.toggle('current',cur);
+      if(cur) h.setAttribute('aria-current','true'); else h.removeAttribute('aria-current');
+    });
+    return;
+  }
+  hallPage=page; hallN=n;
   const frag=document.createDocumentFragment();
-  Object.keys(EASEL_SPOTS).forEach(k=>{
-    const i=galIndex+Number(k); if(i<0 || i>=n) return;
-    const p=gallery[i], spot=EASEL_SPOTS[k];
-    const h=el('button','hang');
-    h.type='button'; h.tabIndex=-1; h.dataset.num=i+1;
-    h.setAttribute('aria-label', fmt(t('galHangLabel'),{i:i+1,title:p.title}));
-    const mat=el('div','mat'), im=new Image(); im.alt=''; im.src=p.thumb; mat.appendChild(im); h.appendChild(mat);
-    h.style.cssText=`--x:${spot.x*100}%;--y:${spot.y*100}%;--fw:${Math.round(m.w*spot.s)}px`;
-    h.addEventListener('click',()=>{ stopTour(); galShow(i); });
+  for(let k=0;k<ROOM_SIZE;k++){
+    const i=page*ROOM_SIZE+k, p=gallery[i];
+    const h=el('button','hang'+(p?'':' blank')+(i===galIndex?' current':''));
+    h.type='button'; h.tabIndex=-1;
+    h.style.cssText=`--x:${(SLOT_X[k]/PAINT_W*100).toFixed(3)}%;--y:${(SLOT_Y/PAINT_H*100).toFixed(3)}%`;
+    const mat=el('div','mat'); h.appendChild(mat);
+    if(p){
+      h.dataset.num=i+1; h.dataset.i=i;
+      h.setAttribute('aria-label', fmt(t('galHangLabel'),{i:i+1,title:p.title}));
+      if(i===galIndex) h.setAttribute('aria-current','true');
+      const im=new Image(); im.alt=''; im.src=p.thumb; mat.appendChild(im);
+      h.addEventListener('click',()=>{ stopTour(); if(i===galIndex) galZoom(!document.getElementById('gallery').classList.contains('zoomed')); else galShow(i); });
+    }else{ h.disabled=true; h.dataset.num=''; }
     frag.appendChild(h);
-  });
+  }
   sc.innerHTML=''; sc.appendChild(frag);
 }
+function galZoom(on){ document.getElementById('gallery').classList.toggle('zoomed',!!on); }
 function moveCamera(){ /* nothing moves: the painting stays still, pieces fade in and out */ }
 let hallResizeT;
 addEventListener('resize',()=>{ if(!galleryOpen) return; clearTimeout(hallResizeT); hallResizeT=setTimeout(()=>{ buildHall(); moveCamera(false); },150); });
@@ -1894,7 +1917,7 @@ async function galRename(){
   });
   document.addEventListener('keydown',e=>{
     if(!galleryOpen) return;
-    if(e.key==='Escape'){ e.preventDefault(); closeGallery(); return; }
+    if(e.key==='Escape'){ e.preventDefault(); if(document.getElementById('gallery').classList.contains('zoomed')) galZoom(false); else closeGallery(); return; }
     const inField=e.target && e.target.tagName==='INPUT';
     if(!inField && gallery.length){
       const rtl=document.documentElement.getAttribute('dir')==='rtl';
