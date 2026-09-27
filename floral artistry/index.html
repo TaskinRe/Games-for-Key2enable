@@ -458,10 +458,20 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
 
 /* the piece in front, on its own easel */
 .gal-wall{position:absolute;inset:0;z-index:10;pointer-events:none}
-.gal-wall .gal-nav,.gal-frame.show{pointer-events:auto}
-.gal-head{pointer-events:none}.gal-head>*{pointer-events:auto}
+.gal-frame.show{pointer-events:auto}
+.gal-head,.gal-foot{pointer-events:none}.gal-head>*,.gal-foot>*{pointer-events:auto}
 .gal-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:60px;height:60px;border-radius:50%;justify-content:center;padding:0;font-size:2rem;font-family:'Cormorant Garamond',Georgia,serif;line-height:1}
 #galPrev{inset-inline-start:14px}#galNext{inset-inline-end:14px}
+/* resting the mouse on either edge of the scene brings the previous / next garden in */
+.gal-edge{position:absolute;top:0;bottom:0;width:clamp(72px,7vw,100px);z-index:5;pointer-events:auto;cursor:pointer}
+.gal-edge .gal-nav{z-index:12}
+.gal-edge.prev{inset-inline-start:0}.gal-edge.next{inset-inline-end:0}
+.gal-edge::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .45s;background:linear-gradient(to right,rgba(255,250,235,.7),rgba(255,250,235,0))}
+.gal-edge.next::before,[dir="rtl"] .gal-edge.prev::before{background:linear-gradient(to left,rgba(255,250,235,.7),rgba(255,250,235,0))}
+[dir="rtl"] .gal-edge.next::before{background:linear-gradient(to right,rgba(255,250,235,.7),rgba(255,250,235,0))}
+.gal-edge.hot::before{opacity:1}.gal-edge.hot.off::before{opacity:.25}
+.gal-edge.hot .gal-nav{background:var(--leaf);color:#fff;border-color:#fff8ee}
+@media (hover:none){.gal-edge{pointer-events:none}.gal-edge .gal-nav{pointer-events:auto}}
 [dir="rtl"] .gal-nav .glyph{display:inline-block;transform:scaleX(-1)}
 .gal-dim{position:absolute;inset:0;background:rgba(30,40,30,.5);opacity:0;pointer-events:none;transition:opacity .4s}
 #gallery.zoomed .gal-dim{opacity:1;pointer-events:auto}
@@ -600,6 +610,8 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
     <div class="paint"></div>
     <div class="scene" id="scene"></div>
   </div>
+  <div class="gal-edge prev" id="galEdgePrev"><button class="btn gal-nav" id="galPrev" onclick="galStep(-1)"><span class="glyph" aria-hidden="true">‹</span></button></div>
+  <div class="gal-edge next" id="galEdgeNext"><button class="btn gal-nav" id="galNext" onclick="galStep(1)"><span class="glyph" aria-hidden="true">›</span></button></div>
   <div class="vignette" aria-hidden="true"></div>
   <div class="gal-curtain" aria-hidden="true"></div>
   <div class="gal-dust" id="galDust" aria-hidden="true"></div>
@@ -612,14 +624,12 @@ canvas:focus-visible{outline:3px solid var(--accentA);outline-offset:-4px}
   <p id="galHint" class="sr-only"></p>
 
   <div class="gal-wall" id="galWall">
-    <button class="btn gal-nav" id="galPrev" onclick="galStep(-1)"><span class="glyph" aria-hidden="true">‹</span></button>
     <div class="gal-dim" onclick="galZoom(false)"></div>
     <div class="gal-stage">
       <figure class="gal-frame" id="galFrame" onclick="galZoom(false)">
         <div class="gal-mat"><div class="inner"><img id="galImg" alt=""></div></div>
       </figure>
     </div>
-    <button class="btn gal-nav" id="galNext" onclick="galStep(1)"><span class="glyph" aria-hidden="true">›</span></button>
   </div>
 
   <div class="gal-empty" id="galEmpty" hidden>
@@ -710,7 +720,7 @@ const I18N={
     galThumb:'Show piece {i}: {title}',
     galEmpty:'The garden is empty. Bloom something beautiful, then choose Save → Exhibit to place it here.',
     galBack:'Back to the canvas',
-    galHint:'Click the arrows, a piece along the path, or the garden map to walk there; scroll the mouse wheel to walk piece by piece. Keyboard: left and right arrows, Page Up and Page Down for gardens, Home and End, Escape to close.',
+    galHint:'Move the mouse over a piece to bring it forward; rest the mouse on the left or right edge of the scene to bring the previous or next six pieces in; scroll the wheel to walk piece by piece; click the front piece to enlarge it. The arrows and garden map also work by clicking. Keyboard: left and right arrows, Page Up and Page Down for gardens, Home and End, Escape to close.',
     galFirst:'First',galLast:'Last',galRoomPrev:'Previous garden',galRoomNext:'Next garden',
     galFirstLabel:'First piece',galLastLabel:'Last piece',galRoomLabel:'Go to garden {r}',
     pieceTitle:'Bloom No. {n}',
@@ -774,7 +784,7 @@ const I18N={
     galThumb:'اعرض اللوحة {i}: {title}',
     galEmpty:'الحديقة خالية. ازرع شيئًا جميلًا ثم اختر حفظ ← اعرضها لوضعه هنا.',
     galBack:'عودة إلى اللوحة',
-    galHint:'انقر على الأسهم أو على لوحة على جانب الممشى أو على خريطة الحديقة للانتقال إليها؛ حرّك عجلة الفأرة للتنقل لوحةً لوحة. لوحة المفاتيح: السهمان الأيسر والأيمن، وPage Up وPage Down للحدائق، وHome وEnd، وEscape للإغلاق.',
+    galHint:'حرّك الفأرة فوق لوحة لإبرازها؛ أَبقِ الفأرة على الحافة اليمنى أو اليسرى للمشهد لإحضار اللوحات الست السابقة أو التالية؛ حرّك العجلة للتنقل لوحةً لوحة؛ انقر على اللوحة الأمامية لتكبيرها. الأسهم وخريطة الحديقة تعمل بالنقر أيضًا. لوحة المفاتيح: السهمان الأيسر والأيمن، وPage Up وPage Down للحدائق، وHome وEnd، وEscape للإغلاق.',
     galFirst:'الأولى',galLast:'الأخيرة',galRoomPrev:'الحديقة السابقة',galRoomNext:'الحديقة التالية',
     galFirstLabel:'اللوحة الأولى',galLastLabel:'اللوحة الأخيرة',galRoomLabel:'انتقل إلى الحديقة {r}',
     pieceTitle:'تفتّح رقم {n}',
@@ -1746,6 +1756,7 @@ function buildHall(){
       h.setAttribute('aria-label', fmt(t('galHangLabel'),{i:i+1,title:p.title}));
       if(i===galIndex) h.setAttribute('aria-current','true');
       const im=new Image(); im.alt=''; im.src=p.thumb; mat.appendChild(im);
+      h.addEventListener('pointerenter',e=>{ if(e.pointerType!=='mouse' || i===galIndex) return; stopTour(); galShow(i); });
       h.addEventListener('click',()=>{ stopTour(); if(i===galIndex) galZoom(!document.getElementById('gallery').classList.contains('zoomed')); else galShow(i); });
     }else{ h.disabled=true; h.dataset.num=''; }
     frag.appendChild(h);
@@ -1900,6 +1911,20 @@ async function galRename(){
 (function galWire(){
   const name=document.getElementById('galName');
   const g=document.getElementById('gallery'), plan=document.getElementById('galPlan');
+  [['galEdgePrev',-1],['galEdgeNext',1]].forEach(([id,d])=>{ // hovering an edge flips gardens for as long as the mouse rests there
+    const z=document.getElementById(id); let t1=0,t2=0;
+    const flip=()=>{
+      const n=gallery.length; if(!n) return;
+      const to=d>0 ? Math.min(n-1,galIndex+ROOM_SIZE) : Math.max(0,galIndex-ROOM_SIZE);
+      if(to!==galIndex) galGo(to);
+      z.classList.toggle('off', to===galIndex);
+    };
+    z.addEventListener('pointerenter',e=>{
+      if(e.pointerType!=='mouse' || g.classList.contains('zoomed')) return;
+      z.classList.add('hot'); t1=setTimeout(()=>{ flip(); t2=setInterval(flip,1500); },350);
+    });
+    z.addEventListener('pointerleave',()=>{ z.classList.remove('hot','off'); clearTimeout(t1); clearInterval(t2); });
+  });
   let wheelT=0;
   g.addEventListener('wheel',e=>{ // mouse wheel walks the hall, one piece per notch
     if(!galleryOpen || !gallery.length || e.target.closest('.gal-plan')) return;
