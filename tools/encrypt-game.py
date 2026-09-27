@@ -72,12 +72,17 @@ def main(argv):
         sys.exit(__doc__)
     game_id, code, src = argv[1:]
     g = game_from_config(game_id)
-    if g["hash"] and hashlib.sha256(normalize(code).encode()).hexdigest() != g["hash"]:
+    if not g["hash"]:
+        sys.exit(f"{game_id} has no entry in site-config.js access.keys — add its hash first "
+                 "(hub → Trainer tools → Change a game code), or the game could never be opened.")
+    if hashlib.sha256(normalize(code).encode()).hexdigest() != g["hash"]:
         sys.exit(f"{code!r} is not the current code for {game_id} (access.keys hash differs). "
                  "Use the game's code, or update the hash in site-config.js first.")
+    html = open(src, "rb").read()
+    if not re.search(rb"<(!doctype\s+html|html|body)\b", html, re.I):
+        sys.exit(f"{src} does not look like an HTML page.")
     folder = os.path.join(ROOT, g["folder"])
     os.makedirs(folder, exist_ok=True)
-    html = open(src, "rb").read()
     blob = encrypt(code, html)
     assert decrypt(code, blob) == html
     with open(os.path.join(folder, "game.enc"), "wb") as f:

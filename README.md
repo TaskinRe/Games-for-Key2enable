@@ -114,21 +114,17 @@ The `game-0X/` folder can stay as a placeholder or be deleted.
 
 The hub itself needs no code — put its link / QR code on the first slide.
 Every game, however, opens on a **"… is locked"** screen until it has been
-unlocked on that laptop. There is one code per game:
-
-| Game | Code (change these!) |
-|------|------|
-| 01 Keyboard Grove  | `GROVE-2481` |
-| 02 Floral Artistry | `BLOOM-7316` |
-| 03 | `GAME3-5029` |
-| 04 | `GAME4-8147` |
-| 05 | `GAME5-3692` |
+unlocked on that laptop. There is one code per game, in the form `WORD-1234`.
+The codes are **not written down anywhere in this repository** — since the
+game files are encrypted with them, a published code would give away the
+game. The trainer keeps them; if one is lost, set a new one (see *Changing a
+code*) and re-encrypt that game.
 
 **Workshop flow**
 
 1. On the hub open *Trainer tools → game codes, unlock QR codes & feedback*,
    type a game's code in its box and press **Unlock QR**. You get the game's
-   unlock link — `…/keyboard-grove/?key=GROVE-2481` — as a QR code
+   unlock link — `…/keyboard-grove/?key=WORD-1234` — as a QR code
    (**QR (PNG)** downloads a 1024 px version) plus the code in a yellow chip.
 2. Put that QR code **and** the code on the slide for that game.
 3. Participants scan the QR code (opens the game already unlocked) or, on a
@@ -158,7 +154,9 @@ access: {
 
 The moment the new file is deployed, old QR codes and unlocks for that game
 stop working. Set `enabled: false` to open everything (e.g. after the
-workshop).
+workshop) — except encrypted games, which always need their code to be
+decrypted; to publish one of those openly, replace its loader + `game.enc`
+with the plain HTML.
 
 > **Limits.** The lock itself is browser-side. Codes are hashed so they can't
 > be read from the files, and the game files are encrypted with those codes
@@ -198,7 +196,7 @@ that game with the new code in the same commit.
 **— or on the command line** (needs Python 3 and `pip install cryptography`):
 
 ```bash
-python3 tools/encrypt-game.py game-04 GAME4-8147 ~/Downloads/robot.html
+python3 tools/encrypt-game.py game-04 WORD-1234 ~/Downloads/robot.html
 ```
 
 Keep the plain HTML files somewhere safe (not in the repo) — they are the

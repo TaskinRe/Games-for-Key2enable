@@ -20,7 +20,9 @@
                        isUnlocked(id), until(id), code(id), lock(id), hours }
 
    The grant keeps the normalised code so vault.js can decrypt an
-   encrypted game (game.enc) on later visits without asking again. */
+   encrypted game (game.enc) on later visits without asking again. A loader
+   page marks its gate script with data-encrypted: there the code is the
+   decryption key, so it is required even when access.enabled is false. */
 (function () {
   "use strict";
   var site = window.SITE_CONFIG || {};
@@ -30,6 +32,8 @@
   var STORE = cfg.storageKey || "k2e-access";
   var enabled = cfg.enabled !== false;
   var html = document.documentElement;
+  var me = document.currentScript;
+  var ENCRYPTED = !!(me && me.hasAttribute("data-encrypted"));
 
   /* ---------- SHA-256 (sync, works on file:// too) ---------- */
   function sha256(str) {
@@ -95,6 +99,7 @@
     var g = readAll()[id], h = expectedHash(id);
     if (!g || !h || g.h !== h) return null;
     if (HOURS > 0 && (!g.until || g.until < Date.now())) return null;
+    if (ENCRYPTED && !g.c) return null;
     return g;
   }
   function verify(id, code) { var h = expectedHash(id); return !!h && hashCode(code) === h; }
@@ -105,7 +110,7 @@
     writeAll(all);
     return true;
   }
-  function isLocked(id) { return enabled && !!expectedHash(id) && !grant(id); }
+  function isLocked(id) { return (enabled || ENCRYPTED) && !!expectedHash(id) && !grant(id); }
 
   window.K2E_GATE = {
     enabled: enabled,
@@ -126,7 +131,6 @@
   };
 
   /* ---------- which game is this page? ---------- */
-  var me = document.currentScript;
   var GAME = (me && me.getAttribute("data-game")) || "";
   if (!GAME) {
     (site.games || []).some(function (g) {

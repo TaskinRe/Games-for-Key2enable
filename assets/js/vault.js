@@ -90,7 +90,7 @@
     var code = gate.code(GAME);
     if (!code) {
       var keys = ((window.SITE_CONFIG || {}).access || {}).keys || {};
-      if (!gate.enabled || !keys[GAME]) return fail("This game is encrypted but has no code in site-config.js.");
+      if (!keys[GAME]) return fail("This game is encrypted but has no code in site-config.js.");
       /* Unlocked by an older grant that never stored the code: ask again. */
       if (gate.isUnlocked(GAME)) { gate.lock(GAME); location.reload(); }
       return;

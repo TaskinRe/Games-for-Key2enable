@@ -353,6 +353,8 @@
       if (!gate.verify(game.id, code)) { out.textContent = "That isn\u2019t the current code for " + game.title + " \u2014 the game would never open. Change the code hash first, or use the current code."; codeIn.select(); return; }
       out.textContent = "Encrypting\u2026";
       Promise.all([file.text(), fetch("assets/vault-loader.html").then(function (r) { return r.text(); })]).then(function (res) {
+        if (!/<(!doctype\s+html|html|body)\b/i.test(res[0])) throw new Error(file.name + " doesn\u2019t look like an HTML page.");
+        if (res[0].indexOf("game.enc") !== -1 && /assets\/js\/vault\.js/.test(res[0])) throw new Error(file.name + " is already an encrypted-game loader, not the game itself.");
         return vault.encrypt(code, res[0]).then(function (bytes) {
           var loader = res[1].replace(/\{\{title\}\}/g, game.title).replace(/\{\{game_id\}\}/g, game.id)
             .replace(/\{\{brand\}\}/g, cfg.brand || "Key2Enable").replace(/\{\{hub\}\}/g, cfg.hubName || "Game Hub");
