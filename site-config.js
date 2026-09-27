@@ -76,12 +76,12 @@ window.SITE_CONFIG = {
     {
       id: "game-04",
       url: "game-04/",
-      title: "Game 04",
-      description: "Coming soon.",
-      trains: ["Letters", "Word building"],
+      title: "Robot Workshop",
+      description: "Click the arrows to plan Byte the robot's route to the charging station, then run it.",
+      trains: ["Mouse", "Planning"],
       difficulty: 2,
-      icon: "letters",
-      ready: false
+      icon: "robot",
+      ready: true
     },
     {
       id: "game-05",
