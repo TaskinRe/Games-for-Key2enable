@@ -221,6 +221,53 @@
   wireCopy(document.getElementById("copyHubUrl"), HUB_URL, "the Game Hub");
   renderQr(document.getElementById("hubQrImg"), HUB_URL, 200, document.getElementById("hubQrDownload"), "game-hub-qr.png");
 
+  /* ---------- Trainer tools: PIN (access.trainerPin, hashed like game codes) ---------- */
+  (function () {
+    var pinHash = String(access.trainerPin || "").toLowerCase();
+    var form = document.getElementById("pinForm"), body = document.getElementById("trainerBody");
+    if (!form || !body || !pinHash || !gate) return;
+    var STORE = (access.storageKey || "k2e-access") + "-trainer";
+    var input = document.getElementById("pinInput");
+    var signedIn = document.getElementById("pinSignedIn"), state = document.getElementById("pinState");
+    function store() { return gate.hours > 0 ? localStorage : sessionStorage; }
+    function grant() {
+      try {
+        var g = JSON.parse(store().getItem(STORE) || "null");
+        if (!g || g.h !== pinHash) return null;
+        if (gate.hours > 0 && (!g.until || g.until < Date.now())) return null;
+        return g;
+      } catch (e) { return null; }
+    }
+    function paint() {
+      var g = grant();
+      form.hidden = !!g;
+      body.hidden = !g;
+      signedIn.hidden = !g;
+      if (g) state.textContent = "Trainer tools open on this laptop" + (g.until ? " until " + fmtUntil(new Date(g.until)) : "") + ".";
+    }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var pin = input.value.trim();
+      if (!pin) { input.focus(); return; }
+      if (gate.hash(pin) === pinHash) {
+        try { store().setItem(STORE, JSON.stringify({ h: pinHash, at: Date.now(), until: gate.hours > 0 ? Date.now() + gate.hours * 3600000 : 0 })); } catch (err) { /* private mode */ }
+        input.value = "";
+        paint();
+        toast("Trainer tools open");
+      } else {
+        toast("That PIN doesn\u2019t match");
+        input.select();
+      }
+    });
+    document.getElementById("pinSignOut").addEventListener("click", function () {
+      try { store().removeItem(STORE); } catch (err) { /* ignore */ }
+      paint();
+      toast("Trainer tools closed on this laptop");
+    });
+    window.addEventListener("storage", function (e) { if (!e.key || e.key === STORE) paint(); });
+    paint();
+  })();
+
   /* ---------- Share list: per-game link + QR (+ unlock QR when gated) ---------- */
   var shareList = document.getElementById("shareList");
   var shareIntro = document.getElementById("shareIntro");
@@ -310,12 +357,14 @@
     var out = document.getElementById("hashOut");
     var copyBtn = document.getElementById("copyHash");
     games.filter(gated).forEach(function (g) { sel.appendChild(el("option", { value: g.id, text: g.title })); });
+    sel.appendChild(el("option", { value: "trainerPin", text: "Trainer PIN" }));
     document.getElementById("hashForm").addEventListener("submit", function (e) {
       e.preventDefault();
       var code = input.value.trim().toUpperCase();
       if (!code) { input.focus(); return; }
-      var line = '"' + sel.value + '": "' + gate.hash(code) + '",';
-      out.textContent = "// site-config.js \u2192 access.keys   (code: " + code + ")\n" + line;
+      var isPin = sel.value === "trainerPin";
+      var line = isPin ? 'trainerPin: "' + gate.hash(code) + '",' : '"' + sel.value + '": "' + gate.hash(code) + '",';
+      out.textContent = "// site-config.js \u2192 access" + (isPin ? "" : ".keys") + "   (" + (isPin ? "PIN" : "code") + ": " + code + ")\n" + line;
       out.hidden = false;
       copyBtn.hidden = false;
       wireCopy(copyBtn, line, "the config line");
@@ -324,6 +373,47 @@
       gate.lock();
       refreshLocks();
       toast("All games locked on this laptop");
+    });
+  })();
+
+  /* ---------- Trainer tools: encrypt a game file (game.enc + loader) ---------- */
+  (function () {
+    var box = document.getElementById("vaultTools");
+    var vault = window.K2E_VAULT;
+    if (!box || !anyGated || !vault || !vault.supported) return;
+    box.hidden = false;
+    var sel = document.getElementById("vaultGame");
+    var codeIn = document.getElementById("vaultCode");
+    var fileIn = document.getElementById("vaultFile");
+    var out = document.getElementById("vaultOut");
+    games.filter(gated).forEach(function (g) { sel.appendChild(el("option", { value: g.id, text: g.title })); });
+
+    function save(blob, name) {
+      var a = el("a", { href: URL.createObjectURL(blob), download: name });
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 5000);
+    }
+    document.getElementById("vaultForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var game = games.filter(function (g) { return g.id === sel.value; })[0];
+      var code = codeIn.value.trim(), file = fileIn.files && fileIn.files[0];
+      if (!game || !code) { codeIn.focus(); return; }
+      if (!file) { fileIn.focus(); return; }
+      if (!gate.verify(game.id, code)) { out.textContent = "That isn\u2019t the current code for " + game.title + " \u2014 the game would never open. Change the code hash first, or use the current code."; codeIn.select(); return; }
+      out.textContent = "Encrypting\u2026";
+      Promise.all([file.text(), fetch("assets/vault-loader.html").then(function (r) { return r.text(); })]).then(function (res) {
+        if (!/<(!doctype\s+html|html|body)\b/i.test(res[0])) throw new Error(file.name + " doesn\u2019t look like an HTML page.");
+        if (res[0].indexOf("game.enc") !== -1 && /assets\/js\/vault\.js/.test(res[0])) throw new Error(file.name + " is already an encrypted-game loader, not the game itself.");
+        return vault.encrypt(code, res[0]).then(function (bytes) {
+          var loader = res[1].replace(/\{\{title\}\}/g, game.title).replace(/\{\{game_id\}\}/g, game.id)
+            .replace(/\{\{brand\}\}/g, cfg.brand || "Key2Enable").replace(/\{\{hub\}\}/g, cfg.hubName || "Game Hub");
+          save(new Blob([bytes], { type: "application/octet-stream" }), "game.enc");
+          setTimeout(function () { save(new Blob([loader], { type: "text/html" }), "index.html"); }, 400);
+          var folder = (game.url || game.id + "/").replace(/index\.html$/, "");
+          out.textContent = "Done \u2014 two downloads: put game.enc and index.html into " + folder + " (replacing what is there) and commit.";
+          toast("Encrypted " + game.title);
+        });
+      }).catch(function (err) { out.textContent = "Couldn\u2019t encrypt: " + (err && err.message || err); });
     });
   })();
 

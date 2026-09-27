@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="assets/css/hub.css">
   <script src="site-config.js"></script>
   <script src="assets/js/gate.js"></script>
+  <script src="assets/js/vault.js"></script>
 </head>
 <body>
 
@@ -27,6 +28,7 @@
       <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18.5V5.5l11-2v13"/><circle cx="6.5" cy="18.5" r="2.5"/><circle cx="17.5" cy="16.5" r="2.5"/></symbol>
       <symbol id="i-keyboard" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M18 14h.01M9 14h6"/></symbol>
       <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 2.5c3 2 5 6 5 10.5l-2 2.5H9L7 13C7 8.5 9 4.5 12 2.5z"/><circle cx="12" cy="10" r="1.8"/><path d="M9 15.5l-3.5 2.5L7 13M15 15.5l3.5 2.5L17 13M10.5 15.5c0 3-1 4-1 6 1-.5 1.7-1 2.5-2 .8 1 1.5 1.5 2.5 2 0-2-1-3-1-6"/></symbol>
+      <symbol id="i-robot" viewBox="0 0 24 24"><rect x="4.5" y="8" width="15" height="11" rx="2.5"/><path d="M12 8V4.5M12 4.5h.01"/><circle cx="12" cy="3.5" r="1"/><path d="M9 13h.01M15 13h.01M9.5 16.5h5"/><path d="M4.5 12H2.5v4h2M19.5 12h2v4h-2"/></symbol>
       <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></symbol>
       <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1.4 1.4"/><path d="M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1.4-1.4"/></symbol>
       <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
@@ -128,13 +130,26 @@
 
       <details class="share">
         <summary><svg class="ico" aria-hidden="true"><use href="#i-qr"/></svg> Trainer tools</summary>
+        <form class="pin-form" id="pinForm" hidden>
+          <p class="share__intro">For trainers. Enter the trainer PIN.</p>
+          <div class="pin-form__row">
+            <label for="pinInput" class="sr-only">Trainer PIN</label>
+            <input id="pinInput" type="password" autocomplete="off" spellcheck="false" placeholder="PIN" required>
+            <button type="submit" class="btn btn--primary btn--sm">Open</button>
+          </div>
+        </form>
+        <div id="trainerBody">
+        <div class="btn-row" id="pinSignedIn" hidden>
+          <p class="share__intro" id="pinState"></p>
+          <button type="button" class="btn btn--ghost btn--sm" id="pinSignOut">Close Trainer tools</button>
+        </div>
         <p class="share__intro" id="shareIntro">Each game has its own link and QR code.</p>
         <ul class="share__list" id="shareList" role="list"></ul>
         <div class="share__feedback" id="accessTools" hidden>
           <h3>Change a game code</h3>
           <p class="share__intro">Only a fingerprint (hash) of each code lives in <code>site-config.js</code>. Type a new code, then paste the line over that game’s entry in <code>access.keys</code>.</p>
           <form class="hash-form" id="hashForm">
-            <label for="hashGame" class="sr-only">Game</label>
+            <label for="hashGame" class="sr-only">Game or trainer PIN</label>
             <select id="hashGame"></select>
             <label for="hashInput" class="sr-only">New code</label>
             <input id="hashInput" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="New code" required>
@@ -146,6 +161,20 @@
             <button type="button" class="btn btn--ghost btn--sm" id="lockAll">Lock all games on this laptop</button>
           </div>
         </div>
+        <div class="share__feedback" id="vaultTools" hidden>
+          <h3>Encrypt a game file</h3>
+          <p class="share__intro">Games are stored encrypted with their code, so “View source” shows nothing. Pick the game, type its code, choose the game’s HTML — you get <code>game.enc</code> and a small <code>index.html</code> to put in that game’s folder.</p>
+          <form class="hash-form" id="vaultForm">
+            <label for="vaultGame" class="sr-only">Game</label>
+            <select id="vaultGame"></select>
+            <label for="vaultCode" class="sr-only">Game code</label>
+            <input id="vaultCode" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Game code" required>
+            <label for="vaultFile" class="sr-only">Game HTML file</label>
+            <input id="vaultFile" type="file" accept=".html,.htm,text/html" required>
+            <button type="submit" class="btn btn--ghost btn--sm">Encrypt</button>
+          </form>
+          <p class="share__intro" id="vaultOut" role="status" aria-live="polite"></p>
+        </div>
         <div class="share__feedback" id="feedbackTools">
           <h3>Feedback</h3>
           <p id="feedbackCount">Nothing saved in this browser yet.</p>
@@ -153,6 +182,7 @@
             <button type="button" class="btn btn--ghost btn--sm" id="feedbackCsv" disabled>Download CSV</button>
             <button type="button" class="btn btn--ghost btn--sm" id="feedbackClear" disabled>Clear</button>
           </div>
+        </div>
         </div>
       </details>
     </section>

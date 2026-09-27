@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Floral Artistry — Key2Enable Game Hub</title>
+  <title>{{title}} — {{brand}} {{hub}}</title>
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../assets/css/vault.css">
   <script src="../site-config.js"></script>
-  <script src="../assets/js/gate.js" data-game="game-02" data-encrypted></script>
+  <script src="../assets/js/gate.js" data-game="{{game_id}}" data-encrypted></script>
 </head>
 <body>
   <!-- This game is encrypted: the real page is game.enc, decrypted in the
        browser with the game's code (see assets/js/vault.js). -->
   <main class="vault">
-    <p class="vault__brand">Key2Enable · Game Hub</p>
+    <p class="vault__brand">{{brand}} · {{hub}}</p>
     <p id="k2eVaultStatus" class="vault__status" role="status" aria-live="polite">Opening…</p>
   </main>
   <script src="../assets/js/vault.js" data-src="game.enc"></script>

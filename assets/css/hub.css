@@ -229,9 +229,17 @@ section { margin-top: 88px; }
 .share__item .code-form input { flex: 1 1 120px; min-width: 0; font: inherit; font-size: .85rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--ink); }
 .share__item .share__code { display: inline-block; font-family: ui-monospace, Menlo, monospace; font-weight: 700; letter-spacing: .1em; background: #FFF1CC; color: #7A5200; padding: 3px 10px; border-radius: 999px; margin: 0 0 8px; font-size: .9rem; }
 .share__item .share__state { font-size: .8rem; color: var(--ink-soft); margin: 0 0 6px; }
+.pin-form { padding-bottom: 22px; }
+.pin-form .share__intro { margin-bottom: 10px; }
+.pin-form__row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.pin-form__row input { font: inherit; font-size: .95rem; letter-spacing: .2em; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--ink); width: 160px; max-width: 100%; }
+#pinSignedIn { align-items: center; justify-content: space-between; margin-bottom: 14px; }
+#pinSignedIn .share__intro { margin: 0; }
 .hash-form { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
 .hash-form select, .hash-form input { font: inherit; font-size: .9rem; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--ink); }
 .hash-form input { flex: 1 1 200px; min-width: 0; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.hash-form input[type="file"] { font-weight: 400; letter-spacing: 0; text-transform: none; flex-basis: 260px; padding: 6px 12px; }
+.hash-form input[type="file"]::file-selector-button { font: inherit; font-size: .85rem; font-weight: 600; padding: 4px 12px; margin-right: 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper, #F3EFE6); color: var(--ink); cursor: pointer; }
 .hash-out { font-size: .78rem; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px 12px; white-space: pre-wrap; word-break: break-all; margin: 0 0 10px; }
 .share__feedback { border-top: 1px solid var(--line); padding: 20px 0 22px; }
 .share__feedback h3 { font-size: 1rem; margin-bottom: 6px; }

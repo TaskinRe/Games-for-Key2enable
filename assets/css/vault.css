@@ -1,0 +1,33 @@
+/* Loader page shown while an encrypted game (game.enc) is being opened. */
+html, body { height: 100%; margin: 0; }
+body {
+  display: grid;
+  place-items: center;
+  background: #FBF9F4;
+  color: #2B3546;
+  font: 16px/1.5 "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.vault { text-align: center; padding: 24px; }
+.vault__brand {
+  margin: 0 0 14px;
+  font-weight: 600;
+  font-size: .78rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #D14E3A;
+}
+.vault__status { margin: 0; color: #5F6979; max-width: 36ch; }
+.vault__status[data-error] { color: #D14E3A; font-weight: 500; }
+html.k2e-decrypting .vault__status::after {
+  content: "";
+  display: block;
+  width: 28px; height: 28px;
+  margin: 18px auto 0;
+  border-radius: 50%;
+  border: 3px solid #E4DED2;
+  border-top-color: #F0654F;
+  animation: vault-spin .8s linear infinite;
+}
+@keyframes vault-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { html.k2e-decrypting .vault__status::after { animation: none; } }
