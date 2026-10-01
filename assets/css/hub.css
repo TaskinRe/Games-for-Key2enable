@@ -60,7 +60,7 @@ code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 6px; }
 
 .skip-link {
-  position: absolute; left: 12px; top: -60px;
+  position: absolute; inset-inline-start: 12px; top: -60px;
   background: var(--ink); color: #fff; padding: 10px 16px; border-radius: 10px; z-index: 50;
   font-weight: 600; text-decoration: none;
 }
@@ -148,11 +148,11 @@ section { margin-top: 88px; }
 .game-card:nth-child(2) { animation-delay: .06s } .game-card:nth-child(3) { animation-delay: .12s }
 .game-card:nth-child(4) { animation-delay: .18s } .game-card:nth-child(5) { animation-delay: .24s }
 @keyframes card-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-.game-card:hover, .game-card:focus-within { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: color-mix(in srgb, var(--c) 45%, var(--line)); }
+.game-card:hover, .game-card:focus-within { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--c); border-color: color-mix(in srgb, var(--c) 45%, var(--line)); }
 .game-card__top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .game-card__icon {
   position: relative; width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center;
-  background: color-mix(in srgb, var(--c) 18%, white); color: var(--ink); transform: rotate(-4deg);
+  background: var(--paper-2); background: color-mix(in srgb, var(--c) 18%, white); color: var(--ink); transform: rotate(-4deg);
   transition: transform .25s ease;
 }
 .game-card:hover .game-card__icon { transform: rotate(3deg) scale(1.04); }
@@ -173,7 +173,7 @@ section { margin-top: 88px; }
 .badge--locked .ico { width: 12px; height: 12px; stroke: var(--sun); }
 .badge--open { background: #DDF5EA; color: #0F6B45; }
 .badge--open .ico { width: 12px; height: 12px; }
-.game-card.is-locked .game-card__icon::after { content: ""; position: absolute; right: -7px; bottom: -7px; width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff; background: var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F5B53F' stroke-width='2.2' stroke-linecap='round'%3E%3Crect x='5' y='10.5' width='14' height='10' rx='2.5'/%3E%3Cpath d='M8 10.5V7.5a4 4 0 018 0v3'/%3E%3C/svg%3E") center / 12px no-repeat; }
+.game-card.is-locked .game-card__icon::after { content: ""; position: absolute; inset-inline-end: -7px; bottom: -7px; width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff; background: var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F5B53F' stroke-width='2.2' stroke-linecap='round'%3E%3Crect x='5' y='10.5' width='14' height='10' rx='2.5'/%3E%3Cpath d='M8 10.5V7.5a4 4 0 018 0v3'/%3E%3C/svg%3E") center / 12px no-repeat; }
 .game-card__actions { display: flex; gap: 10px; align-items: center; margin-top: 2px; }
 .game-card__actions .btn { flex: 1; }
 .game-card__actions .btn--primary { background: var(--ink); color: #fff; }
@@ -214,7 +214,7 @@ section { margin-top: 88px; }
 .share { margin-top: 20px; background: var(--paper-2); border-radius: var(--radius); padding: 4px 24px; }
 .share summary { cursor: pointer; font-family: var(--font-display); font-weight: 600; font-size: .95rem; padding: 16px 0; display: flex; align-items: center; gap: 10px; list-style: none; color: var(--ink); }
 .share summary::-webkit-details-marker { display: none; }
-.share summary::after { content: ""; margin-left: auto; width: 8px; height: 8px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); transition: transform .2s ease; }
+.share summary::after { content: ""; margin-inline-start: auto; width: 8px; height: 8px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); transition: transform .2s ease; }
 .share[open] summary::after { transform: rotate(-135deg); }
 .share__intro { color: var(--ink-soft); margin-bottom: 16px; font-size: .9rem; }
 .share__list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); padding-bottom: 22px; }
@@ -239,7 +239,7 @@ section { margin-top: 88px; }
 .hash-form select, .hash-form input { font: inherit; font-size: .9rem; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--ink); }
 .hash-form input { flex: 1 1 200px; min-width: 0; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
 .hash-form input[type="file"] { font-weight: 400; letter-spacing: 0; text-transform: none; flex-basis: 260px; padding: 6px 12px; }
-.hash-form input[type="file"]::file-selector-button { font: inherit; font-size: .85rem; font-weight: 600; padding: 4px 12px; margin-right: 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper, #F3EFE6); color: var(--ink); cursor: pointer; }
+.hash-form input[type="file"]::file-selector-button { font: inherit; font-size: .85rem; font-weight: 600; padding: 4px 12px; margin-inline-end: 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper, #F3EFE6); color: var(--ink); cursor: pointer; }
 .hash-out { font-size: .78rem; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px 12px; white-space: pre-wrap; word-break: break-all; margin: 0 0 10px; }
 .share__feedback { border-top: 1px solid var(--line); padding: 20px 0 22px; }
 .share__feedback h3 { font-size: 1rem; margin-bottom: 6px; }
@@ -314,4 +314,41 @@ section { margin-top: 88px; }
   .join__card { padding: 22px; }
   .share { padding: 4px 16px; }
   .intro .wordmark { font-size: 104px; }
+}
+
+/* ---------- No-JS notice ---------- */
+.noscript { margin: 0; padding: 14px 24px; text-align: center; background: #FFF1CC; color: #7A5200; font-weight: 500; }
+
+/* ---------- Language switch ---------- */
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px; background: var(--card); }
+.lang__btn { font: inherit; font-size: .82rem; font-weight: 600; padding: 4px 12px; border: 0; border-radius: 999px; background: transparent; color: var(--ink-soft); cursor: pointer; line-height: 1.4; }
+.lang__btn[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.lang__btn:hover:not([aria-pressed="true"]) { color: var(--ink); }
+
+/* ---------- Code entry on the hub ---------- */
+.code-entry { flex: 1 1 100%; display: flex; flex-direction: column; gap: 8px; padding: 16px 18px; border: 1px dashed var(--line); border-radius: var(--radius-sm); background: var(--card); }
+.code-entry__label { display: inline-flex; gap: 8px; align-items: center; color: var(--ink-soft); font-size: .95rem; }
+.code-entry__label .ico { width: 1em; height: 1em; flex: none; }
+.code-entry__row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.code-entry__row input { font: inherit; font-size: 1rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--ink); width: 220px; max-width: 100%; direction: ltr; }
+.code-entry__msg { min-height: 1.3em; font-size: .9rem; color: var(--accent-dark); font-weight: 500; }
+.code-entry.is-wrong .code-entry__row input { border-color: var(--accent-dark); animation: shake .35s ease; }
+@keyframes shake { 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+.share__tip { padding: 10px 14px; border-radius: var(--radius-sm); background: #FFF8E1; color: #5C4A12; }
+.share__body { text-align: left; }
+
+/* ---------- Arabic / right-to-left ---------- */
+[lang="ar"] { --font-display: "Cairo", "Plus Jakarta Sans", system-ui, sans-serif; --font-body: "Cairo", "Inter", system-ui, sans-serif; }
+[lang="ar"] h1, [lang="ar"] h2, [lang="ar"] h3 { letter-spacing: 0; }
+[dir="rtl"] .steps li.steps__arrow svg { transform: scaleX(-1); }
+[dir="rtl"] .intro__skip { right: auto; left: 22px; }
+[dir="rtl"] .game-card__num { letter-spacing: 0; }
+[dir="rtl"] .url-box code, [dir="rtl"] .share__item code { direction: ltr; unicode-bidi: isolate; text-align: left; }
+
+/* ---------- Print (hub QR / slides) ---------- */
+@media print {
+  .intro, .toast, .site-nav, .skip-link, .share, .hero__doodles, .game-card__actions, .hero__actions, #copyHubUrl, #hubQrDownload { display: none !important; }
+  body { background: #fff; color: #000; }
+  .game-card, .join__card { break-inside: avoid; box-shadow: none; }
+  a { text-decoration: none; }
 }

@@ -31,3 +31,7 @@ html.k2e-decrypting .vault__status::after {
 }
 @keyframes vault-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { html.k2e-decrypting .vault__status::after { animation: none; } }
+.vault__bar { width: min(260px, 70vw); height: 6px; margin: 16px auto 0; border-radius: 999px; background: #E4DED2; overflow: hidden; }
+.vault__bar span { display: block; height: 100%; width: 0; background: #F0654F; border-radius: inherit; transition: width .2s linear; }
+.vault__hint { margin: 14px auto 0; max-width: 34ch; font-size: .85rem; color: #9AA3B5; }
+[hidden] { display: none !important; }

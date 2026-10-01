@@ -10,6 +10,9 @@
   var BRAND = (window.SITE_CONFIG && window.SITE_CONFIG.brand) || "Key2Enable";
   var SUB = ((window.SITE_CONFIG && window.SITE_CONFIG.hubName) || "Game Hub").toUpperCase();
   var DURATION = cfg.durationMs || 7200;
+  var COUNT = ((window.SITE_CONFIG && window.SITE_CONFIG.games) || []).length;
+  var WORDS = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
+  var CAPTION = (COUNT ? (WORDS[COUNT] || COUNT) + " game" + (COUNT === 1 ? "" : "s") : "Games") + " \u00b7 one hub \u00b7 let's play!";
   var SEEN_KEY = "k2e-intro-seen";
 
   var root = document.getElementById("intro");
@@ -260,7 +263,7 @@
     }
 
     if (t >= T.caption) once("caption", function () {
-      caption.textContent = "Five games · one hub · let's play!";
+      caption.textContent = CAPTION;
       caption.classList.add("show");
     });
 
@@ -292,7 +295,7 @@
       scene.subLetters.forEach(function (l) { l.style.opacity = 1; });
       scene.confetti.forEach(function (e) { e.style.opacity = 1; });
       scene.keys.forEach(function (k, i) { k.style.fill = KEY_COLORS[i % KEY_COLORS.length]; k.style.fillOpacity = ".85"; });
-      caption.textContent = "Five games · one hub · let's play!";
+      caption.textContent = CAPTION;
       caption.classList.add("show");
       setTimeout(finish, 1400);
       return;

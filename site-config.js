@@ -19,6 +19,13 @@ window.SITE_CONFIG = {
   hubName: "Game Hub",
   tagline: "Interactive Training Games",
   description: "Five short games. Pick one, scan its code, play.",
+  /* Arabic versions of the texts above (the hub has an EN / عربي switch; any
+     field left out falls back to the English one). */
+  ar: {
+    hubName: "مركز الألعاب",
+    tagline: "ألعاب تدريبية تفاعلية",
+    description: "خمس ألعاب قصيرة. اختر لعبة، امسح رمزها، والعب."
+  },
 
   /* ---------- Intro animation ----------
      playIntro : true  → the pencil-sketch intro plays once per browser session
@@ -41,7 +48,9 @@ window.SITE_CONFIG = {
      icon        : one of the built-in icons: "puzzle", "letters", "target",
                    "memory", "music", "keyboard", "star", "rocket"
      ready       : false → card shows a "Coming soon" badge until the game
-                   files are dropped into its folder. Set to true when live. */
+                   files are dropped into its folder. Set to true when live.
+     ar          : optional { title, description, trains } shown when the hub
+                   is switched to Arabic (falls back to the English fields). */
   games: [
     {
       id: "game-01",
@@ -51,7 +60,12 @@ window.SITE_CONFIG = {
       trains: ["Key-X buttons", "Getting started"],
       difficulty: 1,
       icon: "keyboard",
-      ready: true
+      ready: true,
+      ar: {
+        title: "بستان المفاتيح",
+        description: "تعرّف على أزرار Key-X في بستان ليلي، فصلًا قصيرًا في كل مرة.",
+        trains: ["أزرار Key-X", "البداية"]
+      }
     },
     {
       id: "game-02",
@@ -61,7 +75,12 @@ window.SITE_CONFIG = {
       trains: ["Creativity", "Making choices"],
       difficulty: 1,
       icon: "star",
-      ready: true
+      ready: true,
+      ar: {
+        title: "فن الزهور",
+        description: "صمّم لوحتك الزهرية الخاصة في حديقة ليلية هادئة.",
+        trains: ["الإبداع", "اتخاذ القرارات"]
+      }
     },
     {
       id: "game-03",
@@ -71,7 +90,12 @@ window.SITE_CONFIG = {
       trains: ["Number keys", "Recognition"],
       difficulty: 2,
       icon: "target",
-      ready: true
+      ready: true,
+      ar: {
+        title: "امسك السماء",
+        description: "التقط الصور المتساقطة بمفتاح الرقم المطابق، ثم أعد النمط من الذاكرة.",
+        trains: ["مفاتيح الأرقام", "التعرّف"]
+      }
     },
     {
       id: "game-04",
@@ -81,7 +105,12 @@ window.SITE_CONFIG = {
       trains: ["Mouse", "Planning"],
       difficulty: 2,
       icon: "robot",
-      ready: true
+      ready: true,
+      ar: {
+        title: "ورشة الروبوت",
+        description: "انقر الأسهم لتخطيط مسار الروبوت «بايت» إلى محطة الشحن، ثم شغّله.",
+        trains: ["الفأرة", "التخطيط"]
+      }
     },
     {
       id: "game-05",
@@ -91,7 +120,12 @@ window.SITE_CONFIG = {
       trains: ["Letter keys", "Typing"],
       difficulty: 2,
       icon: "letters",
-      ready: true
+      ready: true,
+      ar: {
+        title: "معلّم الكتابة",
+        description: "تعلّم الكتابة حرفًا حرفًا: اعبر خريطة الحروف، تدرّب على مجموعات الحروف، ثم كوّن كلمات بسيطة.",
+        trains: ["مفاتيح الحروف", "الكتابة"]
+      }
     }
   ],
 
@@ -100,7 +134,7 @@ window.SITE_CONFIG = {
      opens the instructor's QR link (<game url>?key=CODE) or types the code on
      the game's lock screen. Codes live here as SHA-256 hashes of the
      UPPERCASE code with spaces/dashes removed — never the code itself.
-     To change a code: Trainer tools → "Game codes & QR" on the hub gives you
+     To change a code: Trainer tools → "Change a game code" on the hub gives you
      the hash line to paste here. Changing a hash re-locks that game everywhere.
      hours : how long one unlock lasts on that laptop (0 = until the tab closes).
      trainerPin : hash of the PIN that opens Trainer tools on the hub (QR

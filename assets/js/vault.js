@@ -78,10 +78,43 @@
     el.textContent = msg;
     if (isError) el.setAttribute("data-error", "");
   }
+  function progress(ratio) {
+    var bar = document.getElementById("k2eVaultBar");
+    if (!bar) return;
+    bar.hidden = ratio == null;
+    if (ratio != null) bar.firstElementChild.style.width = Math.round(ratio * 100) + "%";
+  }
 
   function fail(msg) {
     status(msg, true);
+    progress(null);
     document.documentElement.classList.remove("k2e-decrypting");
+  }
+
+  /* Download with a progress read-out when the browser streams and the
+     server sends Content-Length; otherwise a plain arrayBuffer(). */
+  function download(url) {
+    return fetch(url).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      var total = +r.headers.get("Content-Length") || 0;
+      if (!r.body || !r.body.getReader || !total) return r.arrayBuffer();
+      var reader = r.body.getReader(), chunks = [], got = 0;
+      function pump() {
+        return reader.read().then(function (res) {
+          if (res.done) {
+            var out = new Uint8Array(got), off = 0;
+            chunks.forEach(function (c) { out.set(c, off); off += c.length; });
+            return out.buffer;
+          }
+          chunks.push(res.value); got += res.value.length;
+          progress(Math.min(got / total, 1));
+          status("Downloading\u2026 " + Math.round(Math.min(got / total, 1) * 100) + "%");
+          return pump();
+        });
+      }
+      progress(0);
+      return pump();
+    });
   }
 
   function run() {
@@ -97,16 +130,21 @@
     }
     document.documentElement.classList.add("k2e-decrypting");
     status("Opening\u2026");
-    fetch(SRC).then(function (r) {
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      return r.arrayBuffer();
-    }).then(function (buf) {
+    var slow = setTimeout(function () {
+      var el = document.getElementById("k2eVaultHint");
+      if (el) el.hidden = false;
+    }, 8000);
+    download(SRC).then(function (buf) {
+      progress(null);
+      status("Unlocking\u2026");
       return decrypt(code, buf).then(function (html) {
+        clearTimeout(slow);
         try { sessionStorage.removeItem(FAILED); } catch (e) { /* ignore */ }
         document.open();
         document.write(html);
         document.close();
       }, function () {
+        clearTimeout(slow);
         /* The stored code no longer opens this file (re-encrypted with a new code). */
         gate.lock(GAME);
         var again = false;
@@ -115,7 +153,11 @@
         location.reload();
       });
     }).catch(function (e) {
-      fail("Couldn\u2019t load the game (" + (e && e.message || e) + "). Check your connection and reload.");
+      clearTimeout(slow);
+      var offline = typeof navigator.onLine === "boolean" && !navigator.onLine;
+      fail(offline
+        ? "You\u2019re offline. Reconnect to the Wi-Fi and reload the page."
+        : "Couldn\u2019t load the game (" + (e && e.message || e) + "). Check your connection and reload.");
     });
   }
 

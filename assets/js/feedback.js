@@ -231,13 +231,13 @@
   }
 
   /* ---------- floating button ---------- */
-  var fab = el("button", { type: "button", class: "k2e-fb-fab" }, [svg(ICON_CHAT), el("span", { text: t("fab") })]);
+  var fab = el("button", { type: "button", class: "k2e-fb-fab", translate: "no" }, [svg(ICON_CHAT), el("span", { text: t("fab") })]);
   if (attr("data-position", "") === "bottom-left") fab.classList.add("k2e-fb-fab--left");
   fab.setAttribute("aria-label", t("fabAria"));
   fab.addEventListener("click", function () { openDialog(fab); });
 
   /* ---------- dialog ---------- */
-  var dlg = el("dialog", { class: "k2e-fb", "aria-labelledby": "k2eFbTitle" });
+  var dlg = el("dialog", { class: "k2e-fb", "aria-labelledby": "k2eFbTitle", translate: "no" });
   var supportsDialog = typeof dlg.showModal === "function";
   var card = el("div", { class: "k2e-fb__card" });
   dlg.appendChild(card);
@@ -533,8 +533,12 @@
     }).observe(document.body, { childList: true, subtree: true });
   }
 
-  /* ---------- follow the game's language switch ---------- */
+  /* ---------- follow the game's language switch ----------
+     Games may re-set <html lang> on every DOM change; only react to a real change. */
+  var curLang = lang();
   new MutationObserver(function () {
+    if (lang() === curLang) return;
+    curLang = lang();
     fab.querySelector("span").textContent = t("fab");
     fab.setAttribute("aria-label", t("fabAria"));
     var d = document.querySelector(".k2e-fb-done span"); if (d) d.textContent = t("done");
