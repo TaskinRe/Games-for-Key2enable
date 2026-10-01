@@ -97,7 +97,7 @@ window.SITE_CONFIG = {
       id: "game-06",
       url: "game-06/",
       title: "Note Quest",
-      description: "Learn real music: meet the piano notes, read the staff, feel the rhythm, train your ear and play real songs one note at a time.",
+      description: "A keyboard-only music adventure: five worlds of piano notes, staff reading, rhythm, ear training and real songs — combos, stars and no timers.",
       trains: ["Music theory", "Listening"],
       difficulty: 2,
       icon: "music",

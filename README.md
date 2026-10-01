@@ -76,31 +76,36 @@ button and the Feedback panel. They are then **stored encrypted** (see
 
 ### Game 06 · Note Quest (music theory)
 
-Note Quest teaches real music — not just a game with musical sound effects —
-and is designed for students with cerebral palsy:
+Note Quest is a keyboard-only music adventure that teaches real music — not
+just a game with musical sound effects — and is designed for students with
+cerebral palsy. An animated title screen (`Space` to start) leads to a world
+map with five worlds, each with stages that are played as a "note catcher":
+a challenge card flies in and waits; the right key pops it with particles,
+points and a combo, the wrong key just shows the answer. Each stage ends with
+a 1–3 star result and a fanfare; a star in a world unlocks the next one.
 
-- **Piano** — eight big keys (C to high C) with letter + solfège names, the
-  note shown on a treble-clef staff as you play, "play the scale", and a
-  "find the note" practice.
-- **Read the staff** — line notes (E G B D F), space notes (F A C E), then
-  all notes; mnemonics as hints; every note can be heard.
-- **Rhythm** — whole / half / quarter / eighth notes and how many beats they
-  last; "fill the 4/4 bar" problems.
-- **Listen (ear training)** — higher or lower, same / step / skip, and
+- **Piano Meadow** — meet the notes: three, five, then all eight keys
+  (C to high C) with letter and Do‑Re‑Mi names.
+- **Staff Mountain** — read music: line notes (E G B D F), space notes
+  (F A C E), then every note with no labels; mnemonics as hints.
+- **Rhythm River** — whole / half / quarter / eighth notes, how many beats
+  they last, and "fill the 4/4 bar" problems.
+- **Echo Cave** — ear training: higher or lower, same / step / skip, and
   happy (major) or sad (minor) chords.
-- **Play a song** — Hot Cross Buns, Mary Had a Little Lamb, Twinkle Twinkle,
-  London Bridge, Jingle Bells, Ode to Joy — one note at a time with the next
-  key glowing, lyrics and staff following along. Wrong keys are never
-  penalised; there are no timers anywhere in the game.
+- **Song Castle** — Hot Cross Buns, Mary Had a Little Lamb, Twinkle
+  Twinkle, London Bridge, Jingle Bells, Ode to Joy — one note at a time with
+  the next key glowing, lyrics and staff following along.
 
-Accessible input: number keys `1`–`8` press piano keys / answers, `Space` or
-`Enter` activates, arrow keys move between buttons, `Esc` goes back, `R`
-repeats the sound. The ⚙ Settings panel offers 2/3/4 answers per question,
-**switch scanning** (slow / medium / fast, one switch = `Space`/`Enter`),
-**hover-to-select** (1 s / 2 s dwell), a **repeat-key guard** against
-unintended double presses, larger text, high contrast, reduced animation and
-**spoken prompts**. Settings are remembered in the browser. All audio is
-synthesised with the Web Audio API, so no sound files are needed.
+Nothing is timed anywhere in the game. Input is letters and numbers only:
+`A`–`G` are the note names, `1`–`8` the piano keys left to right (and
+`A`–`D` / `1`–`4` pick answers), `Space`/`Enter` starts and continues, arrow
+keys move on the map and menus, `Esc` goes back, `R` repeats the sound,
+`H` help, `S` settings. Settings (arrow keys) offer 2/3/4 answers per
+question, card speed (calm / normal / quick), **switch scanning** (one switch
+= `Space`), a **repeat-key guard** against unintended double presses, larger
+text, high contrast, reduced animation, **spoken prompts**, song tempo and
+"open every world". Progress, stars and settings are remembered in the
+browser. All audio is synthesised with the Web Audio API.
 
 Like the other games, only the encrypted `game-06/game.enc` and its loader
 are published; to change the game, edit the plain HTML source and re-encrypt
