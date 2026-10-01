@@ -15,6 +15,9 @@
   <main class="vault">
     <p class="vault__brand">{{brand}} · {{hub}}</p>
     <p id="k2eVaultStatus" class="vault__status" role="status" aria-live="polite">Opening…</p>
+    <div id="k2eVaultBar" class="vault__bar" aria-hidden="true" hidden><span></span></div>
+    <p id="k2eVaultHint" class="vault__hint" hidden>Large game file — on slow Wi-Fi this can take a little while. Please keep the tab open.</p>
+    <noscript><p class="vault__status" data-error>This game needs JavaScript. Please enable it and reload.</p></noscript>
   </main>
   <script src="../assets/js/vault.js" data-src="game.enc"></script>
 </body>

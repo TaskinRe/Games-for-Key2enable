@@ -7,7 +7,10 @@ back for the next one.
 
 - Pure HTML / CSS / JavaScript — no build step, no backend, no login.
 - The hub is open; each game is locked until the participant scans that
-  game's QR code (or types its code) from the instructor's slide.
+  game's QR code from the instructor's slide — or types its code, on the
+  hub's **"Have a game code?"** box or on the game's own lock screen.
+- Bilingual hub: an **EN / عربي** switch in the header (also `?lang=ar` on
+  the link). Trainer tools stay in English.
 - Hosted on GitHub Pages; works from any repository sub-path.
 - Everything editable lives in **one file**: `site-config.js`.
 - Opens with a short hand-drawn "pencil sketch" intro (skippable, once per
@@ -27,12 +30,13 @@ was limited to deploying them to this hub and encrypting the game files
 ```
 /
 ├── index.html              ← the Game Hub (landing page)
+├── 404.html                ← friendly "not found" page (GitHub Pages serves it for bad links)
+├── .nojekyll               ← tells GitHub Pages to publish the files as they are
 ├── site-config.js          ← ★ edit this: titles, descriptions, links
 ├── README.md
 ├── assets/
 │   ├── css/hub.css         ← hub styling
-│   ├── css/placeholder.css ← styling for the placeholder game pages
-│   ├── js/hub.js           ← renders cards, copy-link, QR codes
+│   ├── js/hub.js           ← renders cards, code box, language switch, QR codes, Trainer tools
 │   ├── js/intro.js         ← pencil-sketch intro animation
 │   ├── js/hub-nav.js       ← drop-in "← Back to Game Hub" button for any game
 │   ├── js/gate.js          ← per-game lock screen (codes + unlock QR links)
@@ -40,7 +44,6 @@ was limited to deploying them to this hub and encrypting the game files
 │   ├── css/vault.css       ← styling for the tiny loader page of an encrypted game
 │   ├── vault-loader.html   ← template for that loader page
 │   ├── js/feedback.js      ← drop-in in-game Feedback panel (faces, text, voice-to-text)
-│   ├── js/placeholder.js   ← fills the placeholder pages from site-config.js
 │   ├── img/favicon.svg
 │   └── vendor/qrcode.js    ← QR generator (qrcode-generator 1.4.4, MIT)
 ├── tools/encrypt-game.py   ← command-line alternative to Trainer tools → Encrypt a game file
@@ -127,11 +130,17 @@ game files are encrypted with them, a published code would give away the
 game. The trainer keeps them; if one is lost, set a new one (see *Changing a
 code*) and re-encrypt that game.
 
-**Trainer PIN.** *Trainer tools* on the hub is behind a PIN — starter PIN
-`TRAIN-4820`. Entering it opens the tools on that laptop for `access.hours`
-(**Close Trainer tools** ends it early). Participants never need it. To
-change it, pick *Trainer PIN* in *Change a game code* → **Get hash** and paste
-the line over `access.trainerPin` in `site-config.js` (`""` removes the PIN).
+**Trainer PIN.** *Trainer tools* on the hub is behind a PIN. Like the game
+codes, the PIN itself is **not in this repository** — only its hash, in
+`access.trainerPin`. Entering it opens the tools on that laptop for
+`access.hours` (**Close Trainer tools** ends it early). Participants never
+need it. To change it, pick *Trainer PIN* in *Change a game code* →
+**Get hash** and paste the line over `access.trainerPin` in `site-config.js`
+(`""` removes the PIN). Lost the PIN? Make a new hash without the hub:
+
+```bash
+python3 -c "import hashlib,re;print(hashlib.sha256(re.sub(r'[\s\-_]+','','NEW-PIN'.upper()).encode()).hexdigest())"
+```
 
 **Workshop flow**
 
@@ -141,8 +150,9 @@ the line over `access.trainerPin` in `site-config.js` (`""` removes the PIN).
    (**QR (PNG)** downloads a 1024 px version) plus the code in a yellow chip.
 2. Put that QR code **and** the code on the slide for that game.
 3. Participants scan the QR code (opens the game already unlocked) or, on a
-   laptop, click the game on the hub and type the code. Case, spaces and
-   dashes don't matter (`grove 2481` works).
+   laptop, type the code in the hub's **"Have a game code?"** box (it opens
+   the matching game) or on the game's lock screen. Case, spaces and dashes
+   don't matter (`grove 2481` works).
 4. The unlock is remembered on that laptop for `access.hours` (48 h by
    default; set `0` to re-lock when the tab closes). Unlocking one game does
    not unlock the others. The hub cards show a padlock / "Unlocked" badge.
@@ -222,8 +232,8 @@ If a game shows *"This code doesn't open the game file"*, the hash in
 
 ## Participant feedback (in-game)
 
-Keyboard Grove shows a floating **Feedback** button while playing and a
-**Share feedback** button on the "Chapter done!" card. The panel has:
+Every game shows a floating **Feedback** button while playing and a
+**Share feedback** button on its "done" screen. The panel has:
 
 * five faces (Hard → Loved it; keys `1`–`5` also pick one),
 * a text box, and a **Speak** button — browser speech-to-text types the words
@@ -258,7 +268,7 @@ feedback: {
   rating, text, name and time pre-filled, one more tap to send from their mail
   app. (Shown also when `endpoint` is empty.)
 * **Per laptop (always on).** Every entry is also saved in that laptop's
-  browser (`localStorage`); the hub's *Trainer tools → Participant feedback*
+  browser (`localStorage`); the hub's *Trainer tools → Feedback*
   offers **Download CSV** and **Clear** for that browser. Entries that reached
   Formspree are marked `sent = yes` in the CSV.
 
@@ -302,13 +312,21 @@ npx serve .                        # Node
 
 Then open <http://localhost:8000/>. Check:
 
-- the intro plays (add `?intro=1` to force it again, or use "Replay intro");
+- the intro plays (add `?intro=1` to force it again, or use the "Intro" button);
+- the **EN / عربي** switch flips the whole hub (and is remembered);
 - all five cards open their own page (`/keyboard-grove/`, `/floral artistry/`,
   `/game-03/` … `/game-05/`) on its lock screen; a wrong code is refused,
-  the game's code (or `?key=CODE` on the URL) unlocks only that game;
+  the game's code (typed on the hub box, on the lock screen, or as `?key=CODE`
+  on the URL) unlocks only that game;
 - "← Back to Game Hub" returns to the hub;
-- "Copy link" shows "Link copied!";
-- the "Join the activity" QR code renders and downloads.
+- "Copy" shows "Link copied!";
+- the "Join" QR code renders and downloads.
+
+To try the whole flow with your own codes without touching the real hashes,
+copy the folder somewhere else, put test hashes into that copy's
+`site-config.js` and encrypt a plain game HTML into it with
+`tools/encrypt-game.py` — the published `game.enc` files only open with the
+real codes.
 
 Opening `index.html` directly from the file system also works for browsing,
 but use a local server to test paths and QR codes properly.
@@ -360,6 +378,48 @@ unlock QR and its code printed underneath for laptop users.
 
 ---
 
+## Workshop-day checklist
+
+**The day before**
+
+1. Open the live hub, *Trainer tools*, enter the PIN. For each game type its
+   code → **Unlock QR** → **QR (PNG)**. Put the QR **and** the code on that
+   game's slide; the hub QR (*Join → Download QR*) goes on the first slide.
+2. Open each game once from the hub on the presenter laptop — this confirms
+   the code matches `game.enc` (no *"This code doesn't open the game file"*).
+3. Check the Formspree dashboard has submissions left this month.
+
+**Before you present**
+
+4. *Trainer tools → Lock all games on this laptop*, so the projector shows
+   participants exactly what they see (padlocks). **Close Trainer tools**.
+5. Pick the language with the **EN / عربي** switch — the games open in the
+   language the hub was last switched to.
+
+**During**
+
+6. First slide: hub QR. Participants who can't scan type the hub address.
+7. Per game: show its slide. Scanning opens the game already unlocked;
+   laptop users type the code in the hub's *"Have a game code?"* box.
+8. Feedback arrives in Formspree as the session runs; afterwards, on any
+   laptop that was used, *Trainer tools → Feedback → Download CSV* collects
+   what was saved locally.
+
+## Troubleshooting
+
+| Symptom | Cause → fix |
+|---|---|
+| *"That code doesn't match any game"* on the hub | Typo, or the code was changed and the hashes in `site-config.js` are newer than the slide. Regenerate the slide from Trainer tools. |
+| *"This code doesn't open the game file — tell the trainer"* | `access.keys` hash and `game.enc` were made with different codes. Re-encrypt that game with the current code (browser tool or `tools/encrypt-game.py`). |
+| Game shows the lock screen again after a reload | Normal if the browser is in private mode (nothing is remembered) or `access.hours` passed. |
+| *"You're offline"* / *"Couldn't load the game"* on the loader | Wi-Fi dropped while downloading `game.enc` (up to ~11 MB). Reconnect and reload; the loader shows download progress. |
+| Hub shows cards but no padlocks, Trainer tools has no code boxes | `access.enabled` is `false`. Encrypted games still need their code — set it back to `true`. |
+| Trainer tools won't open with the PIN | The PIN in use doesn't match `access.trainerPin`. Generate a new hash (see *Trainer PIN*) and deploy. |
+| QR code opens a 404 page | The folder name in `url` and the folder in the repo differ (watch for spaces/case); the 404 page links back to the hub. |
+| Speak button missing in the feedback panel | Firefox, or a non-`https` page — type instead. |
+
+---
+
 ## Accessibility notes
 
 - Semantic landmarks (`header`, `nav`, `main`, `section`, `footer`) and a
@@ -369,7 +429,9 @@ unlock QR and its code printed underneath for laptop users.
 - Intro can be skipped with the button or `Esc`; with
   `prefers-reduced-motion` the sketch is shown already finished and fades
   quickly.
-- Copy / QR actions announce their result in an `aria-live` toast.
+- Copy / QR actions announce their result in an `aria-live` toast; the code
+  box reports a wrong code with `role="alert"`.
+- Arabic switches the page to `dir="rtl"`; URLs and codes stay left-to-right.
 
 ## Credits
 

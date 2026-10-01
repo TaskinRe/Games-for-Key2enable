@@ -6,6 +6,58 @@
   var games = cfg.games || [];
   var accents = cfg.cardAccents || [];
 
+  /* ---------- Language (participant-facing text; Trainer tools stay English) ----------
+     Order: ?lang= on the URL → choice saved on this laptop → language the
+     games were last played in (sessionStorage "k2e-lang") → English. */
+  var LANGS = ["en", "ar"], LANG_KEY = "k2e-hub-lang";
+  var LANG = (function () {
+    var m = /[?&]lang=(en|ar)\b/i.exec(location.search);
+    var v = m && m[1].toLowerCase();
+    try { v = v || localStorage.getItem(LANG_KEY) || sessionStorage.getItem("k2e-lang"); } catch (e) { /* private mode */ }
+    return LANGS.indexOf(v) > -1 ? v : "en";
+  })();
+  var STR = {
+    en: {
+      skipIntro: "Skip intro", skipToGames: "Skip to games", navGames: "Games", navJoin: "Join", navIntro: "Intro",
+      replayTitle: "Replay the intro animation", pick: "Pick a game", gamesTitle: "Games",
+      codeHint: "Have a game code from the slide? Type it here \u2014 the right game opens.", codePh: "Game code", codeBtn: "Open",
+      codeNoMatch: "That code doesn\u2019t match any game \u2014 check the slide.", codeOpening: "Opening {game}\u2026",
+      step1: "Scan", step1p: "the QR code on the slide", step2: "Play", step2p: "on your laptop", step3: "Next", step3p: "\u201cBack to Game Hub\u201d",
+      join: "Join", joinP: "Scan, or type the address.", copy: "Copy", download: "Download QR", trainer: "Trainer tools",
+      game: "GAME", trains: "Trains:", ready: "Ready", soon: "Coming soon", locked: "Locked", unlocked: "Unlocked", play: "Play",
+      lockedTitle: "Scan the QR code on the slide, or type its code", unlockedTitle: "Unlocked on this laptop", until: " until ",
+      playLocked: "Play \u2014 locked, you will be asked for the game code: ", playOpen: "Play: ", difficulty: "Difficulty {n} of 3",
+      copied: "Link copied!", copiedBtn: "Copied", copyPrompt: "Copy this link:", copyAria: "Copy link to "
+    },
+    ar: {
+      skipIntro: "\u062a\u062e\u0637\u0651\u064a \u0627\u0644\u0645\u0642\u062f\u0645\u0629", skipToGames: "\u0627\u0644\u0627\u0646\u062a\u0642\u0627\u0644 \u0625\u0644\u0649 \u0627\u0644\u0623\u0644\u0639\u0627\u0628",
+      navGames: "\u0627\u0644\u0623\u0644\u0639\u0627\u0628", navJoin: "\u0627\u0646\u0636\u0645\u0651", navIntro: "\u0627\u0644\u0645\u0642\u062f\u0645\u0629",
+      replayTitle: "\u0625\u0639\u0627\u062f\u0629 \u062a\u0634\u063a\u064a\u0644 \u0627\u0644\u0645\u0642\u062f\u0645\u0629", pick: "\u0627\u062e\u062a\u0631 \u0644\u0639\u0628\u0629", gamesTitle: "\u0627\u0644\u0623\u0644\u0639\u0627\u0628",
+      codeHint: "\u0644\u062f\u064a\u0643 \u0631\u0645\u0632 \u0644\u0639\u0628\u0629 \u0645\u0646 \u0627\u0644\u0634\u0631\u064a\u062d\u0629\u061f \u0627\u0643\u062a\u0628\u0647 \u0647\u0646\u0627 \u0648\u0633\u062a\u064f\u0641\u062a\u062d \u0627\u0644\u0644\u0639\u0628\u0629 \u0627\u0644\u0645\u0646\u0627\u0633\u0628\u0629.",
+      codePh: "\u0631\u0645\u0632 \u0627\u0644\u0644\u0639\u0628\u0629", codeBtn: "\u0627\u0641\u062a\u062d",
+      codeNoMatch: "\u0647\u0630\u0627 \u0627\u0644\u0631\u0645\u0632 \u0644\u0627 \u064a\u0637\u0627\u0628\u0642 \u0623\u064a \u0644\u0639\u0628\u0629 \u2014 \u062a\u062d\u0642\u0651\u0642 \u0645\u0646 \u0627\u0644\u0634\u0631\u064a\u062d\u0629.",
+      codeOpening: "\u062c\u0627\u0631\u064d \u0641\u062a\u062d {game}\u2026",
+      step1: "\u0627\u0645\u0633\u062d", step1p: "\u0631\u0645\u0632 QR \u0639\u0644\u0649 \u0627\u0644\u0634\u0631\u064a\u062d\u0629", step2: "\u0627\u0644\u0639\u0628", step2p: "\u0639\u0644\u0649 \u062d\u0627\u0633\u0648\u0628\u0643",
+      step3: "\u0627\u0644\u062a\u0627\u0644\u064a", step3p: "\u00ab\u0627\u0644\u0639\u0648\u062f\u0629 \u0625\u0644\u0649 \u0645\u0631\u0643\u0632 \u0627\u0644\u0623\u0644\u0639\u0627\u0628\u00bb",
+      join: "\u0627\u0646\u0636\u0645\u0651", joinP: "\u0627\u0645\u0633\u062d \u0627\u0644\u0631\u0645\u0632 \u0623\u0648 \u0627\u0643\u062a\u0628 \u0627\u0644\u0639\u0646\u0648\u0627\u0646.", copy: "\u0646\u0633\u062e", download: "\u062a\u0646\u0632\u064a\u0644 QR",
+      trainer: "\u0623\u062f\u0648\u0627\u062a \u0627\u0644\u0645\u062f\u0631\u0651\u0628 (Trainer tools)",
+      game: "\u0644\u0639\u0628\u0629", trains: "\u064a\u062f\u0631\u0651\u0628:", ready: "\u062c\u0627\u0647\u0632\u0629", soon: "\u0642\u0631\u064a\u0628\u064b\u0627", locked: "\u0645\u0642\u0641\u0644\u0629", unlocked: "\u0645\u0641\u062a\u0648\u062d\u0629", play: "\u0627\u0644\u0639\u0628",
+      lockedTitle: "\u0627\u0645\u0633\u062d \u0631\u0645\u0632 QR \u0639\u0644\u0649 \u0627\u0644\u0634\u0631\u064a\u062d\u0629 \u0623\u0648 \u0627\u0643\u062a\u0628 \u0631\u0645\u0632 \u0627\u0644\u0644\u0639\u0628\u0629", unlockedTitle: "\u0645\u0641\u062a\u0648\u062d\u0629 \u0639\u0644\u0649 \u0647\u0630\u0627 \u0627\u0644\u062d\u0627\u0633\u0648\u0628", until: " \u062d\u062a\u0649 ",
+      playLocked: "\u0627\u0644\u0639\u0628 \u2014 \u0645\u0642\u0641\u0644\u0629\u060c \u0633\u064a\u064f\u0637\u0644\u0628 \u0645\u0646\u0643 \u0631\u0645\u0632 \u0627\u0644\u0644\u0639\u0628\u0629: ", playOpen: "\u0627\u0644\u0639\u0628: ", difficulty: "\u0627\u0644\u0635\u0639\u0648\u0628\u0629 {n} \u0645\u0646 3",
+      copied: "\u062a\u0645 \u0646\u0633\u062e \u0627\u0644\u0631\u0627\u0628\u0637!", copiedBtn: "\u062a\u0645 \u0627\u0644\u0646\u0633\u062e", copyPrompt: "\u0627\u0646\u0633\u062e \u0647\u0630\u0627 \u0627\u0644\u0631\u0627\u0628\u0637:", copyAria: "\u0646\u0633\u062e \u0631\u0627\u0628\u0637 "
+    }
+  };
+  function t(key, vars) {
+    var str = (STR[LANG] && STR[LANG][key]) || STR.en[key] || key;
+    Object.keys(vars || {}).forEach(function (k) { str = str.replace("{" + k + "}", vars[k]); });
+    return str;
+  }
+  /* Config text with an optional Arabic override: cfg.ar.tagline, game.ar.title … */
+  function tx(obj, key) {
+    var alt = LANG !== "en" && obj && obj[LANG];
+    return (alt && alt[key]) || (obj && obj[key]) || "";
+  }
+
   /* Base URL of the hub = the directory this index.html lives in.
      Works at https://user.github.io/repo/ as well as http://localhost:8000/ */
   var HUB_URL = new URL("./", window.location.href).href;
@@ -69,20 +121,22 @@
 
   function wireCopy(button, text, label) {
     button.copyText = text;
-    button.setAttribute("aria-label", "Copy link to " + label);
+    button.setAttribute("aria-label", t("copyAria") + label);
     if (button.copyWired) return;
     button.copyWired = true;
+    var restore = 0;
     button.addEventListener("click", function () {
       copyText(button.copyText).then(function () {
-        toast("Link copied!");
+        toast(t("copied"));
+        if (!restore) button.copyOld = button.innerHTML;
+        clearTimeout(restore);
         button.classList.add("is-copied");
-        var old = button.innerHTML;
         button.innerHTML = "";
         button.appendChild(icon("check"));
-        button.appendChild(document.createTextNode(" Copied"));
-        setTimeout(function () { button.classList.remove("is-copied"); button.innerHTML = old; }, 1600);
+        button.appendChild(document.createTextNode(" " + t("copiedBtn")));
+        restore = setTimeout(function () { restore = 0; button.classList.remove("is-copied"); button.innerHTML = button.copyOld; }, 1600);
       }).catch(function () {
-        window.prompt("Copy this link:", button.copyText);
+        window.prompt(t("copyPrompt"), button.copyText);
       });
     });
   }
@@ -125,21 +179,49 @@
     }
   }
 
-  /* ---------- Text bindings (brand, tagline, …) ---------- */
-  document.querySelectorAll("[data-cfg]").forEach(function (node) {
-    var key = node.getAttribute("data-cfg");
-    if (cfg[key]) node.textContent = cfg[key];
-  });
-  document.title = (cfg.brand || "") + " " + (cfg.hubName || "Game Hub") + " — " + (cfg.tagline || "");
+  /* ---------- Text bindings (brand, tagline, …) + language ---------- */
+  function applyText() {
+    document.documentElement.lang = LANG;
+    document.documentElement.dir = LANG === "ar" ? "rtl" : "ltr";
+    document.querySelectorAll("[data-i18n]").forEach(function (node) { node.textContent = t(node.getAttribute("data-i18n")); });
+    document.querySelectorAll("[data-i18n-title]").forEach(function (node) { node.title = t(node.getAttribute("data-i18n-title")); });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(function (node) { node.placeholder = t(node.getAttribute("data-i18n-placeholder")); });
+    document.querySelectorAll("[data-cfg]").forEach(function (node) {
+      var v = tx(cfg, node.getAttribute("data-cfg"));
+      if (v) node.textContent = v;
+    });
+    document.title = (cfg.brand || "") + " " + (tx(cfg, "hubName") || "Game Hub") + " \u2014 " + tx(cfg, "tagline");
 
-  // highlight the last word of the tagline
-  var h1 = document.getElementById("heroTitle");
-  if (h1 && cfg.tagline) {
-    var words = cfg.tagline.split(" ");
-    var last = words.pop();
-    h1.innerHTML = "";
-    h1.appendChild(document.createTextNode(words.join(" ") + " "));
-    h1.appendChild(el("span", { class: "hl", text: last }));
+    // highlight the last word of the tagline
+    var h1 = document.getElementById("heroTitle");
+    var tagline = tx(cfg, "tagline");
+    if (h1 && tagline) {
+      var words = tagline.split(" ");
+      var last = words.pop();
+      h1.innerHTML = "";
+      h1.appendChild(document.createTextNode(words.join(" ") + " "));
+      h1.appendChild(el("span", { class: "hl", text: last }));
+    }
+    document.querySelectorAll("#langToggle [data-lang]").forEach(function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-lang") === LANG ? "true" : "false");
+    });
+  }
+  function setLang(lang) {
+    if (LANGS.indexOf(lang) < 0 || lang === LANG) return;
+    LANG = lang;
+    try { localStorage.setItem(LANG_KEY, lang); sessionStorage.setItem("k2e-lang", lang); } catch (e) { /* private mode */ }
+    applyText();
+    renderCards();
+    var msg = document.getElementById("codeEntryMsg");
+    if (msg) msg.textContent = "";
+  }
+  applyText();
+  var langToggle = document.getElementById("langToggle");
+  if (langToggle) {
+    langToggle.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-lang]");
+      if (b) setLang(b.getAttribute("data-lang"));
+    });
   }
 
   function pad(n) { return (n < 10 ? "0" : "") + n; }
@@ -153,67 +235,98 @@
   function fmtUntil(d) {
     if (!d) return "";
     var opts = { weekday: "short", hour: "numeric", minute: "2-digit" };
-    try { return d.toLocaleString(undefined, opts); } catch (e) { return d.toString(); }
+    try { return d.toLocaleString(LANG === "ar" ? "ar" : undefined, opts); } catch (e) { return d.toString(); }
   }
   var anyGated = games.some(gated);
-  var lockNote = document.getElementById("lockNote");
-  if (lockNote) lockNote.hidden = !anyGated;
-  var lockWatchers = [];
-  function refreshLocks() { lockWatchers.forEach(function (fn) { fn(); }); }
+  var lockWatchers = [], cardWatchers = [];
+  function refreshLocks() { lockWatchers.concat(cardWatchers).forEach(function (fn) { fn(); }); }
 
   /* ---------- Game cards ---------- */
   var grid = document.getElementById("gameGrid");
-  games.forEach(function (game, i) {
-    var url = gameUrl(game);
-    var accent = accents[i % accents.length] || "#F76C5E";
-    var titleId = "game-title-" + game.id;
+  function renderCards() {
+    grid.innerHTML = "";
+    cardWatchers = [];
+    games.forEach(function (game, i) {
+      var url = gameUrl(game);
+      var accent = accents[i % accents.length] || "#F76C5E";
+      var titleId = "game-title-" + game.id;
 
-    var dots = el("span", { class: "dots", "aria-hidden": "true" });
-    for (var d = 1; d <= 3; d++) dots.appendChild(el("i", { class: d <= (game.difficulty || 0) ? "on" : "" }));
+      var dots = el("span", { class: "dots", "aria-hidden": "true" });
+      for (var d = 1; d <= 3; d++) dots.appendChild(el("i", { class: d <= (game.difficulty || 0) ? "on" : "" }));
 
-    var trains = el("div", { class: "game-card__trains" }, [el("span", { class: "tag tag--label", text: "Trains:" })].concat(
-      (game.trains || []).map(function (t) { return el("span", { class: "tag", text: t }); })
-    ));
+      var trainList = tx(game, "trains") || [];
+      var trains = el("div", { class: "game-card__trains" }, [el("span", { class: "tag tag--label", text: t("trains") })].concat(
+        trainList.map(function (name) { return el("span", { class: "tag", text: name }); })
+      ));
 
-    var play = el("a", { class: "btn btn--primary", href: url, "aria-describedby": titleId }, [icon("play"), document.createTextNode(" Play")]);
-    var card = el("li", { class: "game-card", style: "--c:" + accent }, [
-      el("div", { class: "game-card__top" }, [
-        el("span", { class: "game-card__icon", "aria-hidden": "true" }, [icon(game.icon || "star", "")]),
-        el("span", { class: "game-card__num", text: "GAME " + pad(i + 1) })
-      ]),
-      el("h3", { id: titleId, text: game.title }),
-      el("p", { class: "game-card__desc", text: game.description || "" }),
-      trains,
-      el("div", { class: "game-card__meta" }, [
-        el("span", { class: "game-card__level" }),
-        game.ready === false ? el("span", { class: "badge badge--soon", text: "Coming soon" }) : el("span", { class: "badge", text: "Ready" })
-      ]),
-      el("div", { class: "game-card__actions" }, [play])
-    ]);
-    if (game.difficulty) {
-      var meta = card.querySelector(".game-card__level");
-      meta.appendChild(dots);
-      meta.setAttribute("aria-label", "Difficulty " + game.difficulty + " of 3");
-    }
-    if (gated(game)) {
-      var badge = card.querySelector(".badge");
-      if (game.ready === false) card.querySelector(".game-card__meta").appendChild(badge = el("span", { class: "badge" }));
-      var paint = function () {
-        var isLocked = locked(game);
-        card.classList.toggle("is-locked", isLocked);
-        badge.className = "badge " + (isLocked ? "badge--locked" : "badge--open");
-        badge.textContent = "";
-        badge.appendChild(icon(isLocked ? "lock" : "unlock"));
-        badge.appendChild(document.createTextNode(isLocked ? " Locked" : " Unlocked"));
-        var until = !isLocked && gate.until(game.id);
-        badge.title = isLocked ? "Scan the QR code on the slide, or type its code" : (until ? "Unlocked on this laptop until " + fmtUntil(until) : "Unlocked on this laptop");
-        play.setAttribute("aria-label", (isLocked ? "Play \u2014 locked, you will be asked for the game code: " : "Play: ") + game.title);
-      };
-      paint();
-      lockWatchers.push(paint);
-    }
-    grid.appendChild(card);
-  });
+      var play = el("a", { class: "btn btn--primary", href: url, "aria-describedby": titleId }, [icon("play"), document.createTextNode(" " + t("play"))]);
+      var card = el("li", { class: "game-card", style: "--c:" + accent }, [
+        el("div", { class: "game-card__top" }, [
+          el("span", { class: "game-card__icon", "aria-hidden": "true" }, [icon(game.icon || "star", "")]),
+          el("span", { class: "game-card__num", text: t("game") + " " + pad(i + 1) })
+        ]),
+        el("h3", { id: titleId, text: tx(game, "title") }),
+        el("p", { class: "game-card__desc", text: tx(game, "description") }),
+        trains,
+        el("div", { class: "game-card__meta" }, [
+          el("span", { class: "game-card__level" }),
+          game.ready === false ? el("span", { class: "badge badge--soon", text: t("soon") }) : el("span", { class: "badge", text: t("ready") })
+        ]),
+        el("div", { class: "game-card__actions" }, [play])
+      ]);
+      if (game.difficulty) {
+        var meta = card.querySelector(".game-card__level");
+        meta.appendChild(dots);
+        meta.setAttribute("aria-label", t("difficulty", { n: game.difficulty }));
+      }
+      if (gated(game)) {
+        var badge = card.querySelector(".badge");
+        if (game.ready === false) card.querySelector(".game-card__meta").appendChild(badge = el("span", { class: "badge" }));
+        var paint = function () {
+          var isLocked = locked(game);
+          card.classList.toggle("is-locked", isLocked);
+          badge.className = "badge " + (isLocked ? "badge--locked" : "badge--open");
+          badge.textContent = "";
+          badge.appendChild(icon(isLocked ? "lock" : "unlock"));
+          badge.appendChild(document.createTextNode(" " + t(isLocked ? "locked" : "unlocked")));
+          var until = !isLocked && gate.until(game.id);
+          badge.title = isLocked ? t("lockedTitle") : t("unlockedTitle") + (until ? t("until") + fmtUntil(until) : "");
+          play.setAttribute("aria-label", t(isLocked ? "playLocked" : "playOpen") + tx(game, "title"));
+        };
+        paint();
+        cardWatchers.push(paint);
+      }
+      grid.appendChild(card);
+    });
+  }
+  renderCards();
+
+  /* ---------- Code entry on the hub: a code opens the game it belongs to ---------- */
+  (function () {
+    var form = document.getElementById("codeEntry");
+    if (!form || !anyGated) return;
+    form.hidden = false;
+    var input = document.getElementById("codeEntryInput"), msg = document.getElementById("codeEntryMsg");
+    input.addEventListener("input", function () { msg.textContent = ""; form.classList.remove("is-wrong"); });
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var code = input.value.trim();
+      if (!code) { input.focus(); return; }
+      var game = games.filter(function (g) { return gated(g) && gate.verify(g.id, code); })[0];
+      if (!game) {
+        msg.textContent = t("codeNoMatch");
+        form.classList.remove("is-wrong");
+        void form.offsetWidth;
+        form.classList.add("is-wrong");
+        input.select();
+        return;
+      }
+      gate.unlock(game.id, code);
+      refreshLocks();
+      msg.textContent = t("codeOpening", { game: tx(game, "title") });
+      window.location.href = gameUrl(game);
+    });
+  })();
 
   /* ---------- Join: hub URL + QR ---------- */
   var hubUrlEl = document.getElementById("hubUrl");
@@ -271,6 +384,8 @@
   /* ---------- Share list: per-game link + QR (+ unlock QR when gated) ---------- */
   var shareList = document.getElementById("shareList");
   var shareIntro = document.getElementById("shareIntro");
+  var shareTip = document.getElementById("shareTip");
+  if (shareTip && anyGated) shareTip.hidden = false;
   if (shareIntro && anyGated) {
     shareIntro.textContent = "One slide per game: type its code \u2192 Unlock QR \u2192 put the QR code and the code on that slide. Scanning (or typing the code) unlocks just that game" + (gate.hours > 0 ? " for " + gate.hours + " h." : " until the tab closes.");
   }

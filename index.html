@@ -5,11 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Key2Enable Game Hub — Interactive Training Games</title>
   <meta name="description" content="Five interactive training games for the Key2Enable workshop. Pick a game, play it, come back for the next one.">
-  <meta name="theme-color" content="#FFF8EE">
+  <meta name="theme-color" content="#FBF9F4">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Key2Enable Game Hub — Interactive Training Games">
+  <meta property="og:description" content="Five interactive training games for the Key2Enable workshop. Pick a game, play it, come back for the next one.">
+  <meta name="twitter:card" content="summary">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=Cairo:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/hub.css">
   <script src="site-config.js"></script>
   <script src="assets/js/gate.js"></script>
@@ -49,10 +53,11 @@
       <p class="intro__caption" id="introCaption" aria-live="polite"></p>
     </div>
     <div class="intro__progress" aria-hidden="true"><span></span></div>
-    <button type="button" class="intro__skip" id="introSkip">Skip intro</button>
+    <button type="button" class="intro__skip" id="introSkip" data-i18n="skipIntro">Skip intro</button>
   </div>
 
-  <a class="skip-link" href="#games">Skip to games</a>
+  <noscript><p class="noscript">This site needs JavaScript to show the games. Please enable it and reload.</p></noscript>
+  <a class="skip-link" href="#games" data-i18n="skipToGames">Skip to games</a>
 
   <!-- ===== Header ===== -->
   <header class="site-header">
@@ -63,11 +68,15 @@
       <span class="logo__text"><b data-cfg="brand">Key2Enable</b> <span data-cfg="hubName">Game Hub</span></span>
     </a>
     <nav class="site-nav" aria-label="Sections">
-      <a href="#games">Games</a>
-      <a href="#join">Join</a>
-      <button type="button" class="btn btn--ghost btn--sm" id="replayIntro" title="Replay the intro animation">
-        <svg class="ico" aria-hidden="true"><use href="#i-replay"/></svg> Intro
+      <a href="#games" data-i18n="navGames">Games</a>
+      <a href="#join" data-i18n="navJoin">Join</a>
+      <button type="button" class="btn btn--ghost btn--sm" id="replayIntro" data-i18n-title="replayTitle" title="Replay the intro animation">
+        <svg class="ico" aria-hidden="true"><use href="#i-replay"/></svg> <span data-i18n="navIntro">Intro</span>
       </button>
+      <div class="lang" role="group" aria-label="Language" id="langToggle">
+        <button type="button" class="lang__btn" data-lang="en" lang="en" aria-pressed="true">EN</button>
+        <button type="button" class="lang__btn" data-lang="ar" lang="ar" aria-pressed="false">عربي</button>
+      </div>
     </nav>
   </header>
 
@@ -85,15 +94,22 @@
       <h1 id="heroTitle" class="hero__title" data-cfg="tagline">Interactive Training Games</h1>
       <p class="hero__lead" data-cfg="description"></p>
       <div class="hero__actions">
-        <a class="btn btn--primary btn--lg" href="#games"><svg class="ico" aria-hidden="true"><use href="#i-play"/></svg> Pick a game</a>
+        <a class="btn btn--primary btn--lg" href="#games"><svg class="ico" aria-hidden="true"><use href="#i-play"/></svg> <span data-i18n="pick">Pick a game</span></a>
       </div>
     </section>
 
     <!-- ===== Games ===== -->
     <section class="games" id="games" aria-labelledby="gamesTitle">
       <div class="section-head">
-        <h2 id="gamesTitle"><span class="u">Games</span></h2>
-        <p class="games__lock-note" id="lockNote" hidden><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg> Locked? Scan the QR code on the slide — or type its code.</p>
+        <h2 id="gamesTitle"><span class="u" data-i18n="gamesTitle">Games</span></h2>
+        <form class="code-entry" id="codeEntry" hidden autocomplete="off">
+          <label for="codeEntryInput" class="code-entry__label"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg> <span data-i18n="codeHint">Have a game code from the slide? Type it here — the right game opens.</span></label>
+          <div class="code-entry__row">
+            <input id="codeEntryInput" type="text" inputmode="text" autocapitalize="characters" spellcheck="false" data-i18n-placeholder="codePh" placeholder="Game code" required>
+            <button type="submit" class="btn btn--primary btn--sm"><svg class="ico" aria-hidden="true"><use href="#i-unlock"/></svg> <span data-i18n="codeBtn">Open</span></button>
+          </div>
+          <p class="code-entry__msg" id="codeEntryMsg" role="alert"></p>
+        </form>
       </div>
       <ul class="game-grid" id="gameGrid" role="list"></ul>
     </section>
@@ -102,11 +118,11 @@
     <section class="how" id="how-to-play" aria-labelledby="howTitle">
       <h2 id="howTitle" class="sr-only">How it works</h2>
       <ol class="steps">
-        <li><span class="steps__pic" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-qr"/></svg></span><span class="steps__num">1</span><h3>Scan</h3><p>the QR code on the slide</p></li>
+        <li><span class="steps__pic" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-qr"/></svg></span><span class="steps__num">1</span><h3 data-i18n="step1">Scan</h3><p data-i18n="step1p">the QR code on the slide</p></li>
         <li class="steps__arrow" aria-hidden="true"><svg viewBox="0 0 60 30"><path d="M2 18c15-10 30 6 44-2M40 8l8 6-6 8"/></svg></li>
-        <li><span class="steps__pic" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-keyboard"/></svg></span><span class="steps__num">2</span><h3>Play</h3><p>on your laptop</p></li>
+        <li><span class="steps__pic" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-keyboard"/></svg></span><span class="steps__num">2</span><h3 data-i18n="step2">Play</h3><p data-i18n="step2p">on your laptop</p></li>
         <li class="steps__arrow" aria-hidden="true"><svg viewBox="0 0 60 30"><path d="M2 12c15 10 30-6 44 2M40 22l8-6-6-8"/></svg></li>
-        <li><span class="steps__pic" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-replay"/></svg></span><span class="steps__num">3</span><h3>Next</h3><p>“Back to Game Hub”</p></li>
+        <li><span class="steps__pic" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-replay"/></svg></span><span class="steps__num">3</span><h3 data-i18n="step3">Next</h3><p data-i18n="step3p">“Back to Game Hub”</p></li>
       </ol>
     </section>
 
@@ -114,22 +130,23 @@
     <section class="join" id="join" aria-labelledby="joinTitle">
       <div class="join__card">
         <div class="join__text">
-          <h2 id="joinTitle"><span class="u">Join</span></h2>
-          <p>Scan, or type the address.</p>
+          <h2 id="joinTitle"><span class="u" data-i18n="join">Join</span></h2>
+          <p data-i18n="joinP">Scan, or type the address.</p>
           <div class="url-box">
-            <code id="hubUrl">…</code>
-            <button type="button" class="btn btn--primary" id="copyHubUrl"><svg class="ico" aria-hidden="true"><use href="#i-link"/></svg> Copy</button>
+            <code id="hubUrl" dir="ltr">…</code>
+            <button type="button" class="btn btn--primary" id="copyHubUrl"><svg class="ico" aria-hidden="true"><use href="#i-link"/></svg> <span data-i18n="copy">Copy</span></button>
           </div>
         </div>
         <figure class="qr" id="hubQr">
           <div class="qr__img" id="hubQrImg" role="img" aria-label="QR code for the Game Hub link"></div>
-          <figcaption>Game Hub</figcaption>
-          <a class="btn btn--ghost btn--sm" id="hubQrDownload" download="game-hub-qr.png" href="#">Download QR</a>
+          <figcaption data-cfg="hubName">Game Hub</figcaption>
+          <a class="btn btn--ghost btn--sm" id="hubQrDownload" download="game-hub-qr.png" href="#" data-i18n="download">Download QR</a>
         </figure>
       </div>
 
       <details class="share">
-        <summary><svg class="ico" aria-hidden="true"><use href="#i-qr"/></svg> Trainer tools</summary>
+        <summary><svg class="ico" aria-hidden="true"><use href="#i-qr"/></svg> <span data-i18n="trainer">Trainer tools</span></summary>
+        <div class="share__body" dir="ltr" lang="en">
         <form class="pin-form" id="pinForm" hidden>
           <p class="share__intro">For trainers. Enter the trainer PIN.</p>
           <div class="pin-form__row">
@@ -144,6 +161,7 @@
           <button type="button" class="btn btn--ghost btn--sm" id="pinSignOut">Close Trainer tools</button>
         </div>
         <p class="share__intro" id="shareIntro">Each game has its own link and QR code.</p>
+        <p class="share__intro share__tip" id="shareTip" hidden>Workshop day: 1) hub QR on the first slide → 2) one slide per game with its <b>Unlock QR + code</b> → 3) press <b>Lock all games on this laptop</b> before you present, so participants see what you see. Participants can also type a code on the hub itself.</p>
         <ul class="share__list" id="shareList" role="list"></ul>
         <div class="share__feedback" id="accessTools" hidden>
           <h3>Change a game code</h3>
@@ -182,6 +200,7 @@
             <button type="button" class="btn btn--ghost btn--sm" id="feedbackCsv" disabled>Download CSV</button>
             <button type="button" class="btn btn--ghost btn--sm" id="feedbackClear" disabled>Clear</button>
           </div>
+        </div>
         </div>
         </div>
       </details>
