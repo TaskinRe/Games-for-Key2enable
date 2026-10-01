@@ -1,6 +1,6 @@
 # Key2Enable Game Hub
 
-A small, static website that presents five training games as one cohesive
+A small, static website that presents six training games as one cohesive
 "Game Hub". Built for a live workshop: participants open the hub on their
 laptops (or scan a QR code), pick a game, play it on its own page, and come
 back for the next one.
@@ -15,10 +15,12 @@ back for the next one.
 
 ## Authorship
 
-**All five games (Keyboard Grove, Floral Artistry, Sky Catch, Robot Workshop,
-Typing Teacher) were designed and built by rt2609 (TaskinRe).** Devin's role
-was limited to deploying them to this hub and encrypting the game files
-(the hub site, access-code gate and encryption tooling in this repository).
+**The first five games (Keyboard Grove, Floral Artistry, Sky Catch, Robot
+Workshop, Typing Teacher) were designed and built by rt2609 (TaskinRe).**
+Devin's role for those was limited to deploying them to this hub and
+encrypting the game files (the hub site, access-code gate and encryption
+tooling in this repository). Game 06 · Note Quest (music theory for students
+with cerebral palsy) was built by Devin at rt2609's request.
 
 ---
 
@@ -48,13 +50,14 @@ was limited to deploying them to this hub and encrypting the game files
 ├── floral artistry/        ← Game 02 · Floral Artistry (live, encrypted)
 ├── game-03/                ← Game 03 · Sky Catch (live, encrypted)
 ├── game-04/                ← Game 04 · Robot Workshop (live, encrypted)
-└── game-05/                ← Game 05 · Typing Teacher (live, encrypted)
+├── game-05/                ← Game 05 · Typing Teacher (live, encrypted)
+└── game-06/                ← Game 06 · Note Quest (live, encrypted)
 ```
 
 Each game folder is independent: it has its own URL and is not bundled with
 the others.
 
-## The five games
+## The six games
 
 | # | Folder              | Title           | Status      | URL |
 |---|---------------------|-----------------|-------------|-----|
@@ -63,12 +66,45 @@ the others.
 | 3 | `game-03/`          | Sky Catch       | live        | `https://taskinre.github.io/Games-for-Key2enable/game-03/` |
 | 4 | `game-04/`          | Robot Workshop  | live        | `https://taskinre.github.io/Games-for-Key2enable/game-04/` |
 | 5 | `game-05/`          | Typing Teacher  | live        | `https://taskinre.github.io/Games-for-Key2enable/game-05/` |
+| 6 | `game-06/`          | Note Quest      | live        | `https://taskinre.github.io/Games-for-Key2enable/game-06/` |
 
 The live games are single self-contained HTML files; the only changes made to
 them are the `<script>` lines that add the lock, the "← Back to Game Hub"
 button and the Feedback panel. They are then **stored encrypted** (see
 [Encrypted game files](#encrypted-game-files-source-protection)) — the
 `index.html` you see in a live game's folder is just a small loader.
+
+### Game 06 · Note Quest (music theory)
+
+Note Quest teaches real music — not just a game with musical sound effects —
+and is designed for students with cerebral palsy:
+
+- **Piano** — eight big keys (C to high C) with letter + solfège names, the
+  note shown on a treble-clef staff as you play, "play the scale", and a
+  "find the note" practice.
+- **Read the staff** — line notes (E G B D F), space notes (F A C E), then
+  all notes; mnemonics as hints; every note can be heard.
+- **Rhythm** — whole / half / quarter / eighth notes and how many beats they
+  last; "fill the 4/4 bar" problems.
+- **Listen (ear training)** — higher or lower, same / step / skip, and
+  happy (major) or sad (minor) chords.
+- **Play a song** — Hot Cross Buns, Mary Had a Little Lamb, Twinkle Twinkle,
+  London Bridge, Jingle Bells, Ode to Joy — one note at a time with the next
+  key glowing, lyrics and staff following along. Wrong keys are never
+  penalised; there are no timers anywhere in the game.
+
+Accessible input: number keys `1`–`8` press piano keys / answers, `Space` or
+`Enter` activates, arrow keys move between buttons, `Esc` goes back, `R`
+repeats the sound. The ⚙ Settings panel offers 2/3/4 answers per question,
+**switch scanning** (slow / medium / fast, one switch = `Space`/`Enter`),
+**hover-to-select** (1 s / 2 s dwell), a **repeat-key guard** against
+unintended double presses, larger text, high contrast, reduced animation and
+**spoken prompts**. Settings are remembered in the browser. All audio is
+synthesised with the Web Audio API, so no sound files are needed.
+
+Like the other games, only the encrypted `game-06/game.enc` and its loader
+are published; to change the game, edit the plain HTML source and re-encrypt
+it with the game's code: `python3 tools/encrypt-game.py game-06 <CODE> path/to/note-quest.html`.
 
 ---
 
@@ -303,8 +339,8 @@ npx serve .                        # Node
 Then open <http://localhost:8000/>. Check:
 
 - the intro plays (add `?intro=1` to force it again, or use "Replay intro");
-- all five cards open their own page (`/keyboard-grove/`, `/floral artistry/`,
-  `/game-03/` … `/game-05/`) on its lock screen; a wrong code is refused,
+- all six cards open their own page (`/keyboard-grove/`, `/floral artistry/`,
+  `/game-03/` … `/game-06/`) on its lock screen; a wrong code is refused,
   the game's code (or `?key=CODE` on the URL) unlocks only that game;
 - "← Back to Game Hub" returns to the hub;
 - "Copy link" shows "Link copied!";
@@ -335,6 +371,7 @@ Game 02  https://taskinre.github.io/Games-for-Key2enable/floral%20artistry/
 Game 03  https://taskinre.github.io/Games-for-Key2enable/game-03/
 Game 04  https://taskinre.github.io/Games-for-Key2enable/game-04/
 Game 05  https://taskinre.github.io/Games-for-Key2enable/game-05/
+Game 06  https://taskinre.github.io/Games-for-Key2enable/game-06/
 ```
 
 All links in the site are relative, so the repository name never has to be
