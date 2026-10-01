@@ -18,7 +18,7 @@ window.SITE_CONFIG = {
   brand: "Key2Enable",
   hubName: "Game Hub",
   tagline: "Interactive Training Games",
-  description: "Five short games. Pick one, scan its code, play.",
+  description: "Six short games. Pick one, scan its code, play.",
 
   /* ---------- Intro animation ----------
      playIntro : true  → the pencil-sketch intro plays once per browser session
@@ -92,6 +92,16 @@ window.SITE_CONFIG = {
       difficulty: 2,
       icon: "letters",
       ready: true
+    },
+    {
+      id: "game-06",
+      url: "game-06/",
+      title: "Note Quest",
+      description: "A keyboard-only music adventure: five worlds of piano notes, staff reading, rhythm, ear training and real songs — combos, stars and no timers.",
+      trains: ["Music theory", "Listening"],
+      difficulty: 2,
+      icon: "music",
+      ready: true
     }
   ],
 
@@ -115,7 +125,8 @@ window.SITE_CONFIG = {
       "game-02": "c07eda507983ecfdf2c7456605a63673221ab2295eca81b5c387b85c8e76a841",
       "game-03": "6ce251051c975512ed1355b9cda32fe98456efed079a80deed963f5942f34416",
       "game-04": "5c11fc3455e8442a809bb6c4c265d38741ae7333bea6e9fd650216e0353fcb29",
-      "game-05": "15a0a5976d1629058a32ceeadb041aebab7e41f1ad3992638a7aa8b5ea0fc0b9"
+      "game-05": "15a0a5976d1629058a32ceeadb041aebab7e41f1ad3992638a7aa8b5ea0fc0b9",
+      "game-06": "914714f28ac1884334d0039c335ff5ab886f36c28a640827331bd6df1cff0ff7"
     },
     storageKey: "k2e-access"
   },
@@ -142,5 +153,5 @@ window.SITE_CONFIG = {
   /* ---------- Theme ----------
      Card accent colours are applied in order to the games above.
      All other colours are CSS variables at the top of assets/css/hub.css. */
-  cardAccents: ["#F76C5E", "#F9B233", "#3FB8AF", "#6C5CE7", "#2ECC71"]
+  cardAccents: ["#F76C5E", "#F9B233", "#3FB8AF", "#6C5CE7", "#2ECC71", "#4A90E2"]
 };

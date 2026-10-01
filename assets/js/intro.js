@@ -260,7 +260,7 @@
     }
 
     if (t >= T.caption) once("caption", function () {
-      caption.textContent = "Five games · one hub · let's play!";
+      caption.textContent = "Six games · one hub · let's play!";
       caption.classList.add("show");
     });
 
@@ -292,7 +292,7 @@
       scene.subLetters.forEach(function (l) { l.style.opacity = 1; });
       scene.confetti.forEach(function (e) { e.style.opacity = 1; });
       scene.keys.forEach(function (k, i) { k.style.fill = KEY_COLORS[i % KEY_COLORS.length]; k.style.fillOpacity = ".85"; });
-      caption.textContent = "Five games · one hub · let's play!";
+      caption.textContent = "Six games · one hub · let's play!";
       caption.classList.add("show");
       setTimeout(finish, 1400);
       return;
