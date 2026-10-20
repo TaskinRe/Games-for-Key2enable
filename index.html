@@ -10,10 +10,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/hub.css">
-  <script src="site-config.js"></script>
-  <script src="assets/js/gate.js"></script>
-  <script src="assets/js/vault.js"></script>
+  <link rel="stylesheet" href="assets/css/hub.css?v=7">
+  <script src="site-config.js?v=5"></script>
+  <script src="assets/js/gate.js?v=4"></script>
+  <script src="assets/js/vault.js?v=4"></script>
 </head>
 <body>
 
@@ -42,6 +42,15 @@
 
   <!-- ===== Intro (pencil-sketch splash). Filled by assets/js/intro.js ===== -->
   <div id="intro" class="intro" hidden>
+    <div class="intro__sponsor" id="introSponsor" hidden>
+      <p class="intro__sponsor-label">Supported by</p>
+      <img class="intro__sponsor-logo" src="assets/img/taqa-logo.png" alt="TAQA Transmission">
+      <p class="intro__sponsor-tag" id="sponsorTag"></p>
+      <button type="button" class="btn btn--primary btn--lg intro__sponsor-enter" id="sponsorEnter">
+        <svg class="ico" aria-hidden="true"><use href="#i-play"/></svg> Enter Game Hub
+      </button>
+      <p class="intro__sponsor-brand">Key2Enable Game Hub</p>
+    </div>
     <div class="intro__stage">
       <svg class="intro__svg" viewBox="0 0 900 520" role="img" aria-labelledby="introTitle">
         <title id="introTitle">Key2Enable Game Hub</title>
@@ -51,6 +60,22 @@
     <div class="intro__progress" aria-hidden="true"><span></span></div>
     <button type="button" class="intro__skip" id="introSkip">Skip intro</button>
   </div>
+
+  <!-- Unhide the intro overlay before first paint so the hub never flashes. -->
+  <script>
+    (function () {
+      try {
+        var cfg = (window.SITE_CONFIG && window.SITE_CONFIG.intro) || {};
+        var seen = sessionStorage.getItem("k2e-intro-seen") === "1";
+        if (cfg.enabled === false || (seen && !/[?&]intro=1/.test(location.search))) return;
+        document.getElementById("intro").hidden = false;
+        document.body.classList.add("intro-active");
+        var sp = (window.SITE_CONFIG && window.SITE_CONFIG.sponsor) || {};
+        var s = document.getElementById("introSponsor");
+        if (s && sp.enabled !== false) s.hidden = false;
+      } catch (e) { /* let the hub render normally */ }
+    })();
+  </script>
 
   <a class="skip-link" href="#games">Skip to games</a>
 
@@ -87,6 +112,10 @@
       <div class="hero__actions">
         <a class="btn btn--primary btn--lg" href="#games"><svg class="ico" aria-hidden="true"><use href="#i-play"/></svg> Pick a game</a>
       </div>
+      <aside class="sponsor" aria-label="Sponsor">
+        <p class="sponsor__label">Supported by</p>
+        <img class="sponsor__logo" src="assets/img/taqa-logo.png" alt="TAQA Transmission">
+      </aside>
     </section>
 
     <!-- ===== Games ===== -->
@@ -196,7 +225,8 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="assets/vendor/qrcode.js"></script>
-  <script src="assets/js/intro.js"></script>
-  <script src="assets/js/hub.js"></script>
+  <script src="assets/js/intro.js?v=4"></script>
+  <script src="assets/js/hub.js?v=5"></script>
+  <script src="assets/js/fx.js?v=4"></script>
 </body>
 </html>

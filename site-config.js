@@ -26,11 +26,23 @@ window.SITE_CONFIG = {
                  button is always shown). */
   intro: {
     enabled: true,
-    durationMs: 7200
+    durationMs: 6800
+  },
+
+  /* ---------- Sponsor splash ----------
+     The opening screen: the sponsor logo and its tagline animate in, then
+     it waits for the "Enter Game Hub" button. Clicking it plays a short
+     music cue and the intro sketch, then the hub opens.
+     enabled : false → skip the sponsor screen */
+  sponsor: {
+    enabled: true,
+    name: "TAQA",
+    tagline: "Powering Potential. Empowering Futures."
   },
 
   /* ---------- Games ----------
      id          : folder name (also used in URLs, e.g. ./game-01/)
+     image       : preview picture on the card (optional; leave out for the icon look)
      url         : where "Play Now" goes. Relative folder ("game-01/") or a full
                    URL ("https://username.github.io/other-repo/") both work.
                    If a game is hosted elsewhere, just paste its link here.
@@ -46,6 +58,7 @@ window.SITE_CONFIG = {
     {
       id: "game-01",
       url: "keyboard-grove/",
+      image: "assets/img/cards/game-01.jpg?v=4",
       title: "Keyboard Grove",
       description: "Learn your Key-X buttons in a night-time grove, one short chapter at a time.",
       trains: ["Key-X buttons", "Getting started"],
@@ -56,6 +69,7 @@ window.SITE_CONFIG = {
     {
       id: "game-02",
       url: "floral artistry/",
+      image: "assets/img/cards/game-02.jpg?v=4",
       title: "Floral Artistry",
       description: "Design your own flower artwork in a calm night garden.",
       trains: ["Creativity", "Making choices"],
@@ -66,6 +80,7 @@ window.SITE_CONFIG = {
     {
       id: "game-03",
       url: "game-03/",
+      image: "assets/img/cards/game-03.jpg?v=4",
       title: "Sky Catch",
       description: "Catch the falling pictures with the matching number key, then replay the pattern from memory.",
       trains: ["Number keys", "Recognition"],
@@ -76,6 +91,7 @@ window.SITE_CONFIG = {
     {
       id: "game-04",
       url: "game-04/",
+      image: "assets/img/cards/game-04.jpg?v=4",
       title: "Robot Workshop",
       description: "Click the arrows to plan Byte the robot's route to the charging station, then run it.",
       trains: ["Mouse", "Planning"],
@@ -86,6 +102,7 @@ window.SITE_CONFIG = {
     {
       id: "game-05",
       url: "game-05/",
+      image: "assets/img/cards/game-05.jpg?v=4",
       title: "Typing Teacher",
       description: "Learn to type one letter at a time: travel the A-to-Z map, practise groups of letters, then build simple words.",
       trains: ["Letter keys", "Typing"],
@@ -142,5 +159,5 @@ window.SITE_CONFIG = {
   /* ---------- Theme ----------
      Card accent colours are applied in order to the games above.
      All other colours are CSS variables at the top of assets/css/hub.css. */
-  cardAccents: ["#F76C5E", "#F9B233", "#3FB8AF", "#6C5CE7", "#2ECC71"]
+  cardAccents: ["#1F6B63", "#D96F9B", "#3E8FD1", "#D4792B", "#4E9A55"]
 };

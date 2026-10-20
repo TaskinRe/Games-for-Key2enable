@@ -168,49 +168,44 @@
     var accent = accents[i % accents.length] || "#F76C5E";
     var titleId = "game-title-" + game.id;
 
-    var dots = el("span", { class: "dots", "aria-hidden": "true" });
-    for (var d = 1; d <= 3; d++) dots.appendChild(el("i", { class: d <= (game.difficulty || 0) ? "on" : "" }));
-
-    var trains = el("div", { class: "game-card__trains" }, [el("span", { class: "tag tag--label", text: "Trains:" })].concat(
-      (game.trains || []).map(function (t) { return el("span", { class: "tag", text: t }); })
-    ));
-
     var play = el("a", { class: "btn btn--primary", href: url, "aria-describedby": titleId }, [icon("play"), document.createTextNode(" Play")]);
-    var card = el("li", { class: "game-card", style: "--c:" + accent }, [
-      el("div", { class: "game-card__top" }, [
-        el("span", { class: "game-card__icon", "aria-hidden": "true" }, [icon(game.icon || "star", "")]),
-        el("span", { class: "game-card__num", text: "GAME " + pad(i + 1) })
-      ]),
+    var lockChip = el("span", { class: "game-card__lock", "aria-hidden": "true" }, [icon("lock"), document.createTextNode(" Locked")]);
+    var cardChildren = [];
+    if (game.image) {
+      cardChildren.push(el("div", { class: "game-card__media" }, [
+        el("img", { src: game.image, alt: "", loading: "lazy" }),
+        lockChip
+      ]));
+    }
+    cardChildren.push(
       el("h3", { id: titleId, text: game.title }),
       el("p", { class: "game-card__desc", text: game.description || "" }),
-      trains,
-      el("div", { class: "game-card__meta" }, [
-        el("span", { class: "game-card__level" }),
-        game.ready === false ? el("span", { class: "badge badge--soon", text: "Coming soon" }) : el("span", { class: "badge", text: "Ready" })
-      ]),
       el("div", { class: "game-card__actions" }, [play])
-    ]);
-    if (game.difficulty) {
-      var meta = card.querySelector(".game-card__level");
-      meta.appendChild(dots);
-      meta.setAttribute("aria-label", "Difficulty " + game.difficulty + " of 3");
+    );
+    var cardInk = "#fff";
+    var m = /^#?([0-9a-f]{6})$/i.exec(accent);
+    if (m) {
+      var rgb = parseInt(m[1], 16);
+      var lum = (0.2126 * (rgb >> 16) + 0.7152 * ((rgb >> 8) & 255) + 0.0722 * (rgb & 255)) / 255;
+      if (lum > 0.55) cardInk = "#17202E";
     }
+    var card = el("li", { class: "game-card", style: "--c:" + accent + ";--ct:" + cardInk }, cardChildren);
     if (gated(game)) {
-      var badge = card.querySelector(".badge");
-      if (game.ready === false) card.querySelector(".game-card__meta").appendChild(badge = el("span", { class: "badge" }));
       var paint = function () {
         var isLocked = locked(game);
         card.classList.toggle("is-locked", isLocked);
-        badge.className = "badge " + (isLocked ? "badge--locked" : "badge--open");
-        badge.textContent = "";
-        badge.appendChild(icon(isLocked ? "lock" : "unlock"));
-        badge.appendChild(document.createTextNode(isLocked ? " Locked" : " Unlocked"));
+        lockChip.textContent = "";
+        lockChip.appendChild(icon(isLocked ? "lock" : "unlock"));
+        lockChip.appendChild(document.createTextNode(isLocked ? " Locked" : " Open"));
+        lockChip.classList.toggle("is-open", !isLocked);
         var until = !isLocked && gate.until(game.id);
-        badge.title = isLocked ? "Scan the QR code on the slide, or type its code" : (until ? "Unlocked on this laptop until " + fmtUntil(until) : "Unlocked on this laptop");
+        lockChip.title = isLocked ? "Scan the QR code on the slide, or type its code" : (until ? "Unlocked on this laptop until " + fmtUntil(until) : "Unlocked on this laptop");
         play.setAttribute("aria-label", (isLocked ? "Play \u2014 locked, you will be asked for the game code: " : "Play: ") + game.title);
       };
       paint();
       lockWatchers.push(paint);
+    } else {
+      lockChip.hidden = true;
     }
     grid.appendChild(card);
   });

@@ -7,6 +7,7 @@
 
   var NS = "http://www.w3.org/2000/svg";
   var cfg = (window.SITE_CONFIG && window.SITE_CONFIG.intro) || {};
+  var sponsorCfg = (window.SITE_CONFIG && window.SITE_CONFIG.sponsor) || {};
   var BRAND = (window.SITE_CONFIG && window.SITE_CONFIG.brand) || "Key2Enable";
   var SUB = ((window.SITE_CONFIG && window.SITE_CONFIG.hubName) || "Game Hub").toUpperCase();
   var DURATION = cfg.durationMs || 7200;
@@ -17,7 +18,84 @@
   var caption = document.getElementById("introCaption");
   var progress = root && root.querySelector(".intro__progress span");
   var skipBtn = document.getElementById("introSkip");
+  var sponsorEl = document.getElementById("introSponsor");
+  var sponsorTag = document.getElementById("sponsorTag");
+  var sponsorEnter = document.getElementById("sponsorEnter");
+  var sponsorLogo = sponsorEl && sponsorEl.querySelector(".intro__sponsor-logo");
   if (!root || !svg) return;
+
+  var sponsorTimer = 0;
+
+  /* ---------------- gentle transition music ----------------
+     A soft pentatonic arpeggio over a warm pad, played while the sponsor
+     screen hands off to the sketch. Starts on the Enter click (a real user
+     gesture, so browsers allow the AudioContext). */
+  var actx = null, musicGain = null;
+  function playIntroMusic() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      actx = new AC();
+      musicGain = actx.createGain();
+      musicGain.connect(actx.destination);
+      var t0 = actx.currentTime + 0.05;
+      musicGain.gain.setValueAtTime(0.0001, t0);
+      musicGain.gain.exponentialRampToValueAtTime(0.09, t0 + 2.0);
+
+      function tone(freq, t, dur, type, vol, attack) {
+        var o = actx.createOscillator(), g = actx.createGain();
+        o.type = type || "sine"; o.frequency.value = freq;
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(vol, t + (attack || 0.08));
+        g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        o.connect(g); g.connect(musicGain);
+        o.start(t); o.stop(t + dur + 0.05);
+      }
+      // warm low pad under the whole transition, very soft
+      tone(130.81, t0, 4.2, "sine", 0.16, 0.6);         // C3
+      tone(196.00, t0 + 0.3, 4.0, "sine", 0.10, 0.6);   // G3
+      tone(261.63, t0 + 4.0, 4.4, "sine", 0.10, 0.7);   // C4 pad swells
+      tone(164.81, t0 + 4.3, 4.2, "sine", 0.11, 0.7);   // E3
+      // slow lullaby arpeggio (C major pentatonic), long soft attacks
+      var scale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
+      var seq = [0, 2, 3, 5, 4, 3, 2, 1, 0, 2, 3, 4, 5, 4, 3, 1, 0];
+      for (var i = 0; i < seq.length; i++) {
+        var t = t0 + 0.5 + i * 0.8;
+        tone(scale[seq[i]], t, 1.5, "sine", 0.15, 0.25);
+        tone(scale[seq[i]] * 2, t, 1.1, "sine", 0.035, 0.3);   // faint octave shimmer
+      }
+    } catch (e) { /* audio unavailable — continue silently */ }
+  }
+  function stopIntroMusic() {
+    if (!actx) return;
+    try {
+      var t = actx.currentTime;
+      musicGain.gain.cancelScheduledValues(t);
+      musicGain.gain.setTargetAtTime(0.0001, t, 0.25);
+      var a = actx; actx = null;
+      setTimeout(function () { a.close(); }, 900);
+    } catch (e) { /* ignore */ }
+  }
+
+  /* Tagline → one .line per sentence, one .w per word (staggered rise-in). */
+  if (sponsorTag && sponsorCfg.tagline) {
+    sponsorTag.textContent = "";
+    sponsorCfg.tagline.split(/\.\s*/).filter(Boolean).forEach(function (line, li) {
+      var lineEl = document.createElement("span");
+      lineEl.className = "line";
+      var words = line.split(/\s+/);
+      words.forEach(function (w, wi) {
+        var s = document.createElement("span");
+        s.className = "w";
+        s.textContent = w + (wi === words.length - 1 ? "." : "");
+        s.style.animationDelay = (1.15 + li * 0.55 + wi * 0.13).toFixed(2) + "s";
+        lineEl.appendChild(s);
+        lineEl.appendChild(document.createTextNode(" "));
+      });
+      sponsorTag.appendChild(lineEl);
+    });
+  }
+  if (sponsorLogo && sponsorCfg.name) sponsorLogo.alt = sponsorCfg.name;
 
   var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var running = false, raf = 0, startTs = 0, onDoneCb = null;
@@ -140,9 +218,15 @@
     mk("rect", { x: -9, y: -140, width: 18, height: 14, rx: 3, fill: "#F48FB1" }, body); // eraser
     scene.pencil = pen;
 
-    // precompute path lengths
+    // precompute path lengths and hide every stroke immediately — otherwise the
+    // finished design is visible for a frame before the draw starts
     var total = 0;
-    scene.paths.forEach(function (p) { p.len = p.el.getTotalLength(); total += p.len; });
+    scene.paths.forEach(function (p) {
+      p.len = p.el.getTotalLength();
+      p.el.style.strokeDasharray = p.len;
+      p.el.style.strokeDashoffset = p.len;
+      total += p.len;
+    });
     scene.totalLen = total;
   }
 
@@ -284,6 +368,28 @@
     running = true;
     skipBtn.focus({ preventScroll: true });
 
+    /* Sponsor screen first; it stays until the Enter button is clicked,
+       which starts the music and the page transition into the hub. */
+    if (sponsorEl && sponsorCfg.enabled !== false) {
+      sponsorEl.hidden = false;
+      sponsorEl.classList.remove("is-out");
+      var onEnter = function () {
+        sponsorEnter.removeEventListener("click", onEnter);
+        playIntroMusic();
+        sponsorEl.classList.add("is-out");
+        sponsorTimer = setTimeout(function () {
+          sponsorEl.hidden = true;
+          startScene();
+        }, 600);
+      };
+      sponsorEnter.addEventListener("click", onEnter);
+    } else {
+      startScene();
+    }
+  }
+
+  function startScene() {
+    if (!running) return;
     if (reduced) {
       // Static version: show the finished sketch briefly, then continue.
       scene.paths.forEach(function (p) { p.el.style.strokeDasharray = "none"; });
@@ -304,6 +410,10 @@
     if (!running) return;
     running = false;
     cancelAnimationFrame(raf);
+    clearTimeout(sponsorTimer);
+    stopIntroMusic();
+    if (sponsorEl) { sponsorEl.hidden = true; sponsorEl.classList.remove("is-out"); }
+    if (sponsorEnter) sponsorEnter.blur();
     try { sessionStorage.setItem(SEEN_KEY, "1"); } catch (e) { /* private mode */ }
     root.classList.add("is-leaving");
     document.body.classList.remove("intro-active");
