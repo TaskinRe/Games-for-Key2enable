@@ -18,7 +18,7 @@ window.SITE_CONFIG = {
   brand: "Key2Enable",
   hubName: "Game Hub",
   tagline: "Interactive Training Games",
-  description: "Five short games. Pick one, scan its code, play.",
+  description: "Five short games. Pick one and play.",
 
   /* ---------- Intro animation ----------
      playIntro : true  → the pencil-sketch intro plays once per browser session
@@ -124,7 +124,9 @@ window.SITE_CONFIG = {
                   generation, code changes, feedback export). Same hashing as
                   the game codes; "" leaves Trainer tools open to everyone. */
   access: {
-    enabled: true,
+    /* Lab build: games are open to everyone — the folders hold the plain
+       (decrypted) game HTML. Flip back to true to restore code lock. */
+    enabled: false,
     hours: 48,
     trainerPin: "ced0d88fe7826dd09f37a9b2147be5849bab92919e01ceb4ca9acab99611fc0f",
     keys: {
